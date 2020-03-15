@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+	<link rel="manifest" href="manifest.json">
+
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="application-name" content="COVID-19">
+	<meta name="apple-mobile-web-app-title" content="COVID-19">
+	<meta name="theme-color" content="#114B5F">
+	<meta name="msapplication-navbutton-color" content="#114B5F">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="msapplication-starturl" content="/">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="icon" type="image/png" sizes="192x192" href="img/icons/icon-192x192.png">
+	<link rel="apple-touch-icon" type="image/png" sizes="192x192" href="img/icons/icon-192x192.png">
+
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+	<title><%= VUE_APP_TITLE %></title>
+
+	<meta name="description" content="" />
+
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:site" content="@iMEdDLab" />
+	<meta name="twitter:creator" content="@iMEdDLab" />
+
+	<meta property="og:url" content="https://lab.imedd.org/covid-19/" />
+	<meta property="og:title" content="<%= VUE_APP_TITLE %>" />
+
+	<meta property="og:description" content="" />
+	<meta name="twitter:description" content=""/>
+	<meta property="og:image" content="" />
+
+	<link rel="icon" type="image/png" sizes="32x32" href="/img/icons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/img/icons/favicon-16x16.png">
+
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Roboto+Mono:400,500,700,900|Noto+Serif:400,400i,700,700i&display=swap">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
+
+	<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+	<div id="app"></div>
+	<!-- built files will be auto injected -->
+
+	<!-- Go to www.addthis.com/dashboard to customize your tools -->
+	<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4dc9169055a53ac6"></script>
+	<% if (NODE_ENV != 'development') { %>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-3911074-22"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-3911074-22');
+	</script>
+	<% } %>
+  </body>
+</html>
