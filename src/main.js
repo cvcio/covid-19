@@ -6,8 +6,12 @@ import store from '@/store';
 
 import '@/registerServiceWorker';
 
+import VueClipboards from 'vue-clipboards';
+
 import moment from 'moment';
 import mapboxgl from 'mapbox-gl';
+
+Vue.use(VueClipboards);
 
 mapboxgl.accessToken = process.env.VUE_APP_MAPBOX || '';
 moment.locale('el');

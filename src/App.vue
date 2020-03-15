@@ -220,7 +220,7 @@
 							<h4 class="accent--text pl-6">width=&quot;640px&quot;</h4>
 							<h4 class="accent--text pl-6">allowfullscreen&gt;</h4>
 							<h4 class="accent--text">&lt;/iframe&gt;</h4>
-							<v-btn small tile style="position: absolute; top: 0; right: 0;" @click="copy"><v-icon small>mdi-content-copy</v-icon></v-btn>
+							<v-btn small tile style="position: absolute; top: 0; right: 0;" v-clipboard="iframe" @success="snackbar = true"><v-icon small>mdi-content-copy</v-icon></v-btn>
 						</div>
 					</v-col>
 					<p class="body-1">
@@ -292,8 +292,9 @@
 									<h4 class="accent--text pl-6">width=&quot;640px&quot;</h4>
 									<h4 class="accent--text pl-6">allowfullscreen&gt;</h4>
 									<h4 class="accent--text">&lt;/iframe&gt;</h4>
-									<v-btn small tile style="position: absolute; top: 0; right: 0;" @click="copy"><v-icon small>mdi-content-copy</v-icon></v-btn>
+									<v-btn small tile style="position: absolute; top: 0; right: 0;" v-clipboard="iframe" @success="snackbar = true"><v-icon small>mdi-content-copy</v-icon></v-btn>
 								</div>
+
 								<p>Με τον παραπάνω κώδικα μπορείτε να ενσωματώσετε την εφαρμογή στην ιστοσελίδα σας. Εάν παρατηρήσετε προβλήματα στην ενσωμάτωση, επικοινωνήστε μαζί μας στο <a href="mailto:lab@imedd.org" target="_blank">lab@imedd.org</a> ή χρησιμοποιήστε τη <a href="https://www.imedd.org/el/contact/" target="_blank">φόρμα επικοινωνίας</a> με το iMEdD.</p>
 							</v-col>
 						</v-row>
@@ -363,7 +364,7 @@
 
 <script>
 import { scaleLinear } from 'd3';
-import { max, find, findIndex, filter, map, mean } from 'lodash';
+import { max, find, findIndex, filter, map, mean, escape, unescape} from 'lodash';
 import chroma from 'chroma-js';
 import { mapGetters } from 'vuex';
 
@@ -447,6 +448,7 @@ export default {
 					m['Country/Region'] = this.worldGeoJson.features[idx_m].properties.ADMIN_GR;
 				}
 			 });
+
 			 this.recovered.forEach(m => {
 				let idx_m = findIndex(this.worldGeoJson.features, c => {
 					return c.properties.ADMIN === m['Country/Region'] || c.properties.ADMIN_H === m['Country/Region'];
@@ -462,27 +464,6 @@ export default {
 		}).catch(() => console.error('Error while fetching data. Please try later.'));
 	},
 	methods: {
-		copy () {
-			const value = this.iframe;
-			this.snackbar = true;
-			if (window.clipboardData && window.clipboardData.setData) {
-				// IE specific code path to prevent textarea being shown while dialog is visible.
-				return window.clipboardData.setData('Text', value);
-			} else if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
-				var textarea = document.createElement('textarea');
-				textarea.textContent = value;
-				textarea.style.position = 'fixed'; // Prevent scrolling to bottom of page in MS Edge.
-				document.body.appendChild(textarea);
-				textarea.select();
-				try {
-					return document.execCommand('copy'); // Security exception may be thrown by some browsers.
-				} catch (ex) {
-					return false;
-				} finally {
-					document.body.removeChild(textarea);
-				}
-			}
-		},
 		find,
 		findIndex,
 		max,
