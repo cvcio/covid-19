@@ -1,6 +1,6 @@
 <template>
 	<v-app id="app" toolbar footer>
-		<v-alert v-if="byCountryCases" :value="alert" dense tile class="ma-0 caption" type="error" color="accent" id="alert" transition="slide-y-transition">
+		<v-alert v-if="!loading" :value="alert" dense tile class="ma-0 caption" type="error" color="accent" id="alert" transition="slide-y-transition">
 			<v-row align="center" no-gutters>
 				<v-col class="grow">Στην {{ findIndex(byCountryCases, ['country', 'Ελλάδα']) + 1 }}η θέση η Ελλάδα παγκοσμίως σε αριθμό κρουσμάτων</v-col>
 				<v-col class="shrink">
@@ -11,7 +11,7 @@
 			</v-row>
 		</v-alert>
 
-		<v-app-bar app fixed dark color="transparent" flat
+		<v-app-bar app fixed dark color="transparent" flat  v-if="!loading"
 			class="main-bar"
 			:class="[
 				(alert && $vuetify.breakpoint.smAndDown ? 'alert-mobile-bar' : ''),
@@ -39,7 +39,7 @@
 			</v-row>
 		</v-app-bar>
 
-		<v-navigation-drawer app touchless :width="$vuetify.breakpoint.xsOnly ? '100%' : '380'" class="main-nav" v-model="navStats"
+		<v-navigation-drawer v-if="!loading" app touchless :width="$vuetify.breakpoint.xsOnly ? '100%' : '380'" class="main-nav" v-model="navStats"
 			:class="[
 				(alert && $vuetify.breakpoint.xsOnly ? 'alert-mobile-nav' : ''),
 				(alert && $vuetify.breakpoint.smAndUp ? 'alert-nav' : ''),
@@ -169,7 +169,7 @@
 			</vue-custom-scrollbar>
 		</v-navigation-drawer>
 
-		<v-navigation-drawer app touchless light right :width="$vuetify.breakpoint.xsOnly ? '100%' : '280'" class="news-nav" v-model="navNews"
+		<v-navigation-drawer v-if="!loading" app touchless light right :width="$vuetify.breakpoint.xsOnly ? '100%' : '280'" class="news-nav" v-model="navNews"
 			:class="[
 				(alert && $vuetify.breakpoint.xsOnly ? 'alert-mobile-nav' : ''),
 				(alert && $vuetify.breakpoint.smAndUp ? 'alert-nav' : ''),
@@ -189,13 +189,13 @@
 
 		<div id="map" class="">
 			<v-row no-gutters justify="center" align="center" class="loader" v-if="loading" >
-				<span class="mb-12 grey--text">Φορτώνεται ο παγκόσμιος χάρτης και η βάση δεδομένων κρουσμάτων με COVID-19</span>
-				<v-progress-circular v-if="loading" class="loader mt-6" color="primary" indeterminate :size="24"/>
+				<span class="mb-12 mt-n12 grey--text text-center">Φορτώνεται ο παγκόσμιος χάρτης και η βάση δεδομένων κρουσμάτων με COVID-19</span>
+				<v-progress-circular v-if="loading" class="loader mt-12" color="primary" indeterminate :size="24"/>
 			</v-row>
 			<map-mapbox v-if="!loading" :level="activeMap"/>
 		</div>
 
-		<v-dialog v-model="dialogAbout" width="600px" transition="slide-y-reverse-transition" :fullscreen="$vuetify.breakpoint.mdAndDown">
+		<v-dialog  v-if="!loading" v-model="dialogAbout" width="600px" transition="slide-y-reverse-transition" :fullscreen="$vuetify.breakpoint.mdAndDown">
 			<v-card tile>
 				<v-card-title>
 					<span class="title text-truncate">
@@ -255,7 +255,7 @@
 			</v-card>
 		</v-dialog>
 
-		<v-dialog v-model="dialogTerms" width="600px" transition="slide-y-reverse-transition" :fullscreen="$vuetify.breakpoint.mdAndDown">
+		<v-dialog  v-if="!loading" v-model="dialogTerms" width="600px" transition="slide-y-reverse-transition" :fullscreen="$vuetify.breakpoint.mdAndDown">
 			<v-card tile>
 				<v-card-title>
 					<span class="title text-truncate">
@@ -280,7 +280,7 @@
 			</v-card>
 		</v-dialog>
 
-		<v-dialog v-model="dialogEmbed" class="embed-dialog" max-width="360" transition="slide-y-reverse-transition" fullscreen>
+		<v-dialog v-if="!loading" v-model="dialogEmbed" class="embed-dialog" max-width="360" transition="slide-y-reverse-transition" fullscreen>
 			<v-card tile>
 				<v-card-title>
 					<span class="title text-truncate">
@@ -329,7 +329,7 @@
 			</v-btn>
 		</v-snackbar>
 
-		<div class="color-scale" :class="$vuetify.breakpoint.mdAndDown ? 'isMobile' : ''">
+		<div v-if="!loading" class="color-scale" :class="$vuetify.breakpoint.mdAndDown ? 'isMobile' : ''">
 			<v-row no-gutters justify="space-between" align="center" class="mt-3">
 				<v-col class="caption font-weight-bold">0</v-col>
 				<v-col class="caption font-weight-bold text-center">1</v-col>
@@ -346,7 +346,7 @@
 			</v-row>
 		</div>
 
-		<v-footer app inset dark class="primary lighten-1" :class="$vuetify.breakpoint.mdAndUp ? '' : 'py-3 mb-8'">
+		<v-footer v-if="!loading" app inset dark class="primary lighten-1" :class="$vuetify.breakpoint.mdAndUp ? '' : 'py-3 mb-8'">
 			<v-btn x-small text @click.stop="dialogAbout = true" class="text-inherit">
 				Η Εφαρμογή & Τα Data
 			</v-btn>
