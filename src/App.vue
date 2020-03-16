@@ -183,7 +183,7 @@
 				</v-btn>
 			</v-row>
 			<v-row no-gutters class="" :class="$vuetify.breakpoint.smAndDown ? 'mt-6' : 'mt-3'">
-				<a class="twitter-timeline" href="https://twitter.com/iMEdDLab/lists/imedd-lab-covid-19?ref_src=twsrc%5Etfw">A Twitter List by iMEdDLab</a>
+				<a class="twitter-timeline" target="_blank" href="https://twitter.com/iMEdDLab/lists/imedd-lab-covid-19?ref_src=twsrc%5Etfw">A Twitter List by iMEdDLab</a>
 			</v-row>
 		</v-navigation-drawer>
 
@@ -411,6 +411,8 @@ export default {
 			});
 
 			this.loading = false;
+			// eslint-disable-next-line no-console
+			this.$nextTick(() => window.twttr.widgets.load());
 
 		}).catch(() => console.error('Error while fetching data. Please try later.'));
 	},
