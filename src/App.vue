@@ -19,7 +19,7 @@
 			]"
 			>
 			<v-row no-gutters :justify="$vuetify.breakpoint.mdAndDown ? 'end' : 'start'">
-				<v-tooltip bottom small>
+				<!-- <v-tooltip bottom small>
 					<template v-slot:activator="{ on }">
 						<v-btn fab small v-on="on" @click.stop="navStats = !navStats" class="primary mx-3" style="pointer-events: auto;">
 							<v-icon small>mdi-chart-timeline-variant</v-icon>
@@ -35,7 +35,14 @@
 						</v-btn>
 					</template>
 					<span>{{ !navNews ? 'Νέα' : 'Απόκρυψη' }}</span>
-				</v-tooltip>
+				</v-tooltip> -->
+				<v-btn fab small @click.stop="navStats = !navStats" class="primary mx-3" style="pointer-events: auto;">
+					<v-icon small>mdi-chart-timeline-variant</v-icon>
+				</v-btn>
+				<v-spacer v-if="$vuetify.breakpoint.smAndUp"></v-spacer>
+				<v-btn fab small @click.stop="navNews = !navNews" class="primary mx-3"  style="pointer-events: auto;">
+					<v-icon small>mdi-message-alert</v-icon>
+				</v-btn>
 			</v-row>
 		</v-app-bar>
 
