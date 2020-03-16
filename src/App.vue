@@ -408,7 +408,7 @@ export default {
 			dialogAbout: false,
 			dialogTerms: false,
 			navNews: false,
-			navStats: true, // this.$vuetify.breakpoint.xsOnly ? false : true,
+			navStats: this.$vuetify.breakpoint.mdAndDown ? false : true,
 			alert: true,
 
 			dialogEmbed: false,
