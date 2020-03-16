@@ -85,16 +85,16 @@ export default {
 
 			let xBand = scaleBand()
 				.domain(data.map(m => new Date(m.date)))
-				.rangeRound([0, width - margin.left - margin.right])
+				.range([0, width - margin.left - margin.right])
 				.paddingInner(0.5);
 
 			let xAxis = axisBottom(x)
 				.tickSizeInner(6)
 				.tickSizeOuter(0)
-				.ticks(timeWeek.every(3));
+				.ticks(timeWeek.every(2));
 
 			let y = scaleLinear()
-				.domain([0, max(data, (m) => m.value) * 1.5])
+				.domain([0, max(data, (m) => m.value) * 1.3])
 				.rangeRound([height - margin.top - margin.bottom, 0]);
 
 			let yAxis = axisLeft(y)
@@ -135,7 +135,7 @@ export default {
 				.call(xAxis)
 				.selectAll('text')
 				.text((d) => {
-					return this.$moment(d).format('DD/MM/YYYY');
+					return this.$moment(d).format('DD/MM');
 				})
 				.attr('x', 0)
 				.attr('y', 12);
@@ -208,7 +208,7 @@ export default {
 			}
 			&.x {
 				text {
-					text-anchor: start;
+					text-anchor: middle;
 					font-size: 10px;
 				}
 			}

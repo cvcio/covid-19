@@ -39,7 +39,7 @@
 			</v-row>
 		</v-app-bar>
 
-		<v-navigation-drawer fixed app :width="$vuetify.breakpoint.xsOnly ? '100%' : '380'" class="main-nav" v-model="navStats"
+		<v-navigation-drawer app :width="$vuetify.breakpoint.xsOnly ? '100%' : '380'" class="main-nav" v-model="navStats"
 			:class="[
 				(alert && $vuetify.breakpoint.xsOnly ? 'alert-mobile-nav' : ''),
 				(alert && $vuetify.breakpoint.smAndUp ? 'alert-nav' : ''),
@@ -113,7 +113,7 @@
 			<v-divider dark class="mb-2"></v-divider>
 
 			<template v-if="activeMap === 'admin-0' && byCountry">
-				<v-data-table v-if="byCountry" class="mt-4" :headers="[
+				<v-data-table dense v-if="byCountry" class="mt-4" :headers="[
 					{ text: 'Χώρα', value: 'country', width: '30%' },
 					{ text: 'Κρούσματα', value: 'cases', width: '35%' },
 					{ text: 'Θάνατοι', value: 'deaths', width: '35%' },
@@ -137,7 +137,7 @@
 				</v-data-table>
 			</template>
 			<template v-else-if="activeMap === 'greece' && greece">
-				<v-data-table v-if="greece" class="mt-4" :headers="[
+				<v-data-table dense v-if="greece" class="mt-4" :headers="[
 					{ text: 'Περιοχή', value: 'county', width: '30%' },
 					{ text: 'Κρούσματα', value: 'cases', width: '35%' },
 					{ text: 'Θάνατοι', value: 'dead', width: '35%' },
@@ -163,7 +163,7 @@
 			</vue-custom-scrollbar>
 		</v-navigation-drawer>
 
-		<v-navigation-drawer app fixed light right :width="$vuetify.breakpoint.xsOnly ? '100%' : '280'" class="news-nav" v-model="navNews"
+		<v-navigation-drawer app light right :width="$vuetify.breakpoint.xsOnly ? '100%' : '280'" class="news-nav" v-model="navNews"
 			:class="[
 				(alert && $vuetify.breakpoint.xsOnly ? 'alert-mobile-nav' : ''),
 				(alert && $vuetify.breakpoint.smAndUp ? 'alert-nav' : ''),
@@ -175,7 +175,10 @@
 		</v-navigation-drawer>
 
 		<div id="map" class="">
-			<v-progress-circular v-if="loading" class="loader" :value="40" color="primary" indeterminate :size="24"/>
+			<v-row no-gutters justify="center" align="center" class="loader" v-if="loading" >
+				<span class="mb-12 grey--text">Φορτώνεται ο παγκόσμιος χάρτης και η βάση δεδομένων κρουσμάτων με COVID-19</span>
+				<v-progress-circular v-if="loading" class="loader mt-6" color="primary" indeterminate :size="24"/>
+			</v-row>
 			<map-mapbox v-if="!loading" :level="activeMap"/>
 		</div>
 
@@ -330,7 +333,7 @@
 			</v-row>
 		</div>
 
-		<v-footer app inset dark class="primary lighten-1" :padless="$vuetify.breakpoint.smAndDown" :class="$vuetify.breakpoint.smAndUp ? '' : 'py-3'">
+		<v-footer app inset dark class="primary lighten-1" :class="$vuetify.breakpoint.mdAndUp ? '' : 'py-3 mb-8'">
 			<v-btn x-small text @click.stop="dialogAbout = true" class="text-inherit">
 				Η Εφαρμογή & Τα Data
 			</v-btn>
@@ -438,8 +441,8 @@ export default {
 				if (idx_m > -1) {
 					this.cases[i]['Country/Region'] = this.worldGeoJson.features[idx_m].properties.ADMIN_GR;
 				}
-			 });
-			 this.deaths.forEach(m => {
+			});
+			this.deaths.forEach(m => {
 				let idx_m = findIndex(this.worldGeoJson.features, c => {
 					return c.properties.ADMIN === m['Country/Region'] || c.properties.ADMIN_H === m['Country/Region'];
 				});
@@ -447,9 +450,9 @@ export default {
 				if (idx_m > -1) {
 					m['Country/Region'] = this.worldGeoJson.features[idx_m].properties.ADMIN_GR;
 				}
-			 });
+			});
 
-			 this.recovered.forEach(m => {
+			this.recovered.forEach(m => {
 				let idx_m = findIndex(this.worldGeoJson.features, c => {
 					return c.properties.ADMIN === m['Country/Region'] || c.properties.ADMIN_H === m['Country/Region'];
 				});
@@ -457,9 +460,9 @@ export default {
 				if (idx_m > -1) {
 					m['Country/Region'] = this.worldGeoJson.features[idx_m].properties.ADMIN_GR;
 				}
-			 });
+			});
 
-			 this.loading = false;
+			this.loading = false;
 
 		}).catch(() => console.error('Error while fetching data. Please try later.'));
 	},
@@ -546,10 +549,11 @@ a {
 
 .loader {
 	position: fixed;
-	z-index: 100;	padding: 0 !important;
+	z-index: 100;
+	padding: 0 !important;
 	top: 50%;
 	left: 50%;
-	transform: translate(-24px -24px);
+	transform: translate(-50%, -50%);
 }
 .v-list-item {
 	min-height: 0;

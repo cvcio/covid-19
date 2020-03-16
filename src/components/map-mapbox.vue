@@ -176,7 +176,7 @@ export default {
 								</div>
 								<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 								<div class="row no-gutters justify-space-between">
-									<h3 class="body-2 pa-2">Στο Νοσοκομείο</h3>
+									<h3 class="body-2 pa-2">Νοσηλεύονται</h3>
 									<h3 class="body-2 font-weight-bold pa-2">${new Intl.NumberFormat('el-GR').format(region[0].properties.hospitalized) || '-'}</h3>
 								</div>
 							`;
@@ -199,6 +199,9 @@ export default {
 				id: 'admin-0',
 				type: 'fill',
 				source: 'admin-0',
+				layout: {
+					visibility: 'visible'
+				},
 				paint: {
 					'fill-color': {
 						'type': 'identity',
@@ -216,6 +219,9 @@ export default {
 				id: 'greece',
 				type: 'circle',
 				source: 'greece',
+				layout: {
+					visibility: 'visible'
+				},
 				paint: {
 					'circle-stroke-color': '#fff',
 					'circle-stroke-width': 1,
@@ -230,7 +236,13 @@ export default {
 				}
 			});
 		},
-		updateLayers (n) {},
+		updateLayers (n) {
+			if (n === 'admin-0') {
+				this.map.setLayoutProperty('greece', 'visibility', 'none');
+				return;
+			}
+			this.map.setLayoutProperty('greece', 'visibility', 'visible');
+		},
 		setPosition (c, z) {
 			if (!this.map) return;
 			this.map.flyTo({
