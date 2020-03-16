@@ -2,11 +2,14 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { json, csv } from 'd3';
 import { sumBy, maxBy, map, groupBy, orderBy, find, filter } from 'lodash';
+
+import { storage } from '@/services/storage';
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
-		worldGeoJson: null,
+		worldGeoJson: storage.get('worldGeoJson') || null,
 		greeceGeoJson: null,
 		countries: null,
 		countriesMapping: null,
@@ -139,6 +142,7 @@ export default new Vuex.Store({
 	},
 	mutations: {
 		set_worldGeoJson (state, data) {
+			storage.set('worldGeoJson', data);
 			state.worldGeoJson = data;
 		},
 		set_greeceGeoJson (state, data) {
@@ -167,7 +171,8 @@ export default new Vuex.Store({
 		}
 	},
 	actions: {
-		async fetchStaticData ({ commit }, data) {
+		async fetchStaticData ({ commit, state }, data) {
+			if (state[data.key] !== null) return;
 			return json(data.file)
 				.then(f => {
 					commit(`set_${data.key}`, f);

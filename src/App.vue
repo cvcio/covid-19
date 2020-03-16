@@ -39,7 +39,7 @@
 			</v-row>
 		</v-app-bar>
 
-		<v-navigation-drawer app :width="$vuetify.breakpoint.xsOnly ? '100%' : '380'" class="main-nav" v-model="navStats"
+		<v-navigation-drawer app touchless :width="$vuetify.breakpoint.xsOnly ? '100%' : '380'" class="main-nav" v-model="navStats"
 			:class="[
 				(alert && $vuetify.breakpoint.xsOnly ? 'alert-mobile-nav' : ''),
 				(alert && $vuetify.breakpoint.smAndUp ? 'alert-nav' : ''),
@@ -47,8 +47,14 @@
 				(!alert && $vuetify.breakpoint.mdAndUp ? 'normal-nav' : '')
 			]"
 			>
+			<v-row no-gutters justify="end"  v-if="$vuetify.breakpoint.smAndDown">
+				<v-btn fixed fab small @click.stop="navStats = !navStats" class="my-n6 mx-n3"  style="pointer-events: auto;">
+					<v-icon small dark>mdi-arrow-left</v-icon>
+				</v-btn>
+			</v-row>
+
 			<a href="https://imedd.org/" target="_blank" class="">
-				<v-img src="/img/imedd.jpg" max-width="300" max-height="96" />
+				<v-img src="/img/imedd.jpg" />
 			</a>
 			<v-divider dark class="mb-2"></v-divider>
 			<vue-custom-scrollbar class="scroll-area">
@@ -107,7 +113,7 @@
 			</v-list>
 			<v-divider dark class=""></v-divider>
 			<v-list>
-				<v-subheader class="grey--text">Κρούσματα &frasl; Ημέρα</v-subheader>
+				<v-subheader class="grey--text">Σύνολο Κρουσμάτων &frasl; Ημέρα</v-subheader>
 			</v-list>
 			<chart-timeline :triggerUpdate="triggerUpdate" :level="activeMap" class="px-4 mb-12"></chart-timeline>
 			<v-divider dark class="mb-2"></v-divider>
@@ -163,7 +169,7 @@
 			</vue-custom-scrollbar>
 		</v-navigation-drawer>
 
-		<v-navigation-drawer app light right :width="$vuetify.breakpoint.xsOnly ? '100%' : '280'" class="news-nav" v-model="navNews"
+		<v-navigation-drawer app touchless light right :width="$vuetify.breakpoint.xsOnly ? '100%' : '280'" class="news-nav" v-model="navNews"
 			:class="[
 				(alert && $vuetify.breakpoint.xsOnly ? 'alert-mobile-nav' : ''),
 				(alert && $vuetify.breakpoint.smAndUp ? 'alert-nav' : ''),
@@ -171,7 +177,14 @@
 				(!alert && $vuetify.breakpoint.mdAndUp ? 'normal-nav' : '')
 			]"
 			>
-			<a class="twitter-timeline" href="https://twitter.com/iMEdDLab/lists/imedd-lab-covid-19?ref_src=twsrc%5Etfw">A Twitter List by iMEdDLab</a>
+			<v-row no-gutters justify="start" v-if="$vuetify.breakpoint.smAndDown">
+				<v-btn fixed fab small @click.stop="navNews = !navNews" class="my-n6 mx-3" style="pointer-events: auto;">
+					<v-icon small dark>mdi-arrow-right</v-icon>
+				</v-btn>
+			</v-row>
+			<v-row no-gutters class="" :class="$vuetify.breakpoint.smAndDown ? 'mt-6' : 'mt-3'">
+				<a class="twitter-timeline" href="https://twitter.com/iMEdDLab/lists/imedd-lab-covid-19?ref_src=twsrc%5Etfw">A Twitter List by iMEdDLab</a>
+			</v-row>
 		</v-navigation-drawer>
 
 		<div id="map" class="">
@@ -395,7 +408,7 @@ export default {
 			dialogAbout: false,
 			dialogTerms: false,
 			navNews: false,
-			navStats: this.$vuetify.breakpoint.xsOnly ? false : true,
+			navStats: true, // this.$vuetify.breakpoint.xsOnly ? false : true,
 			alert: true,
 
 			dialogEmbed: false,
@@ -407,7 +420,7 @@ export default {
 	},
 	mounted () {
 		let jsonFiles = [
-			{ file: '/shared/countries.geojson', key: 'worldGeoJson' },
+			{ file: '/shared/countries-simplified.geojson', key: 'worldGeoJson' },
 			{ file: '/shared/countries.json', key: 'countries' }
 		];
 
@@ -425,6 +438,7 @@ export default {
 			...csvFiles.map(m => this.$store.dispatch('fetchDynamicData', m))
 		]).then(() => {
 			this.triggerUpdate = new Date();
+
 			this.worldGeoJson.features.forEach(m => {
 				let idx_m = findIndex(this.countriesMapping, ['country', m.properties.ADMIN]);
 				if (idx_m > -1) {
