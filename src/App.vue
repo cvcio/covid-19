@@ -2,7 +2,7 @@
 	<v-app id="app" toolbar footer>
 		<v-alert v-if="!loading" :value="alert" dense tile class="ma-0 caption" type="error" color="accent" id="alert" transition="slide-y-transition">
 			<v-row align="center" no-gutters>
-				<v-col class="grow">Στην {{ findIndex(byCountryCases, ['country', 'Ελλάδα']) + 1 }}η θέση η Ελλάδα παγκοσμίως σε αριθμό κρουσμάτων</v-col>
+				<v-col class="grow">{{ find(alerts, ['key', 'alertText']).value }}</v-col>
 				<v-col class="shrink">
 					<v-btn icon small @click.stop="alert = false">
 						<v-icon small>mdi-close</v-icon>
@@ -83,7 +83,7 @@
 			<v-divider dark class=""></v-divider>
 			<v-list>
 				<v-subheader class="grey--text mb-2">
-					<span class="caption">Τελευταία Ενημέρωση: <span class="info--text">{{ $moment(lastUpdatedAt).format('L') || '' }}</span></span>
+					<span class="caption">Τελευταία Ενημέρωση: <span class="info--text">{{ find(alerts, ['key', 'lastUpdatedAt']).value || '' }}</span></span>
 				</v-subheader>
 				<v-list-item>
 					<v-list-item-content class="py-0">
@@ -260,7 +260,6 @@
 									<h4 class="accent--text pl-6">width=&quot;640px&quot;</h4>
 									<h4 class="accent--text pl-6">allowfullscreen&gt;</h4>
 									<h4 class="accent--text">&lt;/iframe&gt;</h4>
-									<v-btn small tile style="position: absolute; top: 0; right: 0;" v-clipboard="iframe" @success="snackbar = true"><v-icon small>mdi-content-copy</v-icon></v-btn>
 								</div>
 
 								<p>Με τον παραπάνω κώδικα μπορείτε να ενσωματώσετε την εφαρμογή στην ιστοσελίδα σας. Εάν παρατηρήσετε προβλήματα στην ενσωμάτωση, επικοινωνήστε μαζί μας στο <a href="mailto:lab@imedd.org" target="_blank">lab@imedd.org</a> ή χρησιμοποιήστε τη <a href="https://www.imedd.org/el/contact/" target="_blank">φόρμα επικοινωνίας</a> με το iMEdD.</p>
@@ -339,7 +338,8 @@ export default {
 			'countCasesGR', 'countDeathsGR', 'countRecoveredGR', 'countCriticalGR',
 			'byCountryCases', 'byCountryDeaths', 'byCountryRecovered', 'byCountryCritical',
 			'lastUpdatedAt',
-			'byCountry'
+			'byCountry',
+			'alerts'
 		])
 	},
 	data () {
@@ -370,7 +370,8 @@ export default {
 			{ file: 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv', key: 'recovered' },
 			{ file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRpR8AOJaRsB5by7H3R_GijtaY06J8srELipebO5B0jYEg9pKugT3C6Rk2RSQ5eyerQl7LolshamK27/pub?gid=527109001&single=true&output=csv', key: 'countriesMapping' },
 			{ file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRpR8AOJaRsB5by7H3R_GijtaY06J8srELipebO5B0jYEg9pKugT3C6Rk2RSQ5eyerQl7LolshamK27/pub?gid=58500637&single=true&output=csv', key: 'greece' },
-			{ file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRpR8AOJaRsB5by7H3R_GijtaY06J8srELipebO5B0jYEg9pKugT3C6Rk2RSQ5eyerQl7LolshamK27/pub?gid=1835616698&single=true&output=csv', key: 'greeceTimeline' }
+			{ file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRpR8AOJaRsB5by7H3R_GijtaY06J8srELipebO5B0jYEg9pKugT3C6Rk2RSQ5eyerQl7LolshamK27/pub?gid=1835616698&single=true&output=csv', key: 'greeceTimeline' },
+			{ file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRpR8AOJaRsB5by7H3R_GijtaY06J8srELipebO5B0jYEg9pKugT3C6Rk2RSQ5eyerQl7LolshamK27/pub?gid=328741193&single=true&output=csv', key: 'alerts' }
 		];
 
 		Promise.all([
@@ -378,7 +379,6 @@ export default {
 			...csvFiles.map(m => this.$store.dispatch('fetchDynamicData', m))
 		]).then(() => {
 			this.triggerUpdate = new Date();
-
 			this.worldGeoJson.features.forEach(m => {
 				console.debug(m.properties.ADMIN);
 				let idx_m = findIndex(this.countriesMapping, ['country', m.properties.ADMIN]);

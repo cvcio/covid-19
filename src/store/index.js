@@ -37,6 +37,7 @@ export default new Vuex.Store({
 		byCountryCritical: null,
 
 		lastUpdatedAt: null,
+		alerts: null
 	},
 	getters: {
 		worldGeoJson: state => state.worldGeoJson,
@@ -49,6 +50,7 @@ export default new Vuex.Store({
 		recovered: state => state.recovered,
 		greece: state => state.greece,
 		greeceTimeline: state => state.greeceTimeline,
+		alerts: state => state.alerts,
 
 		countCases: (state) => {
 			return sumBy(state.cases, (m) => {
@@ -168,6 +170,9 @@ export default new Vuex.Store({
 		},
 		set_greeceTimeline (state, data) {
 			state.greeceTimeline = data;
+		},
+		set_alerts (state, data) {
+			state.alerts = data;
 		}
 	},
 	actions: {

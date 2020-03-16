@@ -32,7 +32,6 @@
 				<h4 class="accent--text pl-6">width=&quot;640px&quot;</h4>
 				<h4 class="accent--text pl-6">allowfullscreen&gt;</h4>
 				<h4 class="accent--text">&lt;/iframe&gt;</h4>
-				<v-btn small tile style="position: absolute; top: 0; right: 0;" v-clipboard="iframe" @success="snackbar = true"><v-icon small>mdi-content-copy</v-icon></v-btn>
 			</div>
 		</v-col>
 		<p class="body-1">
