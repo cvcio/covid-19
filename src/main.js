@@ -18,7 +18,9 @@ moment.locale('el');
 
 Vue.prototype.$mapboxgl = mapboxgl;
 Vue.prototype.$moment = moment;
-Vue.prototype.$APP_URL = process.env.VUE_APP_URL || '';
+Vue.prototype.$APP_URL = process.env.NODE_ENV === 'production'
+	? 'https://lab.imedd.org/covid19/'
+	: '/';
 
 Vue.config.productionTip = process.env.NODE_ENV === 'development';
 Vue.config.performance = process.env.NODE_ENV === 'development';

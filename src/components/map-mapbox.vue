@@ -154,6 +154,10 @@ export default {
 									<h3 class="body-2 pa-2">Ανάρρωσαν</h3>
 									<h3 class="body-2 font-weight-bold pa-2">${new Intl.NumberFormat('el-GR').format(region[0].properties.recovered) || '-'}</h3>
 								</div>
+								<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
+								<div class="row no-gutters justify-space-between mt-3">
+									<h3 class="body-2 pa-2 grey--text">Πηγή δεδομένων: Johns Hopkins University</h3>
+								</div>
 							`;
 						}
 						if (region[0].layer.id === 'greece') {
@@ -178,6 +182,10 @@ export default {
 								<div class="row no-gutters justify-space-between">
 									<h3 class="body-2 pa-2">Νοσηλεύονται</h3>
 									<h3 class="body-2 font-weight-bold pa-2">${new Intl.NumberFormat('el-GR').format(region[0].properties.hospitalized) || '-'}</h3>
+								</div>
+								<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
+								<div class="row no-gutters justify-space-between mt-3">
+									<h3 class="body-2 pa-2 grey--text">Πηγή δεδομένων: ΕΟΔΥ${region[0].properties.county_normalized !== 'ΕΛΛΑΔΑ' ? '' : '<br/>Ο ΕΟΔΥ δεν έχει ανακοινώσει γεωγραφική περιοχή' }</h3>
 								</div>
 							`;
 						}

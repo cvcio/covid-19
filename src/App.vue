@@ -47,14 +47,14 @@
 				(!alert && $vuetify.breakpoint.mdAndUp ? 'normal-nav' : '')
 			]"
 			>
-			<v-row no-gutters justify="end"  v-if="$vuetify.breakpoint.smAndDown">
-				<v-btn fixed fab small @click.stop="navStats = !navStats" class="my-n6 mx-n3"  style="pointer-events: auto;">
+			<v-row no-gutters justify="end" v-if="$vuetify.breakpoint.smAndDown" :class="alert ? 'mt-12' : ''" >
+				<v-btn fixed fab small @click.stop="navStats = !navStats" class="my-n8 mx-n3"  style="pointer-events: auto;">
 					<v-icon small dark>mdi-arrow-left</v-icon>
 				</v-btn>
 			</v-row>
 
 			<a href="https://imedd.org/" target="_blank" class="">
-				<v-img src="/img/imedd.jpg" />
+				<v-img :src="$APP_URL + 'img/imedd.jpg'" max-height="96" max-width="380" />
 			</a>
 			<v-divider dark class="mb-2"></v-divider>
 			<vue-custom-scrollbar class="scroll-area">
@@ -68,7 +68,7 @@
 								<span class="">19</span>
 							</span>
 						</v-list-item-title>
-						<p class="body-2 mb-0">Η εξάπλωση του ιού <br/>στην Ελλάδα και στον κόσμο</p>
+						<p class="body-2 mb-0">Η εξάπλωση της νόσου <br/>στην Ελλάδα και στον κόσμο</p>
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
@@ -177,8 +177,8 @@
 				(!alert && $vuetify.breakpoint.mdAndUp ? 'normal-nav' : '')
 			]"
 			>
-			<v-row no-gutters justify="start" v-if="$vuetify.breakpoint.smAndDown">
-				<v-btn fixed fab small @click.stop="navNews = !navNews" class="my-n6 mx-3" style="pointer-events: auto;">
+			<v-row no-gutters justify="start" v-if="$vuetify.breakpoint.smAndDown" :class="alert ? 'mt-12' : ''">
+				<v-btn fixed fab small @click.stop="navNews = !navNews" class="my-n8 mx-3" style="pointer-events: auto;">
 					<v-icon small dark>mdi-arrow-right</v-icon>
 				</v-btn>
 			</v-row>
@@ -232,7 +232,7 @@
 							<h4 class="accent--text pl-6">frameborder=&quot;1&quot;</h4>
 							<h4 class="accent--text pl-6">marginheight=&quot;0px&quot;</h4>
 							<h4 class="accent--text pl-6">marginwidth=&quot;0px&quot;</h4>
-							<h4 class="accent--text pl-6">height=&quot;480px&quot;</h4>
+							<h4 class="accent--text pl-6">height=&quot;640px&quot;</h4>
 							<h4 class="accent--text pl-6">width=&quot;640px&quot;</h4>
 							<h4 class="accent--text pl-6">allowfullscreen&gt;</h4>
 							<h4 class="accent--text">&lt;/iframe&gt;</h4>
@@ -304,7 +304,7 @@
 									<h4 class="accent--text pl-6">frameborder=&quot;1&quot;</h4>
 									<h4 class="accent--text pl-6">marginheight=&quot;0px&quot;</h4>
 									<h4 class="accent--text pl-6">marginwidth=&quot;0px&quot;</h4>
-									<h4 class="accent--text pl-6">height=&quot;480px&quot;</h4>
+									<h4 class="accent--text pl-6">height=&quot;640px&quot;</h4>
 									<h4 class="accent--text pl-6">width=&quot;640px&quot;</h4>
 									<h4 class="accent--text pl-6">allowfullscreen&gt;</h4>
 									<h4 class="accent--text">&lt;/iframe&gt;</h4>
@@ -360,20 +360,6 @@
 			<v-btn x-small text @click.stop="dialogEmbed = true">
 				Embed <v-icon right small>mdi-code-tags</v-icon>
 			</v-btn>
-			<!-- <a @click.stop="dialogAbout = true" class="caption link link white--text">Η Εφαρμογή & Τα Data</a> -->
-			<!-- <span class="mx-1 primary--text">|</span> -->
-
-			<!-- <a class="caption link link white--text" target="_blank" href="https://www.imedd.org/el/contact/">
-				<v-icon left small>mdi-creative-commons</v-icon>Όροι Χρήσης
-			</a> -->
-			<!-- <span class="mx-1 primary--text">|</span> -->
-			<!-- <a href="https://mediawatch.io/" target="_blank" class="caption link link white--text">Visualization by CVCIO</a>
-			<span class="mx-1 primary--text" v-if="$vuetify.breakpoint.smAndDown">|</span> -->
-			<!-- <v-spacer v-if="$vuetify.breakpoint.smAndUp"></v-spacer> -->
-
-			<!-- <a @click.stop="dialogEmbed = true" class="caption link link white--text">
-				Embed <v-icon right small>mdi-code-tags</v-icon>
-			</a> -->
 		</v-footer>
 	</v-app>
 </template>
@@ -413,15 +399,15 @@ export default {
 
 			dialogEmbed: false,
 			snackbar: false,
-			iframe: `<iframe src="${this.$APP_URL}" style="border:0px #ffffff none;" name="imedd-covid" scrolling="no" frameborder="1" marginheight="0px" marginwidth="0px" height="400px" width="600px" allowfullscreen></iframe>`,
+			iframe: `<iframe src="${this.$APP_URL}" style="border:0px #ffffff none;" name="imedd-covid" scrolling="no" frameborder="1" marginheight="0px" marginwidth="0px" height="640px" width="640px" allowfullscreen></iframe>`,
 			activeMap: 'greece',
 			triggerUpdate: new Date()
 		};
 	},
 	mounted () {
 		let jsonFiles = [
-			{ file: '/shared/countries-simplified.geojson', key: 'worldGeoJson' },
-			{ file: '/shared/countries.json', key: 'countries' }
+			{ file: `${this.$APP_URL}shared/countries-simplified.geojson`, key: 'worldGeoJson' },
+			{ file: `${this.$APP_URL}shared/countries.json`, key: 'countries' }
 		];
 
 		let csvFiles = [
@@ -440,6 +426,7 @@ export default {
 			this.triggerUpdate = new Date();
 
 			this.worldGeoJson.features.forEach(m => {
+				console.debug(m.properties.ADMIN);
 				let idx_m = findIndex(this.countriesMapping, ['country', m.properties.ADMIN]);
 				if (idx_m > -1) {
 					m.properties.ADMIN_GR = this.countriesMapping[idx_m].name_x;

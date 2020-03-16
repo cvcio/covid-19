@@ -6,8 +6,8 @@
   "domainname": "mediawatch.io",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "serve": "vue-cli-service serve --mode development",
+    "build": "NODE_ENV=production vue-cli-service build --mode production",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
