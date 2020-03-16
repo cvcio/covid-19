@@ -169,7 +169,7 @@
 			</vue-custom-scrollbar>
 		</v-navigation-drawer>
 
-		<v-navigation-drawer v-if="!loading" app touchless light right :width="$vuetify.breakpoint.xsOnly ? '100%' : '280'" class="news-nav" v-model="navNews"
+		<v-navigation-drawer app touchless light right :width="$vuetify.breakpoint.xsOnly ? '100%' : '280'" class="news-nav" v-model="navNews"
 			:class="[
 				(alert && $vuetify.breakpoint.xsOnly ? 'alert-mobile-nav' : ''),
 				(alert && $vuetify.breakpoint.smAndUp ? 'alert-nav' : ''),
@@ -206,52 +206,7 @@
 						<v-icon>mdi-close</v-icon>
 					</v-btn>
 				</v-card-title>
-				<v-card-text>
-					<p class="body-1">
-						H συγκεκριμένη διαδικτυακή εφαρμογή δημιουργήθηκε και συντηρείται από το <a href="https://www.imedd.org/el/imedd-lab/" target="_blank">iMEdD Lab</a>. Αρχικά, δημοσιεύθηκε στις 16 Μαρτίου 2020 και έκτοτε ανανεώνεται ημερησίως. Σκοπός είναι η ενημέρωση της ελληνικής δημοσιογραφικής κοινότητας και κάθε ενδιαφερόμενου για την εξάπλωση του ιού SARS-CoV-2 στην Ελλάδα και στον κόσμο, με τη χρήση ενός απλού, εύχρηστου εργαλείου.
-					</p>
-					<p class="body-1">
-						Η εφαρμογή παρουσιάζει τη γεωγραφική κατανομή των καταγεγραμμένων επιβεβαιωμένων κρουσμάτων στη χώρα μας και παγκοσμίως, ενώ αποτυπώνει συγκεντρωτικά τα διαθέσιμα στατιστικά στοιχεία.
-					</p>
-					<p class="body-1">
-						Τα δεδομένα που αφορούν τη γεωγραφική κατανομή των καταγεγραμμένων επιβεβαιωμένων κρουσμάτων στην Ελλάδα συλλέγονται και εμπλουτίζονται διαρκώς από την ομάδα του iMEdD Lab: αποτελούν σύνθεση στοιχείων τα οποία ανακοινώνονται από τον Εθνικό Οργανισμό Δημόσιας Υγείας (ΕΟΔΥ) σε ημερήσια βάση και διασταυρωμένων στοιχείων που προέρχονται από δημοσιεύματα στον ελληνικό Τύπο. Οι σχετικοί αριθμοί και η αποτύπωσή τους βασίζονται σε όσα στοιχεία μάς είναι γνωστά.
-					</p>
-					<p class="body-1">
-						Η πηγή των δεδομένων που αφορούν τόσο τον αριθμό των καταγεγραμμένων επιβεβαιωμένων κρουσμάτων, σε ημερήσια βάση, ανά τον κόσμο όσο και τη γεωγραφική κατανομή τους σε παγκοσμιο επίπεδο είναι το αποθετήριο του <a href="https://github.com/CSSEGISandData/COVID-19" target="_blank">Johns Hopkins University στο GitHub</a>. Στο συγκεκριμένο αποθετήριο, το εν λόγω Πανεπιστήμιο διαθέτει ελεύθερα τα δεδομένα που έχουν συλλεχθεί από την ερευνητική ομάδα του και αποτυπώνονται σε <a href="https://coronavirus.jhu.edu/map.html" target="_blank">αντίστοιχη διαδικτυακή εφαρμογή του Johns Hopkins University</a>, η οποία αρχικά δημοσιεύθηκε στις 22 Ιανουαρίου 2020. Περισσότερα για την ανάπτυξη της εφαρμογής του Johns Hopkins University και για τα δεδομένα που εκείνη χρησιμοποιεί μπορείτε να διαβάσετε <a href="https://coronavirus.jhu.edu/map-faq.html" target="_blank">εδώ</a>.
-					</p>
-					<p class="body-1">
-						Μπορείτε ελεύθερα να κοινοποιήσετε ή/και να ενσωματώσετε την παρούσα διαδικτυακή εφαρμογή του iMEdD Lab στη δική σας ιστοσελίδα, με την παράκληση αναφοράς στον δημιουργό. Ο κώδικας για την ενσωμάτωση της εφαρμογής είναι:
-					</p>
-					<v-col cols="12" xs="12" class="pa-0">
-						<div class="pa-6 mb-4 grey lighten-2 elevation-0 code" style="position: relative;">
-							<h4 class="accent--text">&lt;iframe</h4>
-							<h4 class="accent--text pl-6">src=&quot;{{$APP_URL}}&quot;</h4>
-							<h4 class="accent--text pl-6">style=&quot;border:0px #ffffff none;&quot;</h4>
-							<h4 class="accent--text pl-6">name=&quot;imedd-covid&quot;</h4>
-							<h4 class="accent--text pl-6">scrolling=&quot;no&quot;</h4>
-							<h4 class="accent--text pl-6">frameborder=&quot;1&quot;</h4>
-							<h4 class="accent--text pl-6">marginheight=&quot;0px&quot;</h4>
-							<h4 class="accent--text pl-6">marginwidth=&quot;0px&quot;</h4>
-							<h4 class="accent--text pl-6">height=&quot;640px&quot;</h4>
-							<h4 class="accent--text pl-6">width=&quot;640px&quot;</h4>
-							<h4 class="accent--text pl-6">allowfullscreen&gt;</h4>
-							<h4 class="accent--text">&lt;/iframe&gt;</h4>
-							<v-btn small tile style="position: absolute; top: 0; right: 0;" v-clipboard="iframe" @success="snackbar = true"><v-icon small>mdi-content-copy</v-icon></v-btn>
-						</div>
-					</v-col>
-					<p class="body-1">
-						Η εφαρμογή του iMEdD Lab δεν περιέχει δεδομένα σχετικά με την ηλικία, το φύλο, την εθνικότητα των ασθενών, ούτε κανενός είδους άλλο δημογραφικό ή προσωπικό δεδομένο.
-					</p>
-					<p class="body-1">
-						H συγκεκριμένη ιστοσελίδα έχει δημιουργηθεί αποκλειστικά και μόνο για ενημερωτικούς σκοπούς. Οποιαδήποτε εμπορική χρήση απαγορεύεται αυστηρά. Επίσης, η ιστοσελίδα δεν παρέχει καμία ιατρική καθοδήγηση. Για επίσημες ανακοινώσεις και χρήσιμες πληροφορίες, μπορείτε να επισκέπτεστε την ιστοσελίδα του <a href="https://eody.gov.gr/" target="_blank">ΕΟΔΥ</a>.
-					</p>
-					<p class="body-1">
-						Το iMEdD αποποιείται, με οποιονδήποτε τρόπο, κάθε εγγύησης όσον αφορά στον ιστότοπο, περιλαμβανομένης της ακρίβειας και της καταλληλότητας χρήσης των στοιχείων, για οποιονδήποτε σκοπό πέραν του ενημερωτικού.
-					</p>
-					<p class="body-1">
-						Για οποιαδήποτε πληροφορία ή περαιτέρω διευκρίνιση, παρακαλούμε επικοινωνήστε στο <a href="mailto:lab@imedd.org" target="_blank">lab@imedd.org</a> ή χρησιμοποιήστε τη <a href="https://www.imedd.org/el/contact/" target="_blank">φόρμα επικοινωνίας</a> με το iMEdD.
-					</p>
-				</v-card-text>
+				<text-about/>
 			</v-card>
 		</v-dialog>
 
@@ -259,24 +214,14 @@
 			<v-card tile>
 				<v-card-title>
 					<span class="title text-truncate">
-						Terms
+						Όροι Χρήσης
 					</span>
 					<v-spacer></v-spacer>
 					<v-btn icon @click="dialogTerms = false">
 						<v-icon>mdi-close</v-icon>
 					</v-btn>
 				</v-card-title>
-				<v-card-subtitle>
-					<span class="caption mr-2">Τελευταία Ενημέρωση: <span class="info--text">{{ $moment(lastUpdatedAt).format('L') || '' }}</span></span>
-				</v-card-subtitle>
-				<v-card-text>
-					<p class="body-1">
-						Lorem ipsum dolor sit amet, semper quis, sapien id natoque elit. Nostra urna at, magna at neque sed sed ante imperdiet, dolor mauris cursus velit, velit non, sem nec. Volutpat sem ridiculus placerat leo, augue in, duis erat proin condimentum in a eget, sed fermentum sed vestibulum varius ac, vestibulum volutpat orci ut elit eget tortor.
-					</p>
-					<p class="body-1">
-						Lorem ipsum dolor sit amet, semper quis, sapien id natoque elit. Nostra urna at, magna at neque sed sed ante imperdiet, dolor mauris cursus velit, velit non, sem nec. Volutpat sem ridiculus placerat leo, augue in, duis erat proin condimentum in a eget, sed fermentum sed vestibulum varius ac, vestibulum volutpat orci ut elit eget tortor. Ultrices nascetur nulla gravida ante arcu. Pharetra rhoncus morbi ipsum, nunc tempor debitis, ipsum pellentesque, vitae id quam ut mauris dui tempor, aptent non. Quisque turpis. Phasellus quis lectus luctus orci eget rhoncus. Amet donec vestibulum mattis commodo, nulla aliquet, nibh praesent, elementum nulla. Sit lacus pharetra tempus magna neque pellentesque, nulla vel erat.
-					</p>
-				</v-card-text>
+				<text-terms/>
 			</v-card>
 		</v-dialog>
 
@@ -375,7 +320,9 @@ export default {
 	components: {
 		'chart-timeline': require('@/components/chart-timeline').default,
 		'map-mapbox': require('@/components/map-mapbox').default,
-		'vue-custom-scrollbar': require('vue-custom-scrollbar')
+		'vue-custom-scrollbar': require('vue-custom-scrollbar'),
+		'text-about': require('@/components/text-about').default,
+		'text-terms': require('@/components/text-terms').default
 	},
 	computed: {
 		...mapGetters([
