@@ -120,7 +120,7 @@
 			</v-list>
 			<v-divider dark class=""></v-divider>
 			<v-list>
-				<v-subheader class="grey--text">Σύνολο Κρουσμάτων &frasl; Ημέρα</v-subheader>
+				<v-subheader class="grey--text">Η Εξέλιξη των Κρουσμάτων στον Χρόνο</v-subheader>
 			</v-list>
 			<chart-timeline :triggerUpdate="triggerUpdate" :level="activeMap" class="px-4 mb-12"></chart-timeline>
 			<v-divider dark class="mb-2"></v-divider>
