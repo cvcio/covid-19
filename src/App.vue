@@ -2,7 +2,7 @@
 	<v-app id="app" toolbar footer>
 		<v-alert v-if="!loading" :value="alert" dense tile class="ma-0 caption" type="error" color="accent" id="alert" transition="slide-y-transition">
 			<v-row align="center" no-gutters>
-				<v-col class="grow">{{ find(alerts, ['key', 'alertText']).value }}</v-col>
+				<v-col xs="11" class="grow white--text link" v-html="find(alerts, ['key', 'alertText']).value"></v-col>
 				<v-col class="shrink">
 					<v-btn icon small @click.stop="alert = false">
 						<v-icon small>mdi-close</v-icon>
@@ -19,23 +19,6 @@
 			]"
 			>
 			<v-row no-gutters :justify="$vuetify.breakpoint.mdAndDown ? 'end' : 'start'">
-				<!-- <v-tooltip bottom small>
-					<template v-slot:activator="{ on }">
-						<v-btn fab small v-on="on" @click.stop="navStats = !navStats" class="primary mx-3" style="pointer-events: auto;">
-							<v-icon small>mdi-chart-timeline-variant</v-icon>
-						</v-btn>
-					</template>
-					<span>{{ !navStats ? 'Στατιστικά' : 'Απόκρυψη' }}</span>
-				</v-tooltip>
-				<v-spacer v-if="$vuetify.breakpoint.smAndUp"></v-spacer>
-				<v-tooltip bottom small>
-					<template v-slot:activator="{ on }">
-						<v-btn fab small v-on="on" @click.stop="navNews = !navNews" class="primary mx-3"  style="pointer-events: auto;">
-							<v-icon small>mdi-message-alert</v-icon>
-						</v-btn>
-					</template>
-					<span>{{ !navNews ? 'Νέα' : 'Απόκρυψη' }}</span>
-				</v-tooltip> -->
 				<v-btn fab small @click.stop="navStats = !navStats" class="primary mx-3" style="pointer-events: auto;">
 					<v-icon small>mdi-chart-timeline-variant</v-icon>
 				</v-btn>
@@ -46,7 +29,7 @@
 			</v-row>
 		</v-app-bar>
 
-		<v-navigation-drawer v-if="!loading" app touchless :width="$vuetify.breakpoint.xsOnly ? '100%' : '380'" class="main-nav" v-model="navStats"
+		<v-navigation-drawer v-if="!loading" app touchless width="330" class="main-nav" v-model="navStats"
 			:class="[
 				(alert && $vuetify.breakpoint.xsOnly ? 'alert-mobile-nav' : ''),
 				(alert && $vuetify.breakpoint.smAndUp ? 'alert-nav' : ''),
@@ -54,17 +37,20 @@
 				(!alert && $vuetify.breakpoint.mdAndUp ? 'normal-nav' : '')
 			]"
 			>
-			<v-row no-gutters justify="end" v-if="$vuetify.breakpoint.smAndDown" :class="alert ? 'mt-12' : ''" >
-				<v-btn fixed fab small @click.stop="navStats = !navStats" class="my-n8 mx-n3"  style="pointer-events: auto;">
+			<v-row no-gutters justify="end" v-if="$vuetify.breakpoint.smAndDown" :class="alert ? '' : ''" >
+				<v-btn fixed fab small @click.stop="navStats = !navStats" class="mx-n3"  style="position: absolute; pointer-events: auto;">
 					<v-icon small dark>mdi-arrow-left</v-icon>
 				</v-btn>
 			</v-row>
-
-			<a href="https://imedd.org/" target="_blank" class="">
-				<v-img :src="$APP_URL + 'img/imedd.jpg'" max-height="96" max-width="380" />
-			</a>
-			<v-divider dark class="mb-2"></v-divider>
 			<vue-custom-scrollbar class="scroll-area">
+			<v-row no-gutters justify="center" align="center">
+				<a href="https://imedd.org/" target="_blank" class="">
+					<v-img :src="$BASE_URL + 'img/imedd.jpg'" max-height="56" max-width="180" />
+				</a>
+			</v-row>
+
+			<v-divider dark class="mb-2"></v-divider>
+
 			<v-list dense>
 				<v-list-item>
 					<v-list-item-content class="py-0">
@@ -126,10 +112,10 @@
 			<v-divider dark class="mb-2"></v-divider>
 
 			<template v-if="activeMap === 'admin-0' && byCountry">
-				<v-data-table dense v-if="byCountry" class="mt-4" :headers="[
-					{ text: 'Χώρα', value: 'country', width: '30%' },
-					{ text: 'Κρούσματα', value: 'cases', width: '35%' },
-					{ text: 'Θάνατοι', value: 'deaths', width: '35%' },
+				<v-data-table dense v-if="byCountry" class="mt-4 mb-3" :headers="[
+					{ text: 'Χώρα', value: 'country', width: '30%', class: 'px-0' },
+					{ text: 'Κρούσματα', value: 'cases', width: '35%', class: 'pr-0' },
+					{ text: 'Θάνατοι', value: 'deaths', width: '35%', class: 'pr-0' },
 				]" :items="byCountry">
 					<template v-slot:header.country="{ header }">
 						<span class="caption">{{ header.text }}</span>
@@ -142,18 +128,18 @@
 					</template>
 					<template v-slot:item="props">
 						<tr>
-							<td>{{ props.item.country }}</td>
-							<td>{{ new Intl.NumberFormat('el-GR').format(props.item.cases) }}</td>
+							<td class="pr-0">{{ props.item.country }}</td>
+							<td class="pr-0">{{ new Intl.NumberFormat('el-GR').format(props.item.cases) }}</td>
 							<td class="red--text">{{ new Intl.NumberFormat('el-GR').format(props.item.deaths) }}</td>
 						</tr>
 					</template>
 				</v-data-table>
 			</template>
 			<template v-else-if="activeMap === 'greece' && greece">
-				<v-data-table dense v-if="greece" class="mt-4" :headers="[
-					{ text: 'Περιοχή', value: 'county', width: '30%' },
-					{ text: 'Κρούσματα', value: 'cases', width: '35%' },
-					{ text: 'Θάνατοι', value: 'dead', width: '35%' },
+				<v-data-table dense v-if="greece" class="mt-4 mb-3" :headers="[
+					{ text: 'Περιοχή', value: 'county', width: '30%', class: 'pr-0' },
+					{ text: 'Κρούσματα', value: 'cases', width: '35%', class: 'pr-0' },
+					{ text: 'Θάνατοι', value: 'dead', width: '35%', class: 'pr-0' },
 				]" :items="greece">
 					<template v-slot:header.county="{ header }">
 						<span class="caption text-truncate">{{ header.text }}</span>
@@ -166,17 +152,49 @@
 					</template>
 					<template v-slot:item="props">
 						<tr>
-							<td>{{ props.item.county }}</td>
-							<td>{{ new Intl.NumberFormat('el-GR').format(props.item.cases) }}</td>
+							<td class="pr-0">{{ props.item.county }}</td>
+							<td class="pr-0">{{ new Intl.NumberFormat('el-GR').format(props.item.cases) }}</td>
 							<td class="red--text">{{ new Intl.NumberFormat('el-GR').format(props.item.dead) }}</td>
 						</tr>
 					</template>
 				</v-data-table>
 			</template>
+			<template v-if="$vuetify.breakpoint.smAndDown">
+				<v-divider dark class=""></v-divider>
+				<v-list dense>
+					<v-list-item @click.stop="dialogAbout = true">
+						<v-list-item-content>
+							Η Εφαρμογή & Τα Data
+						</v-list-item-content>
+					</v-list-item>
+					<v-divider dark class=""></v-divider>
+					<v-list-item @click.stop="dialogTerms = true">
+						<v-list-item-content>
+							<span><v-icon left small>mdi-creative-commons</v-icon>Όροι Χρήσης</span>
+						</v-list-item-content>
+					</v-list-item>
+					<v-divider dark class=""></v-divider>
+					<v-list-item href="https://mediawatch.io/" target="_blank" >
+						<v-list-item-content>
+							Visualization by CVCIO
+						</v-list-item-content>
+					</v-list-item>
+					<v-divider dark class=""></v-divider>
+					<v-list-item @click.stop="dialogEmbed = true">
+						<v-list-item-content>
+							<span>Embed <v-icon right small>mdi-code-tags</v-icon></span>
+						</v-list-item-content>
+					</v-list-item>
+					<v-divider dark class=""></v-divider>
+				</v-list>
+				<v-chip x-small color="red" dark label depressed class="ml-4 text-inherit">
+					<span class="caption">BETA</span>
+				</v-chip>
+			</template>
 			</vue-custom-scrollbar>
 		</v-navigation-drawer>
 
-		<v-navigation-drawer app touchless light right :width="$vuetify.breakpoint.xsOnly ? '100%' : '280'" class="news-nav" v-model="navNews"
+		<v-navigation-drawer app touchless light right width="280" class="news-nav" v-model="navNews"
 			:class="[
 				(alert && $vuetify.breakpoint.xsOnly ? 'alert-mobile-nav' : ''),
 				(alert && $vuetify.breakpoint.smAndUp ? 'alert-nav' : ''),
@@ -185,7 +203,7 @@
 			]"
 			>
 			<v-row no-gutters justify="start" v-if="$vuetify.breakpoint.smAndDown" :class="alert ? 'mt-12' : ''">
-				<v-btn fixed fab small @click.stop="navNews = !navNews" class="my-n8 mx-3" style="pointer-events: auto;">
+				<v-btn fixed fab small @click.stop="navNews = !navNews" class="mx-3" style="pointer-events: auto;">
 					<v-icon small dark>mdi-arrow-right</v-icon>
 				</v-btn>
 			</v-row>
@@ -249,7 +267,7 @@
 							<v-col cols="12" xs="12" md="8">
 								<div class="pa-6 mb-4 grey lighten-2 elevation-0 code" style="position: relative;">
 									<h4 class="accent--text">&lt;iframe</h4>
-									<h4 class="accent--text pl-6">src=&quot;{{$APP_URL}}&quot;</h4>
+									<h4 class="accent--text pl-6">src=&quot;{{'https://lab.imedd.org/covid19/'}}&quot;</h4>
 									<h4 class="accent--text pl-6">style=&quot;border:0px #ffffff none;&quot;</h4>
 									<h4 class="accent--text pl-6">name=&quot;imedd-covid&quot;</h4>
 									<h4 class="accent--text pl-6">scrolling=&quot;no&quot;</h4>
@@ -270,16 +288,6 @@
 			</v-card>
 		</v-dialog>
 
-		<v-snackbar v-model="snackbar" color="info">
-			Copied!
-			<v-btn
-				text
-				@click="snackbar = false"
-			>
-				Close
-			</v-btn>
-		</v-snackbar>
-
 		<div v-if="!loading" class="color-scale" :class="$vuetify.breakpoint.mdAndDown ? 'isMobile' : ''">
 			<v-row no-gutters justify="space-between" align="center" class="mt-3">
 				<v-col class="caption font-weight-bold">0</v-col>
@@ -297,7 +305,7 @@
 			</v-row>
 		</div>
 
-		<v-footer v-if="!loading" app inset dark class="primary lighten-1" :class="$vuetify.breakpoint.mdAndUp ? '' : 'py-3 mb-8'">
+		<v-footer v-if="!loading && $vuetify.breakpoint.mdAndUp" app inset dark class="primary lighten-1" :class="$vuetify.breakpoint.mdAndUp ? '' : 'py-3 mb-8'">
 			<v-btn x-small text @click.stop="dialogAbout = true" class="text-inherit">
 				Η Εφαρμογή & Τα Data
 			</v-btn>
@@ -310,6 +318,9 @@
 			<v-spacer v-if="$vuetify.breakpoint.smAndUp"></v-spacer>
 			<v-btn x-small text @click.stop="dialogEmbed = true">
 				Embed <v-icon right small>mdi-code-tags</v-icon>
+			</v-btn>
+			<v-btn x-small color="red" depressed class="ml-2 text-inherit">
+				<span class="caption">BETA</span>
 			</v-btn>
 		</v-footer>
 	</v-app>
@@ -332,11 +343,10 @@ export default {
 	},
 	computed: {
 		...mapGetters([
-			'worldGeoJson', 'greeceGeoJson', 'countries', 'countriesMapping',
+			'worldGeoJson', 'countriesMapping',
 			'cases', 'deaths', 'recovered', 'greece',
 			'countCases', 'countDeaths', 'countRecovered', 'countCritical',
 			'countCasesGR', 'countDeathsGR', 'countRecoveredGR', 'countCriticalGR',
-			'byCountryCases', 'byCountryDeaths', 'byCountryRecovered', 'byCountryCritical',
 			'lastUpdatedAt',
 			'byCountry',
 			'alerts'
@@ -352,26 +362,26 @@ export default {
 			alert: true,
 
 			dialogEmbed: false,
-			snackbar: false,
-			iframe: `<iframe src="${this.$APP_URL}" style="border:0px #ffffff none;" name="imedd-covid" scrolling="no" frameborder="1" marginheight="0px" marginwidth="0px" height="640px" width="640px" allowfullscreen></iframe>`,
 			activeMap: 'greece',
 			triggerUpdate: new Date()
 		};
 	},
 	mounted () {
+		let unix = this.$moment().unix();
 		let jsonFiles = [
-			{ file: `${this.$APP_URL}shared/countries-simplified.geojson`, key: 'worldGeoJson' },
-			{ file: `${this.$APP_URL}shared/countries.json`, key: 'countries' }
+			{ file: `${this.$BASE_URL}shared/countries-simplified.geojson`, key: 'worldGeoJson' },
+			{ file: `${this.$BASE_URL}shared/countries.json`, key: 'countries' }
 		];
 
 		let csvFiles = [
 			{ file: 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv', key: 'cases' },
 			{ file: 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv', key: 'deaths' },
 			{ file: 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv', key: 'recovered' },
-			{ file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRpR8AOJaRsB5by7H3R_GijtaY06J8srELipebO5B0jYEg9pKugT3C6Rk2RSQ5eyerQl7LolshamK27/pub?gid=527109001&single=true&output=csv', key: 'countriesMapping' },
-			{ file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRpR8AOJaRsB5by7H3R_GijtaY06J8srELipebO5B0jYEg9pKugT3C6Rk2RSQ5eyerQl7LolshamK27/pub?gid=58500637&single=true&output=csv', key: 'greece' },
-			{ file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRpR8AOJaRsB5by7H3R_GijtaY06J8srELipebO5B0jYEg9pKugT3C6Rk2RSQ5eyerQl7LolshamK27/pub?gid=1835616698&single=true&output=csv', key: 'greeceTimeline' },
-			{ file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRpR8AOJaRsB5by7H3R_GijtaY06J8srELipebO5B0jYEg9pKugT3C6Rk2RSQ5eyerQl7LolshamK27/pub?gid=328741193&single=true&output=csv', key: 'alerts' }
+
+			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/countriesMapping.csv?${unix}`, key: 'countriesMapping' },
+			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greece.csv?${unix}`, key: 'greece' },
+			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greeceTimeline.csv?${unix}`, key: 'greeceTimeline' },
+			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/alerts.csv?${unix}`, key: 'alerts' }
 		];
 
 		Promise.all([
@@ -380,7 +390,6 @@ export default {
 		]).then(() => {
 			this.triggerUpdate = new Date();
 			this.worldGeoJson.features.forEach(m => {
-				console.debug(m.properties.ADMIN);
 				let idx_m = findIndex(this.countriesMapping, ['country', m.properties.ADMIN]);
 				if (idx_m > -1) {
 					m.properties.ADMIN_GR = this.countriesMapping[idx_m].name_x;
@@ -418,10 +427,17 @@ export default {
 			});
 
 			this.loading = false;
-			// eslint-disable-next-line no-console
-			this.$nextTick(() => window.twttr.widgets.load());
 
-		}).catch(() => console.error('Error while fetching data. Please try later.'));
+			// eslint-disable-next-line no-console
+			this.$nextTick(() => {
+				setTimeout(() => {
+					if (window.twttr) {
+						window.twttr.widgets.load();
+					}
+				}, 2500);
+			});
+
+		}).catch((err) => console.error('Error while fetching data. Please try later.', err));
 	},
 	methods: {
 		find,
@@ -500,7 +516,7 @@ a {
 }
 .scroll-area {
 	margin: 0 0 48px 0;
-	height: calc(~'100% - 180px');
+	height: calc(~'100% - 48px');
 	overflow: hidden !important;
 }
 
@@ -575,10 +591,10 @@ a {
 .main-nav, .news-nav {
 	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	&.alert-mobile-nav {
-		padding-top: 108px;
+		padding-top: 64px;
 	}
 	&.mobile-nav {
-		padding-top: 40px;
+		padding-top: 0;
 	}
 	&.alert-nav {
 		margin-top: 38px !important;

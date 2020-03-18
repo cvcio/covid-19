@@ -2,6 +2,12 @@
 	<div>
 		<div id="mapbox" class="mapbox"></div>
 		<v-tooltip top :position-x="x" :position-y="y" v-model="tooltip" transition="slide-y-reverse-transition" allow-overflow eager offset-overflow color="white" light max-width="280" content-class="pa-4 elevation-3">
+			<!-- <v-row no-gutters>
+				<v-spacer></v-spacer>
+				<v-btn icon small @click="tooltip=false">
+					<v-icon small>mdi-close</v-icon>
+				</v-btn>
+			</v-row> -->
 			<div class="mb-0 primary--text" v-html="tooltipText"></div>
 		</v-tooltip>
 	</div>
@@ -11,14 +17,14 @@
 import { mapGetters } from 'vuex';
 import { select, scaleLinear, scaleLog, scalePow, scaleQuantize } from 'd3';
 import chroma from 'chroma-js';
-import { maxBy, minBy, mean, findIndex, filter } from 'lodash';
+import { maxBy, minBy, mean, findIndex, filter, sumBy } from 'lodash';
 import { parse } from 'querystring';
 export default {
 	name: 'map-mapbox',
 	props: ['level'],
 	computed: {
 		...mapGetters([
-			'worldGeoJson', 'byCountry', 'greece'
+			'worldGeoJson', 'byCountry', 'greece',
 		])
 	},
 	data () {
@@ -54,7 +60,7 @@ export default {
 		draw () {
 			this.map = new this.$mapboxgl.Map({
 				container: 'mapbox',
-				style: 'mapbox://styles/imedd-lab/ck66c483t1z7x1ip8mzolfshi',
+				style: 'mapbox://styles/kk-id-lb/ck7vzxw0z02qn1iplhxaz3b5p',
 				zoom: this.level === 'greece' ? 5 : 2,
 				center: this.level === 'greece' ? [23.7208298, 37.9908697] : [0, 30],
 				maxZoom: 15,
@@ -92,11 +98,17 @@ export default {
 				}
 
 				this.worldGeoJson.features.forEach(f => {
-					const idx_c = findIndex(this.byCountry, m => f.properties.ADMIN_GR === m.country);
-					if (idx_c > -1) {
-						f.properties.count = this.byCountry[idx_c].count;
-						f.properties.deaths = this.byCountry[idx_c].deaths;
-						f.properties.recovered = this.byCountry[idx_c].recovered;
+					if (f.properties.ADMIN !== 'Greece') {
+						const idx_c = findIndex(this.byCountry, m => f.properties.ADMIN_GR === m.country);
+						if (idx_c > -1) {
+							f.properties.count = this.byCountry[idx_c].count;
+							f.properties.deaths = this.byCountry[idx_c].deaths;
+							f.properties.recovered = this.byCountry[idx_c].recovered;
+						}
+					} else {
+						f.properties.count = sumBy(this.greece, m => m.cases);
+						f.properties.deaths = sumBy(this.greece, m => m.dead);
+						f.properties.recovered = undefined;
 					}
 					f.properties.opacity = f.properties.count === 0 ? 0 : 0.7; // scaleOpacityW(f.properties.count);
 					f.properties.color = scaleColorW(f.properties.count).hex();
@@ -107,7 +119,7 @@ export default {
 					data: {
 						type: 'FeatureCollection',
 						features: filter(this.greece, m => m.lat !== '' && m.lng !== '').map(m => {
-							m.color = 'rgba(60,80,80,0.7)'; // scaleColorG(parseInt(m.cases)).alpha(0.8).css();
+							m.color = m.county_normalized === 'ΕΛΛΑΔΑ' ? 'rgba(17,75,95,0.8)' : 'rgba(60,80,80,0.7)'; // scaleColorG(parseInt(m.cases)).alpha(0.8).css();
 							m.size = scaleSizeG(parseInt(m.cases));
 							return {
 								type: 'Feature',
@@ -152,13 +164,15 @@ export default {
 								<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 								<div class="row no-gutters justify-space-between">
 									<h3 class="body-2 pa-2">Ανάρρωσαν</h3>
-									<h3 class="body-2 font-weight-bold pa-2">${new Intl.NumberFormat('el-GR').format(region[0].properties.recovered) || '-'}</h3>
-								</div>
-								<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
-								<div class="row no-gutters justify-space-between mt-3">
-									<h3 class="body-2 pa-2 grey--text">Πηγή δεδομένων: Johns Hopkins University</h3>
+									<h3 class="body-2 font-weight-bold pa-2">${region[0].properties.recovered ? new Intl.NumberFormat('el-GR').format(region[0].properties.recovered) : '-'}</h3>
 								</div>
 							`;
+							if (region[0].properties.ADMIN !== 'Greece') {
+								this.tooltipText += `<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
+								<div class="row no-gutters justify-space-between mt-3">
+									<h3 class="body-2 pa-2 grey--text">Πηγή δεδομένων: Johns Hopkins University</h3>
+								</div>`;
+							}
 						}
 						if (region[0].layer.id === 'greece') {
 							this.tooltipText = `
@@ -175,18 +189,13 @@ export default {
 								</div>
 								<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 								<div class="row no-gutters justify-space-between">
-									<h3 class="body-2 pa-2">Ανάρρωσαν</h3>
-									<h3 class="body-2 font-weight-bold pa-2">${'-'}</h3>
-								</div>
-								<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
-								<div class="row no-gutters justify-space-between">
 									<h3 class="body-2 pa-2">Νοσηλεύονται</h3>
 									<h3 class="body-2 font-weight-bold pa-2">${new Intl.NumberFormat('el-GR').format(region[0].properties.hospitalized) || '-'}</h3>
 								</div>
-								<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
+								<!--<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 								<div class="row no-gutters justify-space-between mt-3">
 									<h3 class="body-2 pa-2 grey--text">Πηγή δεδομένων: ΕΟΔΥ${region[0].properties.county_normalized !== 'ΕΛΛΑΔΑ' ? '' : '<br/>Ο ΕΟΔΥ δεν έχει ανακοινώσει γεωγραφική περιοχή' }</h3>
-								</div>
+								</div>-->
 							`;
 						}
 					} else {

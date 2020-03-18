@@ -1073,7 +1073,7 @@
     webpack "^4.0.0"
     yorkie "^2.0.0"
 
-"@vue/cli-plugin-pwa@~4.2.0":
+"@vue/cli-plugin-pwa@^4.2.3":
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/@vue/cli-plugin-pwa/-/cli-plugin-pwa-4.2.3.tgz#f1c030cbfa7da459d22ee200d79c570ef09ef7b3"
   integrity sha512-Z5bx8OEmVr44q/roZjDQqkair7LLQRhsLI+reFl+RZq7BPa99qS9y3VFcdZcreneVpEMPd934G7zdDnZmgxXSg==
@@ -7796,7 +7796,7 @@ regexpu-core@^4.6.0:
     unicode-match-property-ecmascript "^1.0.4"
     unicode-match-property-value-ecmascript "^1.1.0"
 
-register-service-worker@^1.6.2:
+register-service-worker@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/register-service-worker/-/register-service-worker-1.7.0.tgz#b4b60d87a1d117f119bfd24ece073dcdb85dae64"
   integrity sha512-sJQIxgodrulyN4d+bTkRnroPNMH3i1J4kP7Wm+vLhTP5CdbDSRr5jCeC9sJ6jyL603IZVbMAZ5HcU0hWCbJQQA==

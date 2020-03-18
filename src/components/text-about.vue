@@ -18,7 +18,7 @@
 		<v-col cols="12" xs="12" class="pa-0">
 			<div class="pa-6 mb-4 grey lighten-2 elevation-0 code" style="position: relative;">
 				<h4 class="accent--text">&lt;iframe</h4>
-				<h4 class="accent--text pl-6">src=&quot;{{$APP_URL}}&quot;</h4>
+				<h4 class="accent--text pl-6">src=&quot;{{'https://lab.imedd.org/covid19/'}}&quot;</h4>
 				<h4 class="accent--text pl-6">style=&quot;border:0px #ffffff none;&quot;</h4>
 				<h4 class="accent--text pl-6">name=&quot;imedd-covid&quot;</h4>
 				<h4 class="accent--text pl-6">scrolling=&quot;no&quot;</h4>

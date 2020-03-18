@@ -7,9 +7,14 @@ import { storage } from '@/services/storage';
 
 Vue.use(Vuex);
 
+function IsSafari () {
+	var is_safari = navigator.userAgent.toLowerCase().indexOf('safari/') > -1;
+	return is_safari;
+}
+
 export default new Vuex.Store({
 	state: {
-		worldGeoJson: storage.get('worldGeoJson') || null,
+		worldGeoJson: null,
 		greeceGeoJson: null,
 		countries: null,
 		countriesMapping: null,
@@ -72,14 +77,10 @@ export default new Vuex.Store({
 		},
 
 		countCasesGR: (state) => {
-			return sumBy(filter(state.greeceTimeline, ['Status', 'total cases']), (m) => {
-				return parseInt(m[Object.keys(m)[Object.keys(m).length - 1]]);
-			});
+			return sumBy(state.greece, 'cases');
 		},
 		countDeathsGR: (state) => {
-			return sumBy(filter(state.greeceTimeline, ['Status', 'deaths']), (m) => {
-				return parseInt(m[Object.keys(m)[Object.keys(m).length - 1]]);
-			});
+			return sumBy(state.greece, 'dead');
 		},
 		countRecoveredGR: (state) => {
 			return sumBy(filter(state.greeceTimeline, ['Status', 'revovered']), (m) => {
@@ -144,7 +145,11 @@ export default new Vuex.Store({
 	},
 	mutations: {
 		set_worldGeoJson (state, data) {
-			storage.set('worldGeoJson', data);
+			try {
+				storage.set('worldGeoJson', data);
+			} catch (err) {
+				console.log('Error while saving worldGeoJson on localstorage');
+			}
 			state.worldGeoJson = data;
 		},
 		set_greeceGeoJson (state, data) {
@@ -166,7 +171,12 @@ export default new Vuex.Store({
 			state.recovered = data;
 		},
 		set_greece (state, data) {
-			state.greece = data;
+			state.greece = map(data, m => {
+				m.cases = parseInt(m.cases) || 0;
+				m.dead = parseInt(m.dead) || 0;
+				m.hospitalized = parseInt(m.hospitalized) || 0;
+				return m;
+			});
 		},
 		set_greeceTimeline (state, data) {
 			state.greeceTimeline = data;
@@ -177,7 +187,7 @@ export default new Vuex.Store({
 	},
 	actions: {
 		async fetchStaticData ({ commit, state }, data) {
-			if (state[data.key] !== null) return;
+			if (!IsSafari() && state[data.key] !== null) return;
 			return json(data.file)
 				.then(f => {
 					commit(`set_${data.key}`, f);
