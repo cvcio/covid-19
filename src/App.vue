@@ -1,35 +1,9 @@
 <template>
 	<v-app id="app" toolbar footer>
-		<v-alert v-if="!loading" :value="alert" dense tile class="ma-0 caption" type="error" color="accent" id="alert" transition="slide-y-transition">
-			<v-row align="center" no-gutters>
-				<v-col xs="11" class="grow white--text link" v-html="find(alerts, ['key', 'alertText']).value"></v-col>
-				<v-col class="shrink">
-					<v-btn icon small @click.stop="alert = false">
-						<v-icon small>mdi-close</v-icon>
-					</v-btn>
-				</v-col>
-			</v-row>
-		</v-alert>
+		<top-alert v-if="!loading" :text="alertText"/>
+		<top-app-bar v-if="!loading" />
 
-		<v-app-bar app fixed dark color="transparent" flat  v-if="!loading"
-			class="main-bar"
-			:class="[
-				(alert && $vuetify.breakpoint.smAndDown ? 'alert-mobile-bar' : ''),
-				(alert && $vuetify.breakpoint.mdAndUp ? 'alert-bar' : ''),
-			]"
-			>
-			<v-row no-gutters :justify="$vuetify.breakpoint.mdAndDown ? 'end' : 'start'">
-				<v-btn fab small @click.stop="navStats = !navStats" class="primary mx-3" style="pointer-events: auto;">
-					<v-icon small>mdi-chart-timeline-variant</v-icon>
-				</v-btn>
-				<v-spacer v-if="$vuetify.breakpoint.smAndUp"></v-spacer>
-				<v-btn fab small @click.stop="navNews = !navNews" class="primary mx-3"  style="pointer-events: auto;">
-					<v-icon small>mdi-message-alert</v-icon>
-				</v-btn>
-			</v-row>
-		</v-app-bar>
-
-		<v-navigation-drawer v-if="!loading" app touchless width="330" class="main-nav" v-model="navStats"
+		<v-navigation-drawer v-if="!loading" app touchless width="360" class="main-nav" v-model="navStats"
 			:class="[
 				(alert && $vuetify.breakpoint.xsOnly ? 'alert-mobile-nav' : ''),
 				(alert && $vuetify.breakpoint.smAndUp ? 'alert-nav' : ''),
@@ -37,7 +11,7 @@
 				(!alert && $vuetify.breakpoint.mdAndUp ? 'normal-nav' : '')
 			]"
 			>
-			<v-row no-gutters justify="end" v-if="$vuetify.breakpoint.smAndDown" :class="alert ? '' : ''" >
+			<v-row no-gutters justify="end" v-if="$vuetify.breakpoint.smAndDown" :class="alert ? '' : 'mt-1'" >
 				<v-btn fixed fab small @click.stop="navStats = !navStats" class="mx-n3"  style="position: absolute; pointer-events: auto;">
 					<v-icon small dark>mdi-arrow-left</v-icon>
 				</v-btn>
@@ -85,90 +59,164 @@
 				</v-list-item>
 			</v-list>
 			<v-divider dark class=""></v-divider>
+			<v-row  no-gutters align="baseline">
+				<v-col cols="6" class="py-0">
+					<v-list>
+						<v-subheader class="grey--text">Κρούσματα</v-subheader>
+						<v-list-item>
+							<v-list-item-content class="py-0">
+								<v-list-item-subtitle class="headline font-weight-black">
+									{{ new Intl.NumberFormat('el-GR').format(activeMap === 'admin-0' ? countCases : countCasesGR) }}
+									<!-- <chart-sparklines :triggerUpdate="triggerUpdate" :level="activeMap" class=""/> -->
+								</v-list-item-subtitle>
+							</v-list-item-content>
+						</v-list-item>
+					</v-list>
+				</v-col>
+				<v-col cols="6" class="py-0">
+					<v-list class="">
+						<v-subheader class="grey--text">Θάνατοι</v-subheader>
+						<v-list-item>
+							<v-list-item-content class="py-0">
+								<v-list-item-subtitle class="headline red--text">
+									{{ new Intl.NumberFormat('el-GR').format(activeMap === 'admin-0' ? countDeaths : countDeathsGR) }}
+								</v-list-item-subtitle>
+								<!-- <v-list-item-subtitle class="body-2">{{ ((100 * (activeMap === 'admin-0' ? countDeaths : countDeathsGR)) / (activeMap === 'admin-0' ? countCases : countCasesGR)).toFixed(2) }}% των κρουσμάτων</v-list-item-subtitle> -->
+							</v-list-item-content>
+						</v-list-item>
+					</v-list>
+				</v-col>
+			</v-row>
+			<v-divider dark class=""></v-divider>
 
 			<v-list>
-				<v-subheader class="grey--text">Καταγεγραμμένα Κρούσματα</v-subheader>
+				<v-subheader class="grey--text">Μέσος Όρος Κρουσμάτων 7 Ημερών</v-subheader>
 				<v-list-item>
 					<v-list-item-content class="py-0">
-						<v-list-item-subtitle class="display-1 font-weight-black">{{ new Intl.NumberFormat('el-GR').format(activeMap === 'admin-0' ? countCases : countCasesGR) }}</v-list-item-subtitle>
+						<v-list-item-subtitle class="display-1 font-weight-black">
+							<chart-sparklines :triggerUpdate="triggerUpdate" :level="activeMap" class=""/>
+						</v-list-item-subtitle>
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
 			<v-divider dark class=""></v-divider>
-			<v-list class="">
-				<v-subheader class="grey--text">Θάνατοι </v-subheader>
-				<v-list-item>
-					<v-list-item-content class="py-0">
-						<v-list-item-subtitle class="display-1 red--text">{{ new Intl.NumberFormat('el-GR').format(activeMap === 'admin-0' ? countDeaths : countDeathsGR) }}</v-list-item-subtitle>
-						<v-list-item-subtitle class="body-2">{{ ((100 * (activeMap === 'admin-0' ? countDeaths : countDeathsGR)) / (activeMap === 'admin-0' ? countCases : countCasesGR)).toFixed(2) }}% των κρουσμάτων</v-list-item-subtitle>
-					</v-list-item-content>
-				</v-list-item>
-			</v-list>
-			<v-divider dark class=""></v-divider>
+
+			<template v-if="activeMap === 'greece'">
+				<v-list class="">
+					<v-subheader class="grey--text">Διασωληνωμένοι | Εξιτήρια</v-subheader>
+					<v-list-item>
+						<v-list-item-content class="py-0">
+							<v-list-item-subtitle class="headline">
+								{{ new Intl.NumberFormat('el-GR').format(countCriticalGR) }}<span class="mx-3">|</span>
+								{{ new Intl.NumberFormat('el-GR').format(countRecoveredGR) }}
+							</v-list-item-subtitle>
+						</v-list-item-content>
+					</v-list-item>
+				</v-list>
+				<v-divider dark class=""></v-divider>
+			</template>
 			<v-list>
 				<v-subheader class="grey--text">Η Εξέλιξη των Κρουσμάτων στον Χρόνο</v-subheader>
 			</v-list>
-			<chart-timeline :triggerUpdate="triggerUpdate" :level="activeMap" class="px-4 mb-12"></chart-timeline>
+			<chart-timeline :triggerUpdate="triggerUpdate" :level="activeMap" class="px-4"></chart-timeline>
 			<v-divider dark class="mb-2"></v-divider>
 
-			<template v-if="activeMap === 'admin-0' && byCountry">
-				<v-data-table dense v-if="byCountry" class="mt-4 mb-3" :headers="[
-					{ text: 'Χώρα', value: 'country', width: '30%', class: 'px-0' },
-					{ text: 'Κρούσματα', value: 'cases', width: '35%', class: 'pr-0' },
-					{ text: 'Θάνατοι', value: 'deaths', width: '35%', class: 'pr-0' },
-				]" :items="byCountry">
-					<template v-slot:header.country="{ header }">
-						<span class="caption">{{ header.text }}</span>
-					</template>
-					<template v-slot:header.cases="{ header }">
-						<span class="caption">{{ header.text }}</span>
-					</template>
-					<template v-slot:header.deaths="{ header }">
-						<span class="caption">{{ header.text }}</span>
-					</template>
+			<template v-if="activeMap === 'admin-0' && wom_data">
+				<v-data-table dense v-if="wom_data" class="mt-4 mb-3" :headers="[
+					{ text: 'Χώρα', value: 'country', width: '40%', class: 'extra-small-text pr-1' },
+					{ text: 'Κρούσματα', value: 'totalCases', width: '20%', class: 'extra-small-text pl-0 pr-1' },
+					{ text: 'Ανάρρωσαν', value: 'totalRecovered', width: '20%', class: 'extra-small-text pl-0 pr-1' },
+					{ text: 'Θάνατοι', value: 'totalDeaths', width: '20%', class: 'extra-small-text pl-0 pr-1' },
+
+				]" :items="wom_data" :sort-by="['totalCases', 'totalRecovered', 'totalDeaths']" :sort-desc="[true, true, true]">
 					<template v-slot:item="props">
 						<tr>
-							<td class="pr-0">{{ props.item.country }}</td>
-							<td class="pr-0">{{ new Intl.NumberFormat('el-GR').format(props.item.cases) }}</td>
-							<td class="red--text">{{ new Intl.NumberFormat('el-GR').format(props.item.deaths) }}</td>
+							<td class="caption" style="font-size: 9px !important;">{{ props.item.country }}</td>
+							<td class="caption pl-0" style="position:relative; font-size: 9px;">
+								<h5 class="caption font-weight-bold primary--text" style="font-size: 9px !important;">
+									{{ new Intl.NumberFormat('el-GR').format(props.item.totalCases) }}
+									<div class="small-rect cases primary"
+										:style="'width:' + (props.item.totalCases > 0 ? scale(props.item.totalCases, countCases) : 0) + '%;'"
+									></div>
+									<div class="small-rect grey lighten-2 bg"></div>
+								</h5>
+							</td>
+							<td class="caption pl-0" style="position:relative; font-size: 9px;">
+								<h5 class="caption font-weight-bold green--text " style="font-size: 9px !important;">
+									{{ new Intl.NumberFormat('el-GR').format(props.item.totalRecovered) }}
+									<div class="small-rect recovered green"
+										:style="'width:' + (props.item.totalRecovered > 0 ? scale(props.item.totalRecovered, countRecovered) : 0) + '%;'"
+									></div>
+									<div class="small-rect grey lighten-2 bg"></div>
+								</h5>
+							</td>
+							<td class="caption pl-0" style="position:relative; font-size: 9px;">
+								<h5 class="caption font-weight-bold red--text " style="font-size: 9px !important;">
+									{{ new Intl.NumberFormat('el-GR').format(props.item.totalDeaths) }}
+									<div class="small-rect deaths red"
+										:style="'width:' + (props.item.totalDeaths > 0 ? scale(props.item.totalDeaths, countDeaths) : 0) + '%;'"
+									></div>
+									<div class="small-rect grey lighten-2 bg"></div>
+								</h5>
+							</td>
 						</tr>
 					</template>
 				</v-data-table>
 			</template>
 			<template v-else-if="activeMap === 'greece' && greece">
 				<v-data-table dense v-if="greece" class="mt-4 mb-3" :headers="[
-					{ text: 'Περιοχή', value: 'county', width: '30%', class: 'pr-0' },
-					{ text: 'Κρούσματα', value: 'cases', width: '35%', class: 'pr-0' },
-					{ text: 'Θάνατοι', value: 'dead', width: '35%', class: 'pr-0' },
-				]" :items="greece">
-					<template v-slot:header.county="{ header }">
-						<span class="caption text-truncate">{{ header.text }}</span>
-					</template>
-					<template v-slot:header.cases="{ header }">
-						<span class="caption text-truncate">{{ header.text }}</span>
-					</template>
-					<template v-slot:header.dead="{ header }">
-						<span class="caption text-truncate">{{ header.text }}</span>
-					</template>
+					{ text: 'Νομός', value: 'name', width: '40%', class: 'extra-small-text pr-1' },
+					{ text: 'Κρούσματα', value: 'cases', width: '20%', class: 'extra-small-text pl-0 pr-1' },
+					{ text: 'Εξιτήρια', value: 'recovered', width: '20%', class: 'extra-small-text pl-0 pr-1' },
+					{ text: 'Θάνατοι', value: 'dead', width: '20%', class: 'extra-small-text pl-0 pr-1' },
+				]" :items="greece" :sort-by="['cases', 'recovered', 'dead']" :sort-desc="[true, true, true]">
 					<template v-slot:item="props">
 						<tr>
-							<td class="pr-0">{{ props.item.county }}</td>
-							<td class="pr-0">{{ new Intl.NumberFormat('el-GR').format(props.item.cases) }}</td>
-							<td class="red--text">{{ new Intl.NumberFormat('el-GR').format(props.item.dead) }}</td>
+							<td class="caption" style="font-size: 9px !important;">{{ props.item.name }}</td>
+							<td class="caption pl-0" style="position:relative; font-size: 9px;">
+								<h5 class="caption font-weight-bold primary--text" style="font-size: 9px !important;">
+									{{ new Intl.NumberFormat('el-GR').format(props.item.cases) }}
+									<div
+										class="small-rect cases primary"
+										:style="'width:' + (props.item.cases > 0 ? scale(props.item.cases, countCasesGR) : 0) + '%;'"></div>
+									<div class="small-rect grey lighten-2 bg"></div>
+								</h5>
+							</td>
+							<td class="caption pl-0" style="position:relative; font-size: 9px !important;">
+								<h5 class="caption font-weight-bold green--text " style="font-size: 9px !important;">
+									{{ new Intl.NumberFormat('el-GR').format(props.item.recovered) }}
+									<div
+										class="small-rect recovered green"
+										:style="'width:' + (props.item.recovered > 0 ? scale(props.item.recovered, countRecoveredGR) : 0) + '%;'"></div>
+									<div class="small-rect grey lighten-2 bg"></div>
+								</h5>
+							</td>
+							<td class="caption pl-0" style="position:relative;">
+								<h5 class="caption font-weight-bold red--text " style="font-size: 9px !important;">
+									{{ new Intl.NumberFormat('el-GR').format(props.item.dead) }}
+									<div
+										class="small-rect deaths red"
+										:style="'width:' + (props.item.dead > 0 ? scale(props.item.dead, countDeathsGR) : 0) + '%;'"></div>
+									<div class="small-rect grey lighten-2 bg"></div>
+								</h5>
+							</td>
 						</tr>
+					</template>
+					<template v-slot:footer>
+					<!-- <p class="pa-4 pb-0 grey--text extra-small-text">*Στην Αττική περιλαμβάνεται το σύνολων των κρουσμάτων στις περιφερειακές ενότητες Αθηνών, Πειραιώς, Αν. Αττικής, Δ. Αττικής</p> -->
 					</template>
 				</v-data-table>
 			</template>
 			<template v-if="$vuetify.breakpoint.smAndDown">
 				<v-divider dark class=""></v-divider>
 				<v-list dense>
-					<v-list-item @click.stop="dialogAbout = true">
+					<v-list-item @click.stop="$store.commit('set_dialogAbout', true)">
 						<v-list-item-content>
 							Η Εφαρμογή & Τα Data
 						</v-list-item-content>
 					</v-list-item>
 					<v-divider dark class=""></v-divider>
-					<v-list-item @click.stop="dialogTerms = true">
+					<v-list-item @click.stop="$store.commit('set_dialogTerms', true)">
 						<v-list-item-content>
 							<span><v-icon left small>mdi-creative-commons</v-icon>Όροι Χρήσης</span>
 						</v-list-item-content>
@@ -180,7 +228,7 @@
 						</v-list-item-content>
 					</v-list-item>
 					<v-divider dark class=""></v-divider>
-					<v-list-item @click.stop="dialogEmbed = true">
+					<v-list-item @click.stop="$store.commit('set_dialogEmbed', true)">
 						<v-list-item-content>
 							<span>Embed <v-icon right small>mdi-code-tags</v-icon></span>
 						</v-list-item-content>
@@ -202,7 +250,7 @@
 				(!alert && $vuetify.breakpoint.mdAndUp ? 'normal-nav' : '')
 			]"
 			>
-			<v-row no-gutters justify="start" v-if="$vuetify.breakpoint.smAndDown" :class="alert ? 'mt-12' : ''">
+			<v-row no-gutters justify="start" v-if="$vuetify.breakpoint.smAndDown" :class="alert ? 'mb-12' : 'mt-2 mb-12'">
 				<v-btn fixed fab small @click.stop="navNews = !navNews" class="mx-3" style="pointer-events: auto;">
 					<v-icon small dark>mdi-arrow-right</v-icon>
 				</v-btn>
@@ -220,115 +268,17 @@
 			<map-mapbox v-if="!loading" :level="activeMap"/>
 		</div>
 
-		<v-dialog  v-if="!loading" v-model="dialogAbout" width="600px" transition="slide-y-reverse-transition" :fullscreen="$vuetify.breakpoint.mdAndDown">
-			<v-card tile>
-				<v-card-title>
-					<span class="title text-truncate">
-						Η εφαρμογή και τα δεδομένα
-					</span>
-					<v-spacer></v-spacer>
-					<v-btn icon @click="dialogAbout=false">
-						<v-icon>mdi-close</v-icon>
-					</v-btn>
-				</v-card-title>
-				<text-about/>
-			</v-card>
-		</v-dialog>
+		<dialog-about v-if="!loading" />
+		<dialog-terms v-if="!loading" />
+		<dialog-embed v-if="!loading" />
 
-		<v-dialog  v-if="!loading" v-model="dialogTerms" width="600px" transition="slide-y-reverse-transition" :fullscreen="$vuetify.breakpoint.mdAndDown">
-			<v-card tile>
-				<v-card-title>
-					<span class="title text-truncate">
-						Όροι Χρήσης
-					</span>
-					<v-spacer></v-spacer>
-					<v-btn icon @click="dialogTerms = false">
-						<v-icon>mdi-close</v-icon>
-					</v-btn>
-				</v-card-title>
-				<text-terms/>
-			</v-card>
-		</v-dialog>
-
-		<v-dialog v-if="!loading" v-model="dialogEmbed" class="embed-dialog" max-width="360" transition="slide-y-reverse-transition" fullscreen>
-			<v-card tile>
-				<v-card-title>
-					<span class="title text-truncate">
-						Ενσωμάτωση Κώδικα
-					</span>
-					<v-spacer></v-spacer>
-					<v-btn icon @click="dialogEmbed = false">
-						<v-icon>mdi-close</v-icon>
-					</v-btn>
-				</v-card-title>
-				<v-card-text>
-					<v-container fill-height>
-						<v-row align="center" justify="center">
-							<v-col cols="12" xs="12" md="8">
-								<div class="pa-6 mb-4 grey lighten-2 elevation-0 code" style="position: relative;">
-									<h4 class="accent--text">&lt;iframe</h4>
-									<h4 class="accent--text pl-6">src=&quot;{{'https://lab.imedd.org/covid19/'}}&quot;</h4>
-									<h4 class="accent--text pl-6">style=&quot;border:0px #ffffff none;&quot;</h4>
-									<h4 class="accent--text pl-6">name=&quot;imedd-covid&quot;</h4>
-									<h4 class="accent--text pl-6">scrolling=&quot;no&quot;</h4>
-									<h4 class="accent--text pl-6">frameborder=&quot;1&quot;</h4>
-									<h4 class="accent--text pl-6">marginheight=&quot;0px&quot;</h4>
-									<h4 class="accent--text pl-6">marginwidth=&quot;0px&quot;</h4>
-									<h4 class="accent--text pl-6">height=&quot;640px&quot;</h4>
-									<h4 class="accent--text pl-6">width=&quot;640px&quot;</h4>
-									<h4 class="accent--text pl-6">allowfullscreen&gt;</h4>
-									<h4 class="accent--text">&lt;/iframe&gt;</h4>
-								</div>
-
-								<p>Με τον παραπάνω κώδικα μπορείτε να ενσωματώσετε την εφαρμογή στην ιστοσελίδα σας. Εάν παρατηρήσετε προβλήματα στην ενσωμάτωση, επικοινωνήστε μαζί μας στο <a href="mailto:lab@imedd.org" target="_blank">lab@imedd.org</a> ή χρησιμοποιήστε τη <a href="https://www.imedd.org/el/contact/" target="_blank">φόρμα επικοινωνίας</a> με το iMEdD.</p>
-							</v-col>
-						</v-row>
-					</v-container>
-				</v-card-text>
-			</v-card>
-		</v-dialog>
-
-		<div v-if="!loading" class="color-scale" :class="$vuetify.breakpoint.mdAndDown ? 'isMobile' : ''">
-			<v-row no-gutters justify="space-between" align="center" class="mt-3">
-				<v-col class="caption font-weight-bold">0</v-col>
-				<v-col class="caption font-weight-bold text-center">1</v-col>
-				<v-col class="caption font-weight-bold text-center">
-					{{ new Intl.NumberFormat('el-GR').format(
-						Math.floor(mean(byCountry.map(m => m.count)))
-					) }}
-				</v-col>
-				<v-col class="caption font-weight-bold text-right">
-					{{ new Intl.NumberFormat('el-GR').format(
-						max(byCountry.map(m => m.count))
-					) }}
-				</v-col>
-			</v-row>
-		</div>
-
-		<v-footer v-if="!loading && $vuetify.breakpoint.mdAndUp" app inset dark class="primary lighten-1" :class="$vuetify.breakpoint.mdAndUp ? '' : 'py-3 mb-8'">
-			<v-btn x-small text @click.stop="dialogAbout = true" class="text-inherit">
-				Η Εφαρμογή & Τα Data
-			</v-btn>
-			<v-btn x-small text @click.stop="dialogTerms = true" class="text-inherit">
-				<v-icon left small>mdi-creative-commons</v-icon>Όροι Χρήσης
-			</v-btn>
-			<v-btn x-small text href="https://mediawatch.io/" target="_blank" class="text-inherit">
-				Visualization by CVCIO
-			</v-btn>
-			<v-spacer v-if="$vuetify.breakpoint.smAndUp"></v-spacer>
-			<v-btn x-small text @click.stop="dialogEmbed = true">
-				Embed <v-icon right small>mdi-code-tags</v-icon>
-			</v-btn>
-			<v-btn x-small color="red" depressed class="ml-2 text-inherit">
-				<span class="caption">BETA</span>
-			</v-btn>
-		</v-footer>
+		<bottom-footer v-if="!loading && $vuetify.breakpoint.mdAndUp"/>
 	</v-app>
 </template>
 
 <script>
 import { scaleLinear } from 'd3';
-import { max, find, findIndex, filter, map, mean, escape, unescape} from 'lodash';
+import { max, find, findIndex, filter, map, mean, escape, unescape, fill } from 'lodash';
 import chroma from 'chroma-js';
 import { mapGetters } from 'vuex';
 
@@ -336,32 +286,58 @@ export default {
 	name: 'covid-19',
 	components: {
 		'chart-timeline': require('@/components/chart-timeline').default,
+		'chart-sparklines': require('@/components/chart-sparklines').default,
 		'map-mapbox': require('@/components/map-mapbox').default,
-		'vue-custom-scrollbar': require('vue-custom-scrollbar'),
-		'text-about': require('@/components/text-about').default,
-		'text-terms': require('@/components/text-terms').default
+
+		'top-alert': require('@/components/top-alert').default,
+		'top-app-bar': require('@/components/top-app-bar').default,
+
+		'bottom-footer': require('@/components/bottom-footer').default,
+
+		'dialog-about': require('@/components/dialog-about').default,
+		'dialog-terms': require('@/components/dialog-terms').default,
+		'dialog-embed': require('@/components/dialog-embed').default,
+
+		'vue-custom-scrollbar': require('vue-custom-scrollbar')
 	},
 	computed: {
 		...mapGetters([
-			'worldGeoJson', 'countriesMapping',
-			'cases', 'deaths', 'recovered', 'greece',
+			'loading', 'alert',
+			'worldGeoJson', 'countriesMapping', 'worldPopulation', 'globalData',
+			'cases', 'deaths', 'recovered', 'greece', 'wom_data',
 			'countCases', 'countDeaths', 'countRecovered', 'countCritical',
-			'countCasesGR', 'countDeathsGR', 'countRecoveredGR', 'countCriticalGR',
+			'countCasesGR', 'countDeathsGR', 'countRecoveredGR', 'countCriticalGR', 'countHospitalizedGR',
 			'lastUpdatedAt',
-			'byCountry',
 			'alerts'
-		])
+		]),
+
+		alertText () {
+			return this.alerts ? find(this.alerts, ['key', 'alertText']).value : '';
+		},
+
+		navStats: {
+			get () {
+				return this.$store.state.navStats;
+			},
+			set (state) {
+				if (state !== this.$store.state.navStats) {
+					this.$store.commit('set_navStats', state);
+				}
+			}
+		},
+		navNews: {
+			get () {
+				return this.$store.state.navNews;
+			},
+			set (state) {
+				if (state !== this.$store.state.navNews) {
+					this.$store.commit('set_navNews', state);
+				}
+			}
+		}
 	},
 	data () {
 		return {
-			loading: true,
-			dialogAbout: false,
-			dialogTerms: false,
-			navNews: false,
-			navStats: this.$vuetify.breakpoint.mdAndDown ? false : true,
-			alert: true,
-
-			dialogEmbed: false,
 			activeMap: 'greece',
 			triggerUpdate: new Date()
 		};
@@ -369,68 +345,82 @@ export default {
 	mounted () {
 		let unix = this.$moment().unix();
 		let jsonFiles = [
-			{ file: `${this.$BASE_URL}shared/countries-simplified.geojson`, key: 'worldGeoJson' },
-			{ file: `${this.$BASE_URL}shared/countries.json`, key: 'countries' }
+			{ file: `${this.$BASE_URL}shared/custom.geojson`, key: 'worldGeoJson' },
+			{ file: `${this.$BASE_URL}shared/greece-simplified.geojson`, key: 'greeceGeoJson' }
 		];
 
 		let csvFiles = [
-			{ file: 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv', key: 'cases' },
-			{ file: 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv', key: 'deaths' },
-			{ file: 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv', key: 'recovered' },
-
 			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/countriesMapping.csv?${unix}`, key: 'countriesMapping' },
+			// { file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRpR8AOJaRsB5by7H3R_GijtaY06J8srELipebO5B0jYEg9pKugT3C6Rk2RSQ5eyerQl7LolshamK27/pub?gid=527109001&single=true&output=csv', key: 'countriesMapping' },
+			{ file: `${this.$BASE_URL}shared/world-population.csv`, key: 'worldPopulation' },
+
+			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/alerts.csv?${unix}`, key: 'alerts' },
+
+			{ file: 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv', key: 'cases' },
+			{ file: 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv', key: 'deaths' },
+			{ file: 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv', key: 'recovered' },
+
+			{ file: 'https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/wom_data.csv', key: 'wom_data' },
 			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greece.csv?${unix}`, key: 'greece' },
-			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greeceTimeline.csv?${unix}`, key: 'greeceTimeline' },
-			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/alerts.csv?${unix}`, key: 'alerts' }
+			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greeceTimeline.csv?${unix}`, key: 'greeceTimeline' }
 		];
 
 		Promise.all([
+			...csvFiles.map(m => this.$store.dispatch('fetchDynamicData', m)),
 			...jsonFiles.map(m => this.$store.dispatch('fetchStaticData', m)),
-			...csvFiles.map(m => this.$store.dispatch('fetchDynamicData', m))
 		]).then(() => {
 			this.triggerUpdate = new Date();
+
+			this.$store.commit('set_globalData', {
+				cases: this.cases,
+				deaths: this.deaths,
+				recovered: this.recovered
+			});
+			let empty = Array.apply(null, new Array(this.globalData[0].dates.length)).map(Number.prototype.valueOf, 0);
 			this.worldGeoJson.features.forEach(m => {
-				let idx_m = findIndex(this.countriesMapping, ['country', m.properties.ADMIN]);
-				if (idx_m > -1) {
-					m.properties.ADMIN_GR = this.countriesMapping[idx_m].name_x;
-					m.properties.ADMIN_H = this.countriesMapping[idx_m].country_h;
-				}
+				let idx_m = findIndex(this.countriesMapping, ['country', m.properties.admin]);
+				m.properties.ADMIN_GR = idx_m > -1 ? this.countriesMapping[idx_m].name_x : m.properties.admin;
+
 				m.properties.count = 0;
-			});
-			this.cases.forEach((m, i) => {
-				let idx_m = findIndex(this.worldGeoJson.features, c => {
-					return c.properties.ADMIN === m['Country/Region'] || c.properties.ADMIN_H === m['Country/Region'];
-				});
+				m.properties.opacity = 0;
+				m.properties.totalIndex = 0;
+				m.properties.color = '#fafafa';
 
-				if (idx_m > -1) {
-					this.cases[i]['Country/Region'] = this.worldGeoJson.features[idx_m].properties.ADMIN_GR;
-				}
-			});
-			this.deaths.forEach(m => {
-				let idx_m = findIndex(this.worldGeoJson.features, c => {
-					return c.properties.ADMIN === m['Country/Region'] || c.properties.ADMIN_H === m['Country/Region'];
-				});
+				let idx_p = findIndex(this.worldPopulation, ['country', m.properties.ADMIN_GR]);
+				m.properties.population = idx_p > -1 ? this.worldPopulation[idx_p].population : m.properties.pop_est;
 
-				if (idx_m > -1) {
-					m['Country/Region'] = this.worldGeoJson.features[idx_m].properties.ADMIN_GR;
-				}
-			});
+				let data = find(this.globalData, ['country', m.properties.ADMIN_GR]) || null;
 
-			this.recovered.forEach(m => {
-				let idx_m = findIndex(this.worldGeoJson.features, c => {
-					return c.properties.ADMIN === m['Country/Region'] || c.properties.ADMIN_H === m['Country/Region'];
-				});
+				m.properties.cases = data ? data.cases : [];
+				m.properties.deaths = data ? data.deaths : [];
+				m.properties.recovered = data ? data.recovered : [];
+				m.properties.totalIndex = data ? data.cases.map(x => {
+					return parseFloat(((x / m.properties.population) * 1000000).toFixed(2));
+				}) : [];
 
-				if (idx_m > -1) {
-					m['Country/Region'] = this.worldGeoJson.features[idx_m].properties.ADMIN_GR;
+				let idx_w = findIndex(this.wom_data, ['country', m.properties.ADMIN_GR]);
+				if (idx_w > -1 && m.properties.cases.length > 0) {
+					m.properties.cases.push(this.wom_data[idx_w].totalCases);
+					m.properties.deaths.push(this.wom_data[idx_w].totalDeaths);
+					m.properties.recovered.push(this.wom_data[idx_w].totalRecovered);
+					m.properties.totalIndex.push(this.wom_data[idx_w].totalIndex);
 				}
 			});
 
-			this.loading = false;
+			// console.log(this.globalData);
+			// console.log(this.wom_data);
+
+			this.wom_data.forEach(m => {
+				let idx_m = findIndex(this.globalData, ['country', m.country]);
+				if (idx_m < 0) {
+					// console.log(m.country);
+				}
+			});
 
 			// eslint-disable-next-line no-console
 			this.$nextTick(() => {
 				setTimeout(() => {
+					this.$store.commit('set_loading', false);
 					if (window.twttr) {
 						window.twttr.widgets.load();
 					}
@@ -443,7 +433,12 @@ export default {
 		find,
 		findIndex,
 		max,
-		mean
+		mean,
+		scale (v, m) {
+			return scaleLinear()
+				.domain([1, m])
+				.rangeRound([2, 80])(v);
+		}
 	}
 };
 </script>
@@ -547,7 +542,7 @@ a {
 
 .color-scale {
 	position: absolute;
-	width: 180px;
+	width: 300px;
 	height: 12px;
 	display: block;
 	content: ' ';
@@ -568,13 +563,7 @@ a {
 	}
 }
 
-#alert {
-	width: 100%;
-	position: relative;
-	left: 0;
-	top: 0;
-	z-index: 100;
-}
+
 
 .main-bar {
 	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -618,6 +607,23 @@ a {
 	margin-right: 8px !important;
 	.v-input {
 		margin-left: 8px !important;
+	}
+}
+
+.extra-small-text {
+	font-size: 9px !important;
+}
+.small-rect {
+	position: absolute;
+	display: block;
+	content: ' ';
+
+	width: calc(~'80%');
+	height: 4px;
+	bottom: 0;
+	z-index: 1;
+	&.bg {
+		z-index: 0;
 	}
 }
 </style>

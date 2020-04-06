@@ -3,12 +3,17 @@
 </template>
 
 <script>
-import { select, scaleTime, scaleBand, axisBottom, axisLeft, scaleLinear, max, timeWeek, format } from 'd3';
-import { filter, keys, values, flatten, map, groupBy, sumBy, cloneDeep } from 'lodash';
+import { filter, keys, values, flatten, map, groupBy, sumBy, cloneDeep, maxBy, meanBy } from 'lodash';
+import Highcharts from 'highcharts';
+Highcharts.setOptions({
+	time: {
+		timezone: 'Europe/Athens'
+	}
+});
 
 export default {
 	name: 'chart-timeline',
-	props: ['data', 'level', 'triggerUpdate'],
+	props: ['level', 'triggerUpdate'],
 	data () {
 		return {
 			chart: null
@@ -31,19 +36,19 @@ export default {
 		parseDate (v) {
 			if (!v || v === '') return '';
 			const dateString = v.split('/');
-			return this.$moment(`20${dateString[2]}-${dateString[0]}-${dateString[1]}`).toDate();
+			return this.$moment(`20${dateString[2]}-${dateString[0]}-${dateString[1]}`, 'YYYY-MM-DD').toDate();
 		},
 		draw () {
-			if (!this.$store.state.cases || this.$store.state.cases.length === 0) return;
-			let data = [];
+			let totalcases = [];
+			let cases = [];
 
 			if (this.level === 'greece') {
-				data = cloneDeep(filter(this.$store.state.greeceTimeline, ['Status', 'total cases']));
+				totalcases = cloneDeep(filter(this.$store.state.greeceTimeline, ['Status', 'total cases']));
 			} else {
-				data = cloneDeep(this.$store.state.cases);
+				totalcases = cloneDeep(this.$store.state.cases);
 			}
 
-			data = data.map(m => {
+			totalcases = totalcases.map(m => {
 				delete m['Province/State'];
 				delete m['Country/Region'];
 				delete m['Lat'];
@@ -53,126 +58,187 @@ export default {
 
 				const ks = keys(m);
 				const vs = values(m);
-				return ks.map((k, i) => { return {
-					date: this.parseDate(k),
-					value: parseInt(vs[i])
-				}; });
+				return ks.map((k, i) => {
+					return {
+						date: this.parseDate(k),
+						value: parseInt(vs[i])
+					};
+				});
 			});
-			data = groupBy(flatten(data), 'date');
-			data = map(data, (v, k) => {
+			totalcases = groupBy(flatten(totalcases), 'date');
+			totalcases = map(totalcases, (v, k) => {
 				return {
 					date: k,
 					value: sumBy(v, 'value')
 				};
 			});
 
-			if (!this.chart) {
-				this.chart = select(document.getElementById('timeline')).append('svg');
-			}
+			cases = totalcases.map((m, i) => {
+				return {
+					date: m.date,
+					value: i === 0 ? m.value : m.value - totalcases[i - 1].value
+				};
+			});
 
-			this.chart.selectAll('*').remove();
+			const self = this;
+			Highcharts.chart('timeline', {
+				title: {
+					text: ''
+				},
+				subtitle: {
+					text: ''
+				},
+				credits: {
+					enabled: false
+				},
 
-			let domEl = document.getElementById('timeline');
-			let margin = { top: 0, left: 0, bottom: 0, right: 0 };
-			let width = domEl.offsetWidth - margin.left - margin.right - 24;
-			let height = 180 - margin.top - margin.bottom;
+				xAxis: {
+					type: 'datetime',
+					labels: {
+						style: {
+							fontFamily: 'Roboto Mono',
+							fontSize: '9px'
+						},
+						align: 'center',
+						formatter: (m) => {
+							return this.$moment(m.value).format('DD/MM');
+						}
+					},
+				},
+				yAxis: {
+					labels: {
+						y: -6,
+						x: 0,
+						align: 'left',
+						style: {
+							fontFamily: 'Roboto Mono',
+							fontSize: '9px'
+						},
+					},
+					showLastLabel: true,
+					showFirstLabel: true,
+				},
 
-			let formatK = format('.2s');
+				chart: {
+					animation: false,
+					type: totalcases.length > 31 ? 'area' : 'column',
+					style: {
+						fontFamily: 'Roboto Mono',
+						fontSize: '9px'
+					},
+					height: 240,
+					margin: [0, 0, 60, 0],
+				},
 
-			let x = scaleTime()
-				.domain([new Date(data[0].date), new Date()])
-				.rangeRound([0, width - margin.left - margin.right]);
+				legend: {
+					layout: 'horizontal',
+					align: 'center',
+					verticalAlign: 'bottom',
+					floating: true,
+					symbolPadding: 2,
+					margin: 0,
+					itemStyle: {
+						fontWeight: 'normal',
+						fontFamily: 'Roboto Mono',
+						fontSize: '9px'
+					}
+				},
 
-			let xBand = scaleBand()
-				.domain(data.map(m => new Date(m.date)))
-				.range([0, width - margin.left - margin.right])
-				.paddingInner(0.5);
+				plotOptions: {
+					series: {
+						animation: false,
+						lineWidth: 1,
+						marker: {
+							enabled: false
+						},
+						events: {
+							legendItemClick: function (e) {
+								e.preventDefault();
+								var seriesIndex = this.index;
+								var series = this.chart.series;
+								if (this.visible && this.chart.restIsHidden) {
+									for (var i = 0; i < series.length; i++) {
+										if (series[i].index != seriesIndex) {
+											series[i].show();
+										}
+									}
+									this.chart.restIsHidden = false;
+								} else {
+									for (var j = 0; j < series.length; j++) {
+										if (series[j].index != seriesIndex) {
+											series[j].hide();
+										}
+									}
+									this.show();
+  									this.chart.restIsHidden = true;
+								}
+								return false;
+							}
+						},
+					},
+					column: {
+						groupPadding: 0,
+						grouping: false
+					},
+					area: {
+						grouping: false
+					}
+				},
 
-			let xAxis = axisBottom(x)
-				.tickSizeInner(6)
-				.tickSizeOuter(0)
-				.ticks(timeWeek.every(2));
+				tooltip: {
+					backgroundColor: '#ffffff',
+					borderWidth: 0,
+					borderRadius: 0,
+					shared: false,
+					padding: 12,
+					useHTML: true,
+					formatter: function () {
+						return `
+						<span style="">
+							<span class="grey--text">${ self.$moment(this.point.x).format('LL') }</span><br/>
+							<span>${ this.series.name }:</span>
+							<span class="font-weight-bold">${ new Intl.NumberFormat('el-GR').format(this.point.y) }</span>
+						</span>
+						`;
+					}
+				},
 
-			let y = scaleLinear()
-				.domain([0, max(data, (m) => m.value) * 1.3])
-				.rangeRound([height - margin.top - margin.bottom, 0]);
-
-			let yAxis = axisLeft(y)
-				.tickSizeInner(6)
-				.tickSizeOuter(0)
-				.tickPadding(3)
-				.ticks(5)
-				.tickFormat(d => d ? formatK(d) : null);
-
-			// the chart
-			this.chart
-				.attr('width', width + margin.left + margin.right)
-				.attr('height', height + margin.top + margin.bottom + 24);
-
-			const make_x_gridlines = () => {
-				return axisLeft(y)
-					.ticks(10);
-			};
-
-			// x-grid
-			this.chart
-				.append('g')
-				.attr('class', 'x axis grid')
-				.attr('transform', `translate(36, ${0})`)
-				.call(
-					make_x_gridlines()
-						.tickSize(-width)
-						.tickFormat('')
-				);
-
-			// x-axis
-			this.chart
-				.append('g')
-				.attr('class', 'x axis ticks')
-				.attr('transform', `translate(0, ${
-					height - margin.top - margin.bottom + xAxis.tickSize() - 6
-				})`)
-				.call(xAxis)
-				.selectAll('text')
-				.text((d) => {
-					return this.$moment(d).format('DD/MM');
-				})
-				.attr('x', 0)
-				.attr('y', 12);
-
-
-			// y-axis
-			this.chart
-				.append('g')
-				.attr('class', 'y axis')
-				.attr('transform', `translate(${9}, 0)`)
-				.call(
-					yAxis
-				);
-
-			// bars
-			this.chart.append('g').selectAll('.type').data(data).enter()
-				.append('g')
-				.attr('transform', `translate(${margin.left}, 0)`)
-				.attr('class', 'type')
-				.style('fill', (d, i) => {
-					return '#ED2038';
-				})
-				.append('rect')
-				.attr('class', 'bar')
-				.attr('x', (d) => {
-					if (!d) return;
-					return x(this.$moment(d.date));
-				})
-				.attr('y', (d) => {
-					if (!d) return;
-					return y(d.value);
-				})
-				.attr('width', xBand.bandwidth())
-				.attr('height', (d) => {
-					if (!d) return;
-					return height - y(d.value);
-				});
+				series: [
+					{
+						name: 'Σύνολο Κρουσμάτων',
+						borderWidth: 1,
+						lineWidth: 1,
+						color: 'rgba(160, 160, 160, 0.8)',
+						lineColor: 'rgba(160, 160, 160, 1)',
+						marker: {
+							symbol: 'circle'
+						},
+						data: totalcases.map(m => {
+							return {
+								x: this.$moment(m.date).toDate(),
+								y: m.value
+							};
+						})
+					},
+					{
+						isIntermediateSum: true,
+						name: 'Νέα Κρούσματα',
+						borderWidth: 1,
+						lineWidth: 1,
+						color: 'rgba(17, 75, 95, 0.8)',
+						lineColor: 'rgba(17, 75, 95, 1)',
+						marker: {
+							symbol: 'circle'
+						},
+						data: cases.map(m => {
+							return {
+								x: this.$moment(m.date).toDate(),
+								y: m.value
+							};
+						})
+					}
+				]
+			});
 		}
 	}
 };
@@ -180,62 +246,7 @@ export default {
 
 <style lang="less">
 .chart {
-	height: 180px;
-	padding-right: 24px;
+	height: 240px;
 	z-index: 0;
-	svg {
-		text {
-			text-anchor: start;
-			font: normal 9px 'Roboto Mono', 'Courier New';
-		}
-		z-index: 1;
-		.grid {
-			line {
-				stroke: lightgrey;
-				stroke-opacity: 0.6;
-				shape-rendering: crispEdges
-			}
-			path {
-				visibility: hidden;
-			}
-		}
-		.axis {
-			path {
-				stroke: #000;
-				stroke-width: 1px;
-				shape-rendering: crispEdges;
-				// stroke-dasharray: 4;
-			}
-			&.x {
-				text {
-					text-anchor: middle;
-					font-size: 10px;
-				}
-			}
-			&.y {
-				path {
-					visibility: hidden;
-				}
-				line {
-					visibility: hidden;
-				}
-				text {
-					text-anchor: start;
-					font-size: 10px;
-				}
-			}
-		}
-
-		circle {
-			fill: black;
-			stroke: white;
-			stroke-width: 2px;
-		}
-		rect {
-			stroke: none;
-			stroke-width: 1px;
-			shape-rendering: crispEdges;
-		}
-	}
 }
 </style>

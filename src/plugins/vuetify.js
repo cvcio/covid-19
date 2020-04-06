@@ -2,14 +2,10 @@ import Vue from 'vue';
 import Vuetify from 'vuetify';
 import 'vuetify/dist/vuetify.min.css';
 import VueI18n from 'vue-i18n';
-// import el from 'vuetify/es5/locale/en';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 Vue.use(Vuetify);
 Vue.use(VueI18n);
-
-// el.$vuetify.dataTable.sortBy = 'Ταξινόμηση ανά';
-// el.$vuetify.dataTable.itemsPerPageText = 'Σειρές ανά σελίδα';
-// el.$vuetify.dataFooter.itemsPerPageAll = 'Όλες';
 
 const messages = {
 	el: {
