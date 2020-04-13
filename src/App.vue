@@ -47,14 +47,20 @@
 				</v-subheader>
 				<v-list-item>
 					<v-list-item-content class="py-0">
-						<v-btn-toggle v-model="activeMap" small mandatory dark>
-							<v-btn value="greece" :color="activeMap === 'greece' ? 'primary' : 'primary lighten-4'" small @click="triggerUpdate = new Date()">
-								Ελλαδα
+						<v-row no-gutters>
+							<v-btn-toggle v-model="$store.state.activeMap" small mandatory dark>
+								<v-btn value="greece" :color="activeMap === 'greece' ? 'primary' : 'primary lighten-4'" small @click="$router.push('/'); triggerUpdate = new Date()">
+									Ελλαδα
+								</v-btn>
+								<v-btn value="admin-0" :color="activeMap === 'admin-0' ? 'primary' : 'primary lighten-4'" small  @click="$router.push('/'); triggerUpdate = new Date()">
+									ΚΟΣΜΟΣ
+								</v-btn>
+							</v-btn-toggle>
+							<v-spacer/>
+							<v-btn color="accent" to="/stats/" small  @click="triggerUpdate = new Date()">
+								Στατιστικα
 							</v-btn>
-							<v-btn value="admin-0" :color="activeMap === 'admin-0' ? 'primary' : 'primary lighten-4'" small  @click="triggerUpdate = new Date()">
-								ΚΟΣΜΟΣ
-							</v-btn>
-						</v-btn-toggle>
+						</v-row>
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
@@ -67,7 +73,6 @@
 							<v-list-item-content class="py-0">
 								<v-list-item-subtitle class="headline font-weight-black">
 									{{ new Intl.NumberFormat('el-GR').format(activeMap === 'admin-0' ? countCases : countCasesGR) }}
-									<!-- <chart-sparklines :triggerUpdate="triggerUpdate" :level="activeMap" class=""/> -->
 								</v-list-item-subtitle>
 							</v-list-item-content>
 						</v-list-item>
@@ -81,7 +86,6 @@
 								<v-list-item-subtitle class="headline red--text">
 									{{ new Intl.NumberFormat('el-GR').format(activeMap === 'admin-0' ? countDeaths : countDeathsGR) }}
 								</v-list-item-subtitle>
-								<!-- <v-list-item-subtitle class="body-2">{{ ((100 * (activeMap === 'admin-0' ? countDeaths : countDeathsGR)) / (activeMap === 'admin-0' ? countCases : countCasesGR)).toFixed(2) }}% των κρουσμάτων</v-list-item-subtitle> -->
 							</v-list-item-content>
 						</v-list-item>
 					</v-list>
@@ -203,7 +207,6 @@
 						</tr>
 					</template>
 					<template v-slot:footer>
-					<!-- <p class="pa-4 pb-0 grey--text extra-small-text">*Στην Αττική περιλαμβάνεται το σύνολων των κρουσμάτων στις περιφερειακές ενότητες Αθηνών, Πειραιώς, Αν. Αττικής, Δ. Αττικής</p> -->
 					</template>
 				</v-data-table>
 			</template>
@@ -235,9 +238,6 @@
 					</v-list-item>
 					<v-divider dark class=""></v-divider>
 				</v-list>
-				<v-chip x-small color="red" dark label depressed class="ml-4 text-inherit">
-					<span class="caption">BETA</span>
-				</v-chip>
 			</template>
 			</vue-custom-scrollbar>
 		</v-navigation-drawer>
@@ -260,13 +260,9 @@
 			</v-row>
 		</v-navigation-drawer>
 
-		<div id="map" class="">
-			<v-row no-gutters justify="center" align="center" class="loader" v-if="loading" >
-				<span class="mb-12 mt-n12 grey--text text-center">Φορτώνεται ο παγκόσμιος χάρτης και η βάση δεδομένων κρουσμάτων με COVID-19</span>
-				<v-progress-circular v-if="loading" class="loader mt-12" color="primary" indeterminate :size="24"/>
-			</v-row>
-			<map-mapbox v-if="!loading" :level="activeMap"/>
-		</div>
+		<v-content app>
+			<router-view></router-view>
+		</v-content>
 
 		<dialog-about v-if="!loading" />
 		<dialog-terms v-if="!loading" />
@@ -278,8 +274,7 @@
 
 <script>
 import { scaleLinear } from 'd3';
-import { max, find, findIndex, filter, map, mean, escape, unescape, fill } from 'lodash';
-import chroma from 'chroma-js';
+import { find, findIndex } from 'lodash';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -287,7 +282,6 @@ export default {
 	components: {
 		'chart-timeline': require('@/components/chart-timeline').default,
 		'chart-sparklines': require('@/components/chart-sparklines').default,
-		'map-mapbox': require('@/components/map-mapbox').default,
 
 		'top-alert': require('@/components/top-alert').default,
 		'top-app-bar': require('@/components/top-app-bar').default,
@@ -302,13 +296,19 @@ export default {
 	},
 	computed: {
 		...mapGetters([
-			'loading', 'alert',
-			'worldGeoJson', 'countriesMapping', 'worldPopulation', 'globalData',
-			'cases', 'deaths', 'recovered', 'greece', 'wom_data',
+			'loading', 'alert', 'lastUpdatedAt', 'alerts', 'activeMap',
+			'worldPopulation', 'countries',
+
+			'cases', 'deaths', 'recovered',
+			'greece_cases', 'greece_deaths',
+
+			'globalData', 'greeceData',
+			'greece', 'wom_data',
+
+			'worldGeoJson',   'greeceGeoJson',
+
 			'countCases', 'countDeaths', 'countRecovered', 'countCritical',
-			'countCasesGR', 'countDeathsGR', 'countRecoveredGR', 'countCriticalGR', 'countHospitalizedGR',
-			'lastUpdatedAt',
-			'alerts'
+			'countCasesGR', 'countDeathsGR', 'countRecoveredGR', 'countCriticalGR', 'countHospitalizedGR'
 		]),
 
 		alertText () {
@@ -336,23 +336,30 @@ export default {
 			}
 		}
 	},
+	watch: {
+		$route (to, from) {
+			console.log(to);
+		}
+	},
 	data () {
 		return {
-			activeMap: 'greece',
+			// activeMap: 'greece',
 			triggerUpdate: new Date()
 		};
 	},
 	mounted () {
 		let unix = this.$moment().unix();
 		let jsonFiles = [
-			{ file: `${this.$BASE_URL}shared/custom.geojson`, key: 'worldGeoJson' },
+			{ file: `${this.$BASE_URL}shared/countries-simplified.geojson`, key: 'worldGeoJson' },
 			{ file: `${this.$BASE_URL}shared/greece-simplified.geojson`, key: 'greeceGeoJson' }
 		];
 
 		let csvFiles = [
-			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/countriesMapping.csv?${unix}`, key: 'countriesMapping' },
-			// { file: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRpR8AOJaRsB5by7H3R_GijtaY06J8srELipebO5B0jYEg9pKugT3C6Rk2RSQ5eyerQl7LolshamK27/pub?gid=527109001&single=true&output=csv', key: 'countriesMapping' },
-			{ file: `${this.$BASE_URL}shared/world-population.csv`, key: 'worldPopulation' },
+			{ file: `${this.$BASE_URL}shared/countries.csv?${unix}`, key: 'countries' },
+			{ file: `${this.$BASE_URL}shared/world-population.csv?${unix}`, key: 'worldPopulation' },
+
+			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greece_cases.csv?${unix}`, key: 'greece_cases' },
+			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greece_deaths.csv?${unix}`, key: 'greece_deaths' },
 
 			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/alerts.csv?${unix}`, key: 'alerts' },
 
@@ -369,17 +376,32 @@ export default {
 			...csvFiles.map(m => this.$store.dispatch('fetchDynamicData', m)),
 			...jsonFiles.map(m => this.$store.dispatch('fetchStaticData', m)),
 		]).then(() => {
-			this.triggerUpdate = new Date();
-
+			setTimeout(() => { this.formatData(); }, 1000);
+		}).catch((err) => console.error('Error while fetching data. Please try later.', err));
+	},
+	methods: {
+		find,
+		findIndex,
+		scale (v, m) {
+			return scaleLinear()
+				.domain([1, m])
+				.rangeRound([2, 80])(v);
+		},
+		formatData () {
+			this.$store.commit('reset_wom_data', this.wom_data);
 			this.$store.commit('set_globalData', {
 				cases: this.cases,
 				deaths: this.deaths,
 				recovered: this.recovered
 			});
-			let empty = Array.apply(null, new Array(this.globalData[0].dates.length)).map(Number.prototype.valueOf, 0);
+			this.$store.commit('set_greeceData', {
+				cases: this.greece_cases,
+				deaths: this.greece_deaths
+			});
+
 			this.worldGeoJson.features.forEach(m => {
-				let idx_m = findIndex(this.countriesMapping, ['country', m.properties.admin]);
-				m.properties.ADMIN_GR = idx_m > -1 ? this.countriesMapping[idx_m].name_x : m.properties.admin;
+				let idx_m = findIndex(this.countries, ['ADMIN', m.properties.admin]);
+				m.properties.ADMIN_GR = idx_m > -1 ? this.countries[idx_m].ADMIN_GR : m.properties.admin;
 
 				m.properties.count = 0;
 				m.properties.opacity = 0;
@@ -387,57 +409,60 @@ export default {
 				m.properties.color = '#fafafa';
 
 				let idx_p = findIndex(this.worldPopulation, ['country', m.properties.ADMIN_GR]);
-				m.properties.population = idx_p > -1 ? this.worldPopulation[idx_p].population : m.properties.pop_est;
-
+				m.properties.pop_11 = idx_p > -1 ? this.worldPopulation[idx_p].population : m.properties.pop_est;
 				let data = find(this.globalData, ['country', m.properties.ADMIN_GR]) || null;
 
 				m.properties.cases = data ? data.cases : [];
 				m.properties.deaths = data ? data.deaths : [];
 				m.properties.recovered = data ? data.recovered : [];
+
+				m.properties.NOTES = '';
+
 				m.properties.totalIndex = data ? data.cases.map(x => {
-					return parseFloat(((x / m.properties.population) * 1000000).toFixed(2));
+					return parseFloat(((x / m.properties.pop_11) * 1000000).toFixed(2));
+				}) : [];
+				m.properties.deathsIndex = data ? data.deaths.map(x => {
+					return parseFloat(((x / m.properties.pop_11) * 1000000).toFixed(2));
 				}) : [];
 
-				let idx_w = findIndex(this.wom_data, ['country', m.properties.ADMIN_GR]);
-				if (idx_w > -1 && m.properties.cases.length > 0) {
-					m.properties.cases.push(this.wom_data[idx_w].totalCases);
-					m.properties.deaths.push(this.wom_data[idx_w].totalDeaths);
-					m.properties.recovered.push(this.wom_data[idx_w].totalRecovered);
-					m.properties.totalIndex.push(this.wom_data[idx_w].totalIndex);
-				}
 			});
 
-			// console.log(this.globalData);
-			// console.log(this.wom_data);
+			this.greeceGeoJson.features.forEach(m => {
+				let idx_m = findIndex(this.greece, f => {
+					return m.properties.NAME_GR === 'Ν. ' + f.county_normalized || m.properties.NAME_GR === f.county_normalized;
+				});
+				m.properties.ADMIN_GR = idx_m > -1 ? this.greece[idx_m].name : '';
 
-			this.wom_data.forEach(m => {
-				let idx_m = findIndex(this.globalData, ['country', m.country]);
-				if (idx_m < 0) {
-					// console.log(m.country);
-				}
+				m.properties.count = 0;
+				m.properties.opacity = 0;
+				m.properties.totalIndex = 0;
+				m.properties.color = '#fafafa';
+
+				let idx_p = findIndex(this.greece, ['name', m.properties.ADMIN_GR]);
+				m.properties.pop_11 = idx_p > -1 ? this.greece[idx_p].population : 0;
+
+				let data = find(this.greeceData, ['state', m.properties.ADMIN_GR]) || null;
+
+				m.properties.cases = data ? data.cases : [];
+				m.properties.deaths = data ? data.deaths : [];
+				m.properties.totalIndex = data ? data.cases.map(x => {
+					return parseFloat(((x / m.properties.pop_11) * 100000).toFixed(2));
+				}) : [];
+				m.properties.deathsIndex = data ? data.deaths.map(x => {
+					return parseFloat(((x / m.properties.pop_11) * 100000).toFixed(2));
+				}) : [];
 			});
 
-			// eslint-disable-next-line no-console
 			this.$nextTick(() => {
-				setTimeout(() => {
-					this.$store.commit('set_loading', false);
-					if (window.twttr) {
-						window.twttr.widgets.load();
-					}
-				}, 2500);
+				this.show();
 			});
-
-		}).catch((err) => console.error('Error while fetching data. Please try later.', err));
-	},
-	methods: {
-		find,
-		findIndex,
-		max,
-		mean,
-		scale (v, m) {
-			return scaleLinear()
-				.domain([1, m])
-				.rangeRound([2, 80])(v);
+		},
+		show () {
+			this.triggerUpdate = new Date();
+			this.$store.commit('set_loading', false);
+			if (window.twttr) {
+				window.twttr.widgets.load();
+			}
 		}
 	}
 };
@@ -563,8 +588,6 @@ a {
 	}
 }
 
-
-
 .main-bar {
 	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	&.alert-mobile-bar {
@@ -611,7 +634,7 @@ a {
 }
 
 .extra-small-text {
-	font-size: 9px !important;
+	font-size: 8px !important;
 }
 .small-rect {
 	position: absolute;
@@ -624,6 +647,17 @@ a {
 	z-index: 1;
 	&.bg {
 		z-index: 0;
+	}
+}
+
+.news-nav + #map {
+	#legend {
+		transform: translate(-16px, -68px) !important;
+	}
+}
+.news-nav.v-navigation-drawer--open + #map {
+	#legend {
+		transform: translate(-296px, -68px) !important;
 	}
 }
 </style>

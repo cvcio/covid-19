@@ -1,8 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { json, csv } from 'd3';
-import { sumBy, maxBy, map, groupBy, orderBy, find, findIndex, filter, keys, values, mergeWith, merge } from 'lodash';
-import * as _ from 'lodash';
+import { sumBy,  map, groupBy, orderBy, findIndex, filter, keys, cloneDeep } from 'lodash';
 import moment from 'moment';
 import { storage } from '@/services/storage';
 import { reduce } from 'highcharts';
@@ -24,19 +23,22 @@ export default new Vuex.Store({
 	state: {
 		loading: true,
 		alert: true,
-		navStats: true,
+		navStats: window.innerWidth > 1024,
 		navNews: false,
+		activeMap: 'greece',
 
 		dialogAbout: false,
 		dialogTerms: false,
 		dialogEmbed: false,
 
-		worldGeoJson: storage.get('worldGeoJson') || null,
-		greeceGeoJson: storage.get('greeceGeoJson') || null,
+		worldGeoJson: null,
+		greeceGeoJson: null,
 		countries: null,
-		countriesMapping: null,
 
 		worldPopulation: null,
+
+		greece_cases: null,
+		greece_deaths: null,
 
 		globalData: [],
 		greeceData: [],
@@ -74,6 +76,7 @@ export default new Vuex.Store({
 		alert: state => state.alert,
 		navStats: state => state.navStats,
 		navNews: state => state.navNews,
+		activeMap: state => state.activeMap,
 
 		dialogAbout: state => state.dialogAbout,
 		dialogTerms: state => state.dialogTerms,
@@ -82,8 +85,6 @@ export default new Vuex.Store({
 		worldGeoJson: state => state.worldGeoJson,
 		greeceGeoJson: state => state.greeceGeoJson,
 		countries: state => state.countries,
-		countriesMapping: state => state.countriesMapping,
-
 		worldPopulation: state => state.worldPopulation,
 
 		globalData: state => state.globalData,
@@ -129,6 +130,13 @@ export default new Vuex.Store({
 			return sumBy(state.greece, 'critical');
 		},
 
+		greece_cases: (state) => {
+			return state.greece_cases;
+		},
+		greece_deaths: (state) => {
+			return state.greece_deaths;
+		},
+
 		lastUpdatedAt: (state) => {
 			if (!state.cases) return null;
 			let lastEntry = Object.keys(state.cases[0])[Object.keys(state.cases[0]).length - 1].split('/');
@@ -165,39 +173,30 @@ export default new Vuex.Store({
 			state.dialogEmbed = data;
 		},
 
+		set_greece_cases (state, data) {
+			state.greece_cases = data;
+		},
+		set_greece_deaths (state, data) {
+			state.greece_deaths = data;
+		},
+
 		set_worldGeoJson (state, data) {
-			try {
-				storage.set('worldGeoJson', data);
-			} catch (err) {
-				console.log('Error while saving worldGeoJson on localstorage');
-			}
 			state.worldGeoJson = data;
 		},
 		set_greeceGeoJson (state, data) {
-			try {
-				storage.set('greeceGeoJson', data);
-			} catch (err) {
-				console.log('Error while saving greeceGeoJson on localstorage');
-			}
 			state.greeceGeoJson = data;
 		},
 		set_countries (state, data) {
 			state.countries = data;
 		},
-		set_countriesMapping (state, data) {
-			state.countriesMapping = data;
-		},
 
 		set_worldPopulation (state, data) {
 			data = data.map(m => {
-				let idx_m = findIndex(state.countriesMapping, p => {
-					return m['Country (or dependency)'] === p.country ||
-						m['Country (or dependency)'] === p.country_p ||
-						m['Country (or dependency)'] === p.country_w ||
-						m['Country (or dependency)'] === p.country_h;
+				let idx_m = findIndex(state.countries, p => {
+					return m['Country (or dependency)'] === p.ADMIN;
 				});
 				return {
-					country: idx_m > -1 ? state.countriesMapping[idx_m].name_x : m['Country (or dependency)'],
+					country: idx_m > -1 ? state.countries[idx_m].ADMIN_GR : m['Country (or dependency)'],
 					population: parseInt(m['Population (2020)'])
 				};
 			});
@@ -205,7 +204,7 @@ export default new Vuex.Store({
 		},
 
 		set_globalData (state, data) {
-			let cases = map(_.cloneDeep(data.cases), (m, i) => {
+			let cases = map(cloneDeep(data.cases), (m, i) => {
 				let o = {
 					country: m['Country/Region'],
 					state: m['Province/State'],
@@ -239,7 +238,7 @@ export default new Vuex.Store({
 				};
 			});
 
-			let deaths = map(_.cloneDeep(data.deaths), (m, i) => {
+			let deaths = map(cloneDeep(data.deaths), (m, i) => {
 				let o = {
 					country: m['Country/Region'],
 					state: m['Province/State'],
@@ -273,7 +272,7 @@ export default new Vuex.Store({
 				};
 			});
 
-			let recovered = map(_.cloneDeep(data.recovered), (m, i) => {
+			let recovered = map(cloneDeep(data.recovered), (m, i) => {
 				let o = {
 					country: m['Country/Region'],
 					state: m['Province/State'],
@@ -311,23 +310,100 @@ export default new Vuex.Store({
 				v.deaths = filter(red_deaths, ['country', v.country])[0].deaths;
 				v.recovered = filter(red_recovered, ['country', v.country])[0].recovered;
 
-				let idx_m = findIndex(state.countriesMapping, p => {
-					return v.country === p.country ||
-						v.country === p.country_p ||
-						v.country === p.country_w ||
-						v.country === p.country_h;
+				let idx_m = findIndex(state.countries, p => {
+					return v.country === p.ADMIN;
 				});
-
-				v.country = idx_m > -1 ? state.countriesMapping[idx_m].name_x : v.country;
-				let idx_p = findIndex(state.worldPopulation, ['country', v.country]);
-				v.population = idx_p > -1 ? state.worldPopulation[idx_p].population : 1000000;
-				v.totalIndex = v.cases ? v.cases.map(x => {
-					return parseFloat(((x / v.population) * 1000000).toFixed(2));
-				}) : [];
+				v.country = idx_m > -1 ? state.countries[idx_m].ADMIN_GR : v.country;
 				return v;
 			});
 
 			state.globalData = globalData;
+		},
+		set_greeceData (state, data) {
+			let cases = map(cloneDeep(data.cases), (m, i) => {
+				let o = {
+					country: m['county_normalized'],
+					state: m['county'],
+					pop_11: m['pop_11'],
+					dates: [],
+					cases: []
+				};
+
+				delete m['Γεωγραφικό Διαμέρισμα'];
+				delete m['Περιφέρεια'];
+				delete m['county_normalized'];
+				delete m['county'];
+				delete m['pop_11'];
+
+				let kk = keys(m);
+				o.dates = map(kk, (n) => {
+					return parseDate(n);
+				});
+
+				o.cases = map(kk, (n) => {
+					return parseInt(m[n]) || 0;
+				});
+
+				return o;
+			});
+
+			let red_cases = map(groupBy(cases, m => m.country), (v, k) => {
+				return {
+					country: k,
+					state: v[0].state,
+					pop_11: v[0].pop_11,
+					dates: v[0].dates,
+					cases: v.reduce((r, a) => a.cases.map((b, i) => (r[i] || 0) + b), [])
+				};
+			});
+
+			let deaths = map(cloneDeep(data.deaths), (m, i) => {
+				let o = {
+					country: m['county_normalized'],
+					state: m['county'],
+					pop_11: parseInt(m['pop_11']),
+					dates: [],
+					deaths: []
+				};
+
+				delete m['Γεωγραφικό Διαμέρισμα'];
+				delete m['Περιφέρεια'];
+				delete m['county_normalized'];
+				delete m['county'];
+				delete m['pop_11'];
+
+				let kk = keys(m);
+				o.dates = map(kk, (n) => {
+					return parseDate(n);
+				});
+
+				o.deaths = map(kk, (n) => {
+					return parseInt(m[n]) || 0;
+				});
+
+				return o;
+			});
+
+			let red_deaths = map(groupBy(deaths, m => m.country), (v, k) => {
+				return {
+					country: k,
+					dates: v[0].dates,
+					deaths: v.reduce((r, a) => a.deaths.map((b, i) => (r[i] || 0) + b), [])
+				};
+			});
+
+			let greeceData = red_cases.map((v, i) => {
+				v.deaths = filter(red_deaths, ['country', v.country]).length > 0 ? filter(red_deaths, ['country', v.country])[0].deaths : null;
+				v.totalIndex = v.cases ? v.cases.map(x => {
+					return parseFloat(((x / v.pop_11) * 100000).toFixed(2));
+				}) : [];
+				v.deathsIndex = v.deaths ? v.deaths.map(x => {
+					return parseFloat(((x / v.pop_11) * 100000).toFixed(2));
+				}) : [];
+				return v;
+			});
+
+			state.greeceData = greeceData;
 		},
 		set_cases (state, data) {
 			state.cases = data;
@@ -347,6 +423,7 @@ export default new Vuex.Store({
 				m.name = m.county_normalized === 'ΕΛΛΑΔΑ' ? m.county : `${m.county}`;
 				m.population = parseInt(m.pop_11) || 0;
 				m.totalIndex = m.population ? (100000 * m.cases) / (m.population) : 0;
+				m.deathsIndex = m.population ? (100000 * m.dead) / (m.population) : 0;
 				m.cases_normalized = parseFloat(m.cases_normalized) ||  0;
 				return m;
 			});
@@ -357,14 +434,11 @@ export default new Vuex.Store({
 		},
 		set_wom_data (state, data) {
 			data = data.map(m => {
-				let idx_m = findIndex(state.countriesMapping, p => {
-					return m['Country,Other'] === p.country ||
-						m['Country,Other'] === p.country_p ||
-						m['Country,Other'] === p.country_w ||
-						m['Country,Other'] === p.country_h;
+				let idx_m = findIndex(state.countries, p => {
+					return m['Country,Other'] === p.ADMIN;
 				});
 				return {
-					country: idx_m > -1 ? state.countriesMapping[idx_m].name_x : m['Country,Other'],
+					country: idx_m > -1 ? state.countries[idx_m].ADMIN_GR : m['Country,Other'],
 					totalCases: parseInt(m['TotalCases'].replace(',', '')) || 0,
 					newCases: parseInt(m['NewCases'].replace(',', '')) || 0,
 					totalDeaths: parseInt(m['TotalDeaths'].replace(',', '')) || 0,
@@ -377,6 +451,17 @@ export default new Vuex.Store({
 				};
 			});
 			data.pop();
+			state.wom_data = data;
+		},
+		reset_wom_data (state, data) {
+			data = data.map(m => {
+				let idx_m = findIndex(state.countries, p => {
+					return m.country === p.ADMIN ||
+						m.country === p.ADMIN_GR;
+				});
+				m.country = idx_m > -1 ? state.countries[idx_m].ADMIN_GR : m.country;
+				return m;
+			});
 			state.wom_data = data;
 		},
 		set_alerts (state, data) {

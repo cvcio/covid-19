@@ -3,13 +3,8 @@
 </template>
 
 <script>
-import { filter, keys, values, flatten, map, groupBy, sumBy, cloneDeep, maxBy, meanBy } from 'lodash';
+import { filter, keys, values, flatten, map, groupBy, sumBy, cloneDeep, meanBy } from 'lodash';
 import Highcharts from 'highcharts';
-Highcharts.setOptions({
-	time: {
-		timezone: 'Europe/Athens'
-	}
-});
 
 export default {
 	name: 'chart-timeline',

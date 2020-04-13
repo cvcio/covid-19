@@ -2,6 +2,7 @@ import Vue from 'vue';
 
 import vuetify from '@/plugins/vuetify';
 import App from '@/App.vue';
+import router from '@/router';
 import store from '@/store';
 
 import '@/registerServiceWorker';
@@ -20,6 +21,7 @@ Vue.config.productionTip = process.env.NODE_ENV === 'development';
 Vue.config.performance = process.env.NODE_ENV === 'development';
 
 new Vue({
+	router,
 	store,
 	vuetify,
 	render: h => h(App),

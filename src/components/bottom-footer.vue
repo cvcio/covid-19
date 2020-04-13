@@ -13,9 +13,9 @@
 		<v-btn x-small text @click.stop="$store.commit('set_dialogEmbed', true)">
 			Embed <v-icon right small>mdi-code-tags</v-icon>
 		</v-btn>
-		<v-btn x-small color="red" depressed class="ml-2 text-inherit">
+		<!-- <v-btn x-small color="red" depressed class="ml-2 text-inherit">
 			<span class="caption">BETA</span>
-		</v-btn>
+		</v-btn> -->
 	</v-footer>
 </template>
 
