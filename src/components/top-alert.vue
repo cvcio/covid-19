@@ -26,7 +26,7 @@ export default {
 <style lang="less" scoped>
 #alert {
 	width: 100%;
-	position: relative;
+	position: fixed;
 	left: 0;
 	top: 0;
 	z-index: 100;

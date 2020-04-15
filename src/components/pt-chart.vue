@@ -21,7 +21,10 @@ export default {
 	},
 	methods: {
 		draw () {
-			Plotly.newPlot(this.id, this.fig.data, this.fig.layout, { responsive: true });
+			Plotly.newPlot(this.id, this.fig.data, this.fig.layout, {
+				displaylogo: false,
+				staticPlot: false
+			});
 		}
 	}
 };

@@ -48,16 +48,16 @@
 				<v-list-item>
 					<v-list-item-content class="py-0">
 						<v-row no-gutters>
-							<v-btn-toggle v-model="$store.state.activeMap" small mandatory dark>
-								<v-btn value="greece" :color="activeMap === 'greece' ? 'primary' : 'primary lighten-4'" small @click="$router.push('/'); triggerUpdate = new Date()">
+							<v-btn-toggle v-model="$store.state.activeMap" small mandatory dark class="mb-2">
+								<v-btn value="greece" :color="activeMap === 'greece' ? 'primary' : 'primary lighten-4'" small @click="$router.push('/').catch(err => {}); triggerUpdate = new Date()">
 									Ελλαδα
 								</v-btn>
-								<v-btn value="admin-0" :color="activeMap === 'admin-0' ? 'primary' : 'primary lighten-4'" small  @click="$router.push('/'); triggerUpdate = new Date()">
+								<v-btn value="admin-0" :color="activeMap === 'admin-0' ? 'primary' : 'primary lighten-4'" small  @click="$router.push('/').catch(err => {}); triggerUpdate = new Date()">
 									ΚΟΣΜΟΣ
 								</v-btn>
 							</v-btn-toggle>
 							<v-spacer/>
-							<v-btn color="accent" to="/stats/" small  @click="triggerUpdate = new Date()">
+							<v-btn color="accent" to="/stats/" depressed small @click="triggerUpdate = new Date()" class="mb-2">
 								Στατιστικα
 							</v-btn>
 						</v-row>
@@ -336,11 +336,11 @@ export default {
 			}
 		}
 	},
-	watch: {
-		$route (to, from) {
-			console.log(to);
-		}
-	},
+	// watch: {
+	// 	$route (to, from) {
+	// 		console.log(to);
+	// 	}
+	// },
 	data () {
 		return {
 			// activeMap: 'greece',
@@ -355,7 +355,7 @@ export default {
 		];
 
 		let csvFiles = [
-			{ file: `${this.$BASE_URL}shared/countries.csv?${unix}`, key: 'countries' },
+			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/countries_names.csv?${unix}`, key: 'countries' },
 			{ file: `${this.$BASE_URL}shared/world-population.csv?${unix}`, key: 'worldPopulation' },
 
 			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greece_cases.csv?${unix}`, key: 'greece_cases' },
@@ -415,8 +415,7 @@ export default {
 				m.properties.cases = data ? data.cases : [];
 				m.properties.deaths = data ? data.deaths : [];
 				m.properties.recovered = data ? data.recovered : [];
-
-				m.properties.NOTES = '';
+				m.properties.NOTES = idx_m > -1 && this.countries[idx_m].tooltip_note ? this.countries[idx_m].tooltip_note : '';
 
 				m.properties.totalIndex = data ? data.cases.map(x => {
 					return parseFloat(((x / m.properties.pop_11) * 1000000).toFixed(2));
@@ -470,7 +469,8 @@ export default {
 
 <style lang="less">
 html, body, #app {
-	overflow: hidden;
+	overflow: auto;
+	background: #E6ECEC;
 }
 
 .v-toolbar__content {

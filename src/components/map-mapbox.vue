@@ -42,8 +42,6 @@
 									</v-btn>
 								</v-col>
 							</v-row>
-
-
 							<v-row no-gutters justify="center" align="center" class="">
 								<v-col v-if="typeOfMap === 'cases'" class="extra-small-text font-weight-bold text-center">
 									ΚΡΟΥΣΜΑΤΑ / {{ level === 'greece' ? '100K' : '1M' }} ΠΛΗΘΥΣΜΟΥ
@@ -87,7 +85,7 @@ export default {
 	props: ['level'],
 	computed: {
 		...mapGetters([
-			'worldGeoJson', 'greeceGeoJson', 'greece', 'wom_data', 'globalData', 'greeceData'
+			'worldGeoJson', 'greeceGeoJson', 'greece', 'wom_data', 'globalData', 'greeceData' // , 'countries'
 		]),
 		colors (n) {
 			return chroma.scale('YlOrRd').mode('hsl').colors(12);
@@ -289,6 +287,9 @@ export default {
 					f.properties.DEATHSINDEX = f.properties.deathsIndex[this.value] ? f.properties.deathsIndex[this.value] : 0;
 					f.properties.UNKNOWN = null;
 					f.properties.CRITICAL = null;
+
+					// f.properties.NOTES = '';
+
 					f.properties.TOOLTIP = this.setWorldToolTip(f.properties);
 					if (this.typeOfMap === 'deaths') {
 						f.properties.opacity = f.properties.DEATHS === 0 ? 0 : 0.9;
@@ -301,6 +302,9 @@ export default {
 					const idx_c = findIndex(this.wom_data, m => f.properties.ADMIN_GR === m.country);
 					if (idx_c > -1) {
 						f.properties.count = this.wom_data[idx_c].totalCases;
+
+						// let idx_m = findIndex(this.countries, ['ADMIN', f.properties.admin]);
+						// f.properties.NOTES = idx_m > -1 && this.countries[idx_m].tooltip_note ? this.countries[idx_m].tooltip_note : '';
 
 						f.properties.DATE = new Date();
 						f.properties.CASES = this.wom_data[idx_c].totalCases ? this.wom_data[idx_c].totalCases : 0;
@@ -359,7 +363,7 @@ export default {
 					<h3 class="body-2 font-weight-bold pa-2">${new Intl.NumberFormat('el-GR').format(data.RECOVERED) || '-'}</h3>
 				</div>
 			`;
-			if (data.NOTES !== '') {
+			if (data.NOTES !== '' && this.typeOfMap === 'cases') {
 				text += `
 					<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 					<div class="row no-gutters justify-space-between">
