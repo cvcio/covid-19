@@ -28,8 +28,22 @@
 								<h4 class="accent--text pl-6">allowfullscreen&gt;</h4>
 								<h4 class="accent--text">&lt;/iframe&gt;</h4>
 							</div>
-
-							<p>Με τον παραπάνω κώδικα μπορείτε να ενσωματώσετε την εφαρμογή στην ιστοσελίδα σας. Εάν παρατηρήσετε προβλήματα στην ενσωμάτωση, επικοινωνήστε μαζί μας στο <a href="mailto:lab@imedd.org" target="_blank">lab@imedd.org</a> ή χρησιμοποιήστε τη <a href="https://www.imedd.org/el/contact/" target="_blank">φόρμα επικοινωνίας</a> με το iMEdD.</p>
+							<p>Με τον παραπάνω κώδικα μπορείτε να ενσωματώσετε τη σελίδα με τον χάρτη στην ιστοσελίδα σας.</p>
+							<p>Για να ενσωματώσετε τη σελίδα με τα γραφήματα στην ιστοσελίδα σας χρησιμοποιείστε τον παρακάτω κώδικα.</p>
+							<div class="pa-6 mb-4 grey lighten-2 elevation-0 code" style="position: relative;">
+								<h4 class="accent--text">&lt;iframe</h4>
+								<h4 class="accent--text pl-6">src=&quot;{{'https://lab.imedd.org/covid19/stats/'}}&quot;</h4>
+								<h4 class="accent--text pl-6">style=&quot;border:0px #ffffff none;&quot;</h4>
+								<h4 class="accent--text pl-6">name=&quot;imedd-covid-stats&quot;</h4>
+								<h4 class="accent--text pl-6">frameborder=&quot;1&quot;</h4>
+								<h4 class="accent--text pl-6">marginheight=&quot;0px&quot;</h4>
+								<h4 class="accent--text pl-6">marginwidth=&quot;0px&quot;</h4>
+								<h4 class="accent--text pl-6">height=&quot;640px&quot;</h4>
+								<h4 class="accent--text pl-6">width=&quot;640px&quot;</h4>
+								<h4 class="accent--text pl-6">allowfullscreen&gt;</h4>
+								<h4 class="accent--text">&lt;/iframe&gt;</h4>
+							</div>
+							<p>Εάν παρατηρήσετε προβλήματα στην ενσωμάτωση, επικοινωνήστε μαζί μας στο <a href="mailto:lab@imedd.org" target="_blank">lab@imedd.org</a> ή χρησιμοποιήστε τη <a href="https://www.imedd.org/el/contact/" target="_blank">φόρμα επικοινωνίας</a> με το iMEdD.</p>
 						</v-col>
 					</v-row>
 				</v-container>

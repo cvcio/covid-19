@@ -56,10 +56,10 @@
 							<v-row justify="space-between" align="center" class="my-0 py-0">
 								<v-col class="extra-small-text font-weight-bold my-0 py-0">0</v-col>
 								<v-col class="extra-small-text font-weight-bold text-center my-0 py-0">
-									{{ stats.mean ? stats.mean.toFixed(2) : '-' }}
+									{{ stats.mean ? stats.mean : '-' }}
 								</v-col>
 								<v-col class="extra-small-text font-weight-bold text-right my-0 py-0">
-									{{ stats.max ? stats.max.toFixed(2) : '-' }}
+									{{ stats.max ? stats.max : '-' }}
 								</v-col>
 							</v-row>
 						</v-card-text>
@@ -77,7 +77,7 @@
 import { mapGetters } from 'vuex';
 import { scaleThreshold } from 'd3';
 import chroma from 'chroma-js';
-import { findIndex, filter, uniq, max } from 'lodash';
+import { findIndex, filter, uniq, max, min } from 'lodash';
 import * as simple from 'simple-statistics';
 
 export default {
@@ -121,6 +121,9 @@ export default {
 		typeOfMap (n, o) {
 			if (n !== o) {
 				this.setData();
+				// if (n === 'cases' && this.level === 'greece') {
+				// 	this.$store.commit('set_dialogWarnEODY', true);
+				// }
 			}
 		},
 		level (n, o) {
@@ -134,6 +137,10 @@ export default {
 					n === 'greece' ? [23.7208298, 37.9908697] : [0, 30],
 					n === 'greece' ? 4.5 : 2
 				);
+
+				// if (n === 'greece' && this.typeOfMap === 'cases') {
+				// 	this.$store.commit('set_dialogWarnEODY', true);
+				// }
 			}
 		},
 		isPlaying (n, o) {
@@ -271,10 +278,13 @@ export default {
 			}
 			arr = uniq(arr);
 
-			const ckm = this.getCKMeans(arr, arr.length >= 16 ? 16 : arr.length);
+			let ckm = this.getCKMeans(arr, arr.length >= 12 ? 12 : 6).map(m => Math.ceil(m));
+			ckm = uniq(ckm);
+
 			this.stats.mean = ckm[Math.ceil(ckm.length / 2)] || null;
 			this.stats.max = ckm[ckm.length - 1] || null;
-			const scaleColorW = scaleThreshold().domain(uniq(ckm)).range(this.getColors(ckm.length >= 12 ? 12 : ckm.length + 1));
+			const scaleColorW = scaleThreshold().domain(ckm).range(this.getColors(ckm.length));
+
 			this.worldGeoJson.features.forEach(f => {
 				if (this.value < this.dates.length - 1) {
 					f.properties.count = f.properties.cases[this.value] ? f.properties.cases[this.value] : 0;
@@ -293,10 +303,10 @@ export default {
 					f.properties.TOOLTIP = this.setWorldToolTip(f.properties);
 					if (this.typeOfMap === 'deaths') {
 						f.properties.opacity = f.properties.DEATHS === 0 ? 0 : 0.9;
-						f.properties.color = scaleColorW(f.properties.DEATHSINDEX);
+						f.properties.color = !isFinite(f.properties.DEATHSINDEX) ? '#ccc' : scaleColorW(f.properties.DEATHSINDEX);
 					} else {
 						f.properties.opacity = f.properties.CASES === 0 ? 0 : 0.9;
-						f.properties.color = scaleColorW(f.properties.TOTALINDEX);
+						f.properties.color = !isFinite(f.properties.TOTALINDEX) ? '#ccc' : scaleColorW(f.properties.TOTALINDEX);
 					}
 				} else {
 					const idx_c = findIndex(this.wom_data, m => f.properties.ADMIN_GR === m.country);
@@ -312,16 +322,16 @@ export default {
 						f.properties.RECOVERED = this.wom_data[idx_c].totalRecovered ? this.wom_data[idx_c].totalRecovered : 0;
 						f.properties.TOTALINDEX = parseInt((f.properties.CASES * 1000000) / f.properties.pop_11);
 						f.properties.DEATHSINDEX = parseInt((f.properties.DEATHS * 1000000) / f.properties.pop_11);
-						f.properties.UNKNOWN = this.typeOfMap === 'deaths' ? filter(this.greece, m => m.county_normalized === 'ΕΛΛΑΔΑ')[0].dead: filter(this.greece, m => m.county_normalized === 'ΕΛΛΑΔΑ')[0].cases;
-						f.properties.CRITICAL = filter(this.greece, m => m.county_normalized === 'ΕΛΛΑΔΑ')[0].critical;
+						f.properties.UNKNOWN = this.typeOfMap === 'deaths' ? filter(this.greece, m => m.name === 'Χωρίς Γεωγραφικό Προσδιορισμό')[0].dead: filter(this.greece, m => m.name === 'Χωρίς Γεωγραφικό Προσδιορισμό')[0].cases;
+						f.properties.CRITICAL = filter(this.greece, m => m.name === 'Χωρίς Γεωγραφικό Προσδιορισμό')[0].critical;
 						f.properties.TOOLTIP = this.setWorldToolTip(f.properties);
 
 						if (this.typeOfMap === 'deaths') {
 							f.properties.opacity = f.properties.DEATHS === 0 ? 0 : 0.9;
-							f.properties.color = scaleColorW(f.properties.DEATHSINDEX);
+							f.properties.color = !isFinite(f.properties.DEATHSINDEX) ? '#ccc' : scaleColorW(f.properties.DEATHSINDEX);
 						} else {
 							f.properties.opacity = f.properties.CASES === 0 ? 0 : 0.9;
-							f.properties.color = scaleColorW(f.properties.TOTALINDEX);
+							f.properties.color = !isFinite(f.properties.TOTALINDEX) ? '#ccc' : scaleColorW(f.properties.TOTALINDEX);
 						}
 					}
 				}
@@ -427,10 +437,13 @@ export default {
 			}
 			arr = uniq(arr);
 
-			const ckm = this.getCKMeans(arr, arr.length >= 16 ? 16 : arr.length);
+			let ckm = this.getCKMeans(arr, arr.length >= 12 ? 12 : 6).map(m => Math.ceil(m));
+			ckm = uniq(ckm);
+
 			this.stats.mean = ckm[Math.ceil(ckm.length / 2)] || null;
 			this.stats.max = ckm[ckm.length - 1] || null;
-			const scaleColorW = scaleThreshold().domain(uniq(ckm)).range(this.getColors(ckm.length >= 12 ? 12 : ckm.length + 1));
+			const scaleColorW = scaleThreshold().domain(ckm).range(this.getColors(ckm.length));
+
 			this.greeceGeoJson.features.forEach(f => {
 				if (this.value < this.dates.length - 1) {
 					f.properties.DATE =  this.dates[this.value];
@@ -443,15 +456,15 @@ export default {
 
 					if (this.typeOfMap === 'deaths') {
 						f.properties.opacity = f.properties.DEATHS === 0 ? 0 : 0.9;
-						f.properties.color = scaleColorW(f.properties.DEATHSINDEX);
+						f.properties.color = !isFinite(f.properties.DEATHSINDEX) ? '#ccc' : scaleColorW(f.properties.DEATHSINDEX);
 					} else {
 						f.properties.opacity = f.properties.CASES === 0 ? 0 : 0.9;
-						f.properties.color = scaleColorW(f.properties.TOTALINDEX);
+						f.properties.color = !isFinite(f.properties.TOTALINDEX) ? '#ccc' : scaleColorW(f.properties.TOTALINDEX);
 					}
 				} else {
 					f.properties.DATE = new Date();
 					const idx_c = findIndex(this.greece, m => {
-						return f.properties.ADMIN_GR === m.county;
+						return f.properties.ADMIN_GR === m.name;
 					});
 					if (idx_c > -1) {
 						f.properties.CASES = this.greece[idx_c].cases ? this.greece[idx_c].cases : 0;
@@ -459,15 +472,15 @@ export default {
 						f.properties.HOSPITALIZED = this.greece[idx_c].hospitalized ? this.greece[idx_c].hospitalized : 0;
 						f.properties.TOTALINDEX = parseFloat((f.properties.CASES * 100000) / f.properties.pop_11);
 						f.properties.DEATHSINDEX = parseFloat((f.properties.DEATHS * 100000) / f.properties.pop_11);
-						f.properties.UNKNOWN = this.typeOfMap === 'deaths' ? filter(this.greece, m => m.county_normalized === 'ΕΛΛΑΔΑ')[0].dead : filter(this.greece, m => m.county_normalized === 'ΕΛΛΑΔΑ')[0].cases;
+						f.properties.UNKNOWN = this.typeOfMap === 'deaths' ? filter(this.greece, m => m.name === 'Χωρίς Γεωγραφικό Προσδιορισμό')[0].dead : filter(this.greece, m => m.name === 'Χωρίς Γεωγραφικό Προσδιορισμό')[0].cases;
 						f.properties.TOOLTIP = this.setGreeceToolTip(f.properties);
 
 						if (this.typeOfMap === 'deaths') {
 							f.properties.opacity = f.properties.DEATHS === 0 ? 0 : 0.9;
-							f.properties.color = scaleColorW(f.properties.DEATHSINDEX);
+							f.properties.color = !isFinite(f.properties.DEATHSINDEX) ? '#ccc' : scaleColorW(f.properties.DEATHSINDEX);
 						} else {
 							f.properties.opacity = f.properties.CASES === 0 ? 0 : 0.9;
-							f.properties.color = scaleColorW(f.properties.TOTALINDEX);
+							f.properties.color = !isFinite(f.properties.TOTALINDEX) ? '#ccc' : scaleColorW(f.properties.TOTALINDEX);
 						}
 					}
 				}
@@ -491,7 +504,7 @@ export default {
 				</div>
 				<!--<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 				<div class="row no-gutters justify-space-between">
-					<h3 class="body-2 pa-2">Κρούσματα / 100K</h3>
+					<h3 class="body-2 pa-2">Αναλογία / 100Κ Πληθυσμού</h3>
 					<h3 class="body-2 font-weight-bold pa-2">${new Intl.NumberFormat('el-GR').format(data.TOTALINDEX.toFixed(2)) || '-'}</h3>
 				</div>-->
 
@@ -501,8 +514,18 @@ export default {
 					<h3 class="body-2 font-weight-bold red--text pa-2">${new Intl.NumberFormat('el-GR').format(data.DEATHS) || '-'}</h3>
 				</div>
 			</div>
-
 			`;
+			if (this.typeOfMap === 'cases') {
+				text += `
+				<div class="px-2 pt-2">
+					<div class="row no-gutters justify-space-between">
+						<h3 class="body-2 pa-2">Αναλογία / 100Κ Πληθυσμού</h3>
+						<h3 class="body-2 font-weight-bold pa-2">${new Intl.NumberFormat('el-GR').format(data.TOTALINDEX.toFixed(2)) || '-'}</h3>
+					</div>
+				</div>
+				<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
+				`;
+			}
 			if (data.UNKNOWN) {
 				let k = '';
 				if (this.typeOfMap === 'deaths') {
@@ -511,7 +534,7 @@ export default {
 					k = data.UNKNOWN > 1 ? ' κρούσματα' : 'κρούσμα';
 				}
 				text += `
-				<div class="pa-2">
+				<div class="px-2 pb-2">
 					<div class="row no-gutters justify-space-between">
 						<h3 class="body-2 pa-2"><span class="font-weight-bold mr-1">${new Intl.NumberFormat('el-GR').format(data.UNKNOWN) || '-'}</span> ${ k } χωρίς γεωγραφικό προσδιορισμό</h3>
 					</div>
