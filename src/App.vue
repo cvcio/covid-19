@@ -107,7 +107,7 @@
 
 			<template v-if="activeMap === 'greece'">
 				<v-list class="">
-					<v-subheader class="grey--text">Διασωληνωμένοι | Εξιτήρια</v-subheader>
+					<v-subheader class="grey--text">Διασωληνωμένοι | Ανάρρωσαν</v-subheader>
 					<v-list-item>
 						<v-list-item-content class="py-0">
 							<v-list-item-subtitle class="headline">
@@ -171,7 +171,7 @@
 				<v-data-table dense v-if="greece" class="mt-4 mb-3" :headers="[
 					{ text: 'Νομός', value: 'name', width: '40%', class: 'extra-small-text pr-1' },
 					{ text: 'Κρούσματα', value: 'cases', width: '20%', class: 'extra-small-text pl-0 pr-1' },
-					{ text: 'Εξιτήρια', value: 'recovered', width: '20%', class: 'extra-small-text pl-0 pr-1' },
+					{ text: 'Ανάρρωσαν', value: 'recovered', width: '20%', class: 'extra-small-text pl-0 pr-1' },
 					{ text: 'Θάνατοι', value: 'dead', width: '20%', class: 'extra-small-text pl-0 pr-1' },
 				]" :items="greece" :sort-by="['cases', 'recovered', 'dead']" :sort-desc="[true, true, true]">
 					<template v-slot:item="props">
