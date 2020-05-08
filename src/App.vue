@@ -5,8 +5,8 @@
 
 		<v-navigation-drawer v-if="!loading" app touchless width="360" class="main-nav" v-model="navStats"
 			:class="[
-				(alert && $vuetify.breakpoint.xsOnly ? 'alert-mobile-nav' : ''),
-				(alert && $vuetify.breakpoint.smAndUp ? 'alert-nav' : ''),
+				(alert && $vuetify.breakpoint.xsOnly && alertText !== '' ? 'alert-mobile-nav' : ''),
+				(alert && $vuetify.breakpoint.smAndUp && alertText !== '' ? 'alert-nav' : ''),
 				(!alert && $vuetify.breakpoint.mdAndDown ? 'mobile-nav' : ''),
 				(!alert && $vuetify.breakpoint.mdAndUp ? 'normal-nav' : '')
 			]"
@@ -35,30 +35,42 @@
 								<span class="">19</span>
 							</span>
 						</v-list-item-title>
-						<p class="body-2 mb-0">Η εξάπλωση της νόσου <br/>στην Ελλάδα και στον κόσμο</p>
+						<p class="body-2 mb-0" v-html="$t('Η εξάπλωση της νόσου <br/>στην Ελλάδα και στον κόσμο')"></p>
 					</v-list-item-content>
+					<!-- <v-list-item-action>
+						<v-row no-gutters>
+							<v-btn-toggle v-model="$i18n.locale" small mandatory light class="mb-2">
+								<v-btn value="el" small>
+									ΕΛ
+								</v-btn>
+								<v-btn value="en" small>
+									ΕΝ
+								</v-btn>
+							</v-btn-toggle>
+						</v-row>
+					</v-list-item-action> -->
 				</v-list-item>
 			</v-list>
 
 			<v-divider dark class=""></v-divider>
 			<v-list>
 				<v-subheader class="grey--text mb-2">
-					<span class="caption">Τελευταία Ενημέρωση: <span class="info--text">{{ find(alerts, ['key', 'lastUpdatedAt']).value || '' }}</span></span>
+					<span class="caption">{{ $t('Τελευταία Ενημέρωση') }}: <span class="info--text">{{ find(alerts, ['key', 'lastUpdatedAt']).value || '' }}</span></span>
 				</v-subheader>
 				<v-list-item>
 					<v-list-item-content class="py-0">
 						<v-row no-gutters>
 							<v-btn-toggle v-model="$store.state.activeMap" small mandatory dark class="mb-2">
 								<v-btn value="greece" :color="activeMap === 'greece' ? 'primary' : 'primary lighten-4'" small @click="$router.push('/').catch(err => {}); triggerUpdate = new Date()">
-									Ελλαδα
+									{{ $t('Ελλαδα') }}
 								</v-btn>
 								<v-btn value="admin-0" :color="activeMap === 'admin-0' ? 'primary' : 'primary lighten-4'" small  @click="$router.push('/').catch(err => {}); triggerUpdate = new Date()">
-									ΚΟΣΜΟΣ
+									{{ $t('ΚΟΣΜΟΣ') }}
 								</v-btn>
 							</v-btn-toggle>
 							<v-spacer/>
 							<v-btn color="accent" to="/stats/" depressed small @click="triggerUpdate = new Date()" class="mb-2">
-								Στατιστικα
+								{{ $t('Στατιστικα') }}
 							</v-btn>
 						</v-row>
 					</v-list-item-content>
@@ -68,7 +80,7 @@
 			<v-row  no-gutters align="baseline">
 				<v-col cols="6" class="py-0">
 					<v-list>
-						<v-subheader class="grey--text">Κρούσματα</v-subheader>
+						<v-subheader class="grey--text">{{ $t('Κρούσματα') }}</v-subheader>
 						<v-list-item>
 							<v-list-item-content class="py-0">
 								<v-list-item-subtitle class="headline font-weight-black">
@@ -80,7 +92,7 @@
 				</v-col>
 				<v-col cols="6" class="py-0">
 					<v-list class="">
-						<v-subheader class="grey--text">Θάνατοι</v-subheader>
+						<v-subheader class="grey--text">{{ $t('Θάνατοι') }}</v-subheader>
 						<v-list-item>
 							<v-list-item-content class="py-0">
 								<v-list-item-subtitle class="headline red--text">
@@ -94,7 +106,7 @@
 			<v-divider dark class=""></v-divider>
 
 			<v-list>
-				<v-subheader class="grey--text">Μέσος Όρος Κρουσμάτων 7 Ημερών</v-subheader>
+				<v-subheader class="grey--text">{{ $t('Μέσος Όρος Κρουσμάτων 7 Ημερών') }}</v-subheader>
 				<v-list-item>
 					<v-list-item-content class="py-0">
 						<v-list-item-subtitle class="display-1 font-weight-black">
@@ -107,7 +119,7 @@
 
 			<template v-if="activeMap === 'greece'">
 				<v-list class="">
-					<v-subheader class="grey--text">Διασωληνωμένοι | Ανάρρωσαν</v-subheader>
+					<v-subheader class="grey--text">{{ $t('Διασωληνωμένοι | Ανάρρωσαν') }}</v-subheader>
 					<v-list-item>
 						<v-list-item-content class="py-0">
 							<v-list-item-subtitle class="headline">
@@ -120,17 +132,17 @@
 				<v-divider dark class=""></v-divider>
 			</template>
 			<v-list>
-				<v-subheader class="grey--text">Η Εξέλιξη των Κρουσμάτων στον Χρόνο</v-subheader>
+				<v-subheader class="grey--text">{{ $t('Η Εξέλιξη των Κρουσμάτων στον Χρόνο') }}</v-subheader>
 			</v-list>
 			<chart-timeline :triggerUpdate="triggerUpdate" :level="activeMap" class="px-4"></chart-timeline>
 			<v-divider dark class="mb-2"></v-divider>
 
 			<template v-if="activeMap === 'admin-0' && wom_data">
 				<v-data-table dense v-if="wom_data" class="mt-4 mb-3" :headers="[
-					{ text: 'Χώρα', value: 'country', width: '40%', class: 'extra-small-text pr-1' },
-					{ text: 'Κρούσματα', value: 'totalCases', width: '20%', class: 'extra-small-text pl-0 pr-1' },
-					{ text: 'Ανάρρωσαν', value: 'totalRecovered', width: '20%', class: 'extra-small-text pl-0 pr-1' },
-					{ text: 'Θάνατοι', value: 'totalDeaths', width: '20%', class: 'extra-small-text pl-0 pr-1' },
+					{ text: $t('Χώρα'), value: 'country', width: '40%', class: 'extra-small-text pr-1' },
+					{ text: $t('Κρούσματα'), value: 'totalCases', width: '20%', class: 'extra-small-text pl-0 pr-1' },
+					{ text: $t('Ανάρρωσαν'), value: 'totalRecovered', width: '20%', class: 'extra-small-text pl-0 pr-1' },
+					{ text: $t('Θάνατοι'), value: 'totalDeaths', width: '20%', class: 'extra-small-text pl-0 pr-1' },
 
 				]" :items="wom_data" :sort-by="['totalCases', 'totalRecovered', 'totalDeaths']" :sort-desc="[true, true, true]">
 					<template v-slot:item="props">
@@ -169,10 +181,10 @@
 			</template>
 			<template v-else-if="activeMap === 'greece' && greece">
 				<v-data-table dense v-if="greece" class="mt-4 mb-3" :headers="[
-					{ text: 'Νομός', value: 'name', width: '40%', class: 'extra-small-text pr-1' },
-					{ text: 'Κρούσματα', value: 'cases', width: '20%', class: 'extra-small-text pl-0 pr-1' },
-					{ text: 'Ανάρρωσαν', value: 'recovered', width: '20%', class: 'extra-small-text pl-0 pr-1' },
-					{ text: 'Θάνατοι', value: 'dead', width: '20%', class: 'extra-small-text pl-0 pr-1' },
+					{ text: $t('Νομός'), value: 'name', width: '40%', class: 'extra-small-text pr-1' },
+					{ text: $t('Κρούσματα'), value: 'cases', width: '20%', class: 'extra-small-text pl-0 pr-1' },
+					{ text: $t('Ανάρρωσαν'), value: 'recovered', width: '20%', class: 'extra-small-text pl-0 pr-1' },
+					{ text: $t('Θάνατοι'), value: 'dead', width: '20%', class: 'extra-small-text pl-0 pr-1' },
 				]" :items="greece" :sort-by="['cases', 'recovered', 'dead']" :sort-desc="[true, true, true]">
 					<template v-slot:item="props">
 						<tr>
@@ -215,13 +227,16 @@
 				<v-list dense>
 					<v-list-item @click.stop="$store.commit('set_dialogAbout', true)">
 						<v-list-item-content>
-							Η Εφαρμογή & Τα Data
+							{{ $t('Η Εφαρμογή & Τα Data') }}
 						</v-list-item-content>
 					</v-list-item>
 					<v-divider dark class=""></v-divider>
 					<v-list-item @click.stop="$store.commit('set_dialogTerms', true)">
 						<v-list-item-content>
-							<span><v-icon left small>mdi-creative-commons</v-icon>Όροι Χρήσης</span>
+							<span>
+								<v-icon left small>mdi-creative-commons</v-icon>
+								{{ $t('Όροι Χρήσης') }}
+							</span>
 						</v-list-item-content>
 					</v-list-item>
 					<v-divider dark class=""></v-divider>
@@ -244,8 +259,8 @@
 
 		<v-navigation-drawer app touchless light right width="280" class="news-nav" v-model="navNews"
 			:class="[
-				(alert && $vuetify.breakpoint.xsOnly ? 'alert-mobile-nav' : ''),
-				(alert && $vuetify.breakpoint.smAndUp ? 'alert-nav' : ''),
+				(alert && $vuetify.breakpoint.xsOnly && alertText !== '' ? 'alert-mobile-nav' : ''),
+				(alert && $vuetify.breakpoint.smAndUp && alertText !== '' ? 'alert-nav' : ''),
 				(!alert && $vuetify.breakpoint.mdAndDown ? 'mobile-nav' : ''),
 				(!alert && $vuetify.breakpoint.mdAndUp ? 'normal-nav' : '')
 			]"
@@ -336,14 +351,16 @@ export default {
 			}
 		}
 	},
-	// watch: {
-	// 	$route (to, from) {
-	// 		console.log(to);
-	// 	}
-	// },
+	watch: {
+		'$i18n.locale' (to, from) {
+			if (to !== from) {
+				this.$vuetify.lang.current = to;
+				this.$moment.locale(to);
+			}
+		}
+	},
 	data () {
 		return {
-			// activeMap: 'greece',
 			triggerUpdate: new Date()
 		};
 	},

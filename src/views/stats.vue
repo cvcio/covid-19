@@ -17,9 +17,19 @@
 				<pt-chart id="create_scatterplot_casesVStests_logx" src="https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/charts/create_scatterplot_casesVStests_logx.json"/>
 			</v-col>
 			<v-col cols="12" xs="12" lg="6">
-				<pt-chart id="linechart_deaths_intubated_gr" src="https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/charts/linechart_deaths_intubated_gr.json"/>
+				<pt-chart id="deaths_growth" src="https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/charts/deaths_growth.json"/>
 			</v-col>
 		</v-row>
+
+		<v-row justify="center" align="center" v-if="!loading">
+			<v-col cols="12" xs="12" lg="6">
+				<pt-chart id="linechart_deaths_intubated_gr" src="https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/charts/linechart_deaths_intubated_gr.json"/>
+			</v-col>
+			<v-col cols="12" xs="12" lg="6">
+				<pt-chart id="create_regions_facets" src="https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/charts/create_regions_facets.json"/>
+			</v-col>
+		</v-row>
+
 		<v-row justify="center" align="center" v-if="!loading">
 			<v-col cols="12" xs="12" lg="6">
 				<pt-chart id="death_heat" src="https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/charts/death_heat.json"/>

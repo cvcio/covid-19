@@ -1,32 +1,15 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 import 'vuetify/dist/vuetify.min.css';
-import VueI18n from 'vue-i18n';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { en, el } from 'vuetify/es5/locale';
 
 Vue.use(Vuetify);
-Vue.use(VueI18n);
 
-const messages = {
-	el: {
-		$vuetify: {
-			dataTable: {
-				sortBy: 'Ταξινόμηση ανά',
-				itemsPerPageText: 'Σειρές ανά σελίδα'
-			},
-			dataFooter: {
-				pageText: '{0}-{1} από {2}',
-				itemsPerPageAll: 'Όλες'
-			}
-		},
-	}
-};
-
-// Create VueI18n instance with options
-const i18n = new VueI18n({
-	locale: 'el', // set locale
-	messages, // set locale messages
-});
+el.dataTable.sortBy = 'Ταξινόμηση ανά';
+el.dataTable.itemsPerPageText = 'Σειρές ανά σελίδα';
+el.dataFooter.pageText = '{0}-{1} από {2}';
+el.dataFooter.itemsPerPageAll = 'Όλες';
 
 export default new Vuetify({
 	theme: {
@@ -59,6 +42,7 @@ export default new Vuetify({
 		}
 	},
 	lang: {
-		t: (key, ...params) => i18n.t(key, params),
+		locales: { el, en },
+		current: 'el'
 	},
 });

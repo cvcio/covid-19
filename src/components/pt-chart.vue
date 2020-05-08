@@ -23,9 +23,16 @@ export default {
 		draw () {
 			Plotly.newPlot(this.id, this.fig.data, this.fig.layout, {
 				displaylogo: false,
-				staticPlot: false
+				staticPlot: false,
+				responsive: true
 			});
 		}
 	}
 };
 </script>
+
+<style lang="less">
+svg.main-svg {
+
+}
+</style>

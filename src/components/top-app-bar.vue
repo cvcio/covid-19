@@ -1,8 +1,8 @@
 <template>
 	<v-app-bar app fixed dark color="transparent" flat class=""
 		:class="[
-			(alert && $vuetify.breakpoint.smAndDown ? 'mt-12 pt-2' : ''),
-			(alert && $vuetify.breakpoint.mdAndUp ? 'mt-9' : ''),
+			(alert && $vuetify.breakpoint.smAndDown && alertText !== '' ? 'mt-12 pt-2' : ''),
+			(alert && $vuetify.breakpoint.mdAndUp && alertText !== '' ? 'mt-9' : ''),
 		]"
 		>
 		<v-row no-gutters :justify="$vuetify.breakpoint.mdAndDown ? 'end' : 'start'">
@@ -23,7 +23,10 @@ import { mapGetters } from 'vuex';
 export default {
 	name: 'top-app-bar',
 	computed: {
-		...mapGetters(['alert', 'navStats', 'navNews'])
+		...mapGetters(['alerts', 'alert', 'navStats', 'navNews']),
+		alertText () {
+			return this.alerts ? find(this.alerts, ['key', 'alertText']).value : '';
+		},
 	}
 };
 </script>

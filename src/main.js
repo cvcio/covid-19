@@ -4,6 +4,7 @@ import vuetify from '@/plugins/vuetify';
 import App from '@/App.vue';
 import router from '@/router';
 import store from '@/store';
+import i18n from '@/locale';
 
 import '@/registerServiceWorker';
 
@@ -21,6 +22,7 @@ Vue.config.productionTip = process.env.NODE_ENV === 'development';
 Vue.config.performance = process.env.NODE_ENV === 'development';
 
 new Vue({
+	i18n,
 	router,
 	store,
 	vuetify,
