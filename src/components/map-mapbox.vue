@@ -77,7 +77,7 @@
 import { mapGetters } from 'vuex';
 import { scaleThreshold } from 'd3';
 import chroma from 'chroma-js';
-import { findIndex, filter, uniq, max } from 'lodash';
+import { findIndex, filter, uniq, max, find } from 'lodash';
 import * as simple from 'simple-statistics';
 
 export default {
@@ -276,10 +276,14 @@ export default {
 			}
 			arr = uniq(arr);
 
-			const ckm = this.getCKMeans(arr, arr.length >= 16 ? 16 : arr.length);
+			let ckm = this.getCKMeans(arr, arr.length >= 16 ? 16 : 6).map(m => Math.ceil(m));
+			ckm = uniq(ckm);
+
 			this.stats.mean = ckm[Math.ceil(ckm.length / 2)] || null;
 			this.stats.max = ckm[ckm.length - 1] || null;
-			const scaleColorW = scaleThreshold().domain(uniq(ckm)).range(this.getColors(ckm.length >= 12 ? 12 : ckm.length + 1));
+
+			const scaleColorW = scaleThreshold().domain(ckm).range(this.getColors(ckm.length));
+
 			this.worldGeoJson.features.forEach(f => {
 				if (this.value < this.dates.length - 1) {
 					f.properties.count = f.properties.cases[this.value] ? f.properties.cases[this.value] : 0;
@@ -291,6 +295,7 @@ export default {
 					f.properties.TOTALINDEX = f.properties.totalIndex[this.value] ? f.properties.totalIndex[this.value] : 0;
 					f.properties.DEATHSINDEX = f.properties.deathsIndex[this.value] ? f.properties.deathsIndex[this.value] : 0;
 					f.properties.UNKNOWN = null;
+					f.properties.NONGREEK = null;
 					f.properties.CRITICAL = null;
 
 					// f.properties.NOTES = '';
@@ -298,10 +303,10 @@ export default {
 					f.properties.TOOLTIP = this.setWorldToolTip(f.properties);
 					if (this.typeOfMap === 'deaths') {
 						f.properties.opacity = f.properties.DEATHS === 0 ? 0 : 0.9;
-						f.properties.color = scaleColorW(f.properties.DEATHSINDEX);
+						f.properties.color = !isFinite(f.properties.DEATHSINDEX) ? '#ccc' : scaleColorW(f.properties.DEATHSINDEX);
 					} else {
 						f.properties.opacity = f.properties.CASES === 0 ? 0 : 0.9;
-						f.properties.color = scaleColorW(f.properties.TOTALINDEX);
+						f.properties.color = !isFinite(f.properties.TOTALINDEX) ? '#ccc' : scaleColorW(f.properties.TOTALINDEX);
 					}
 				} else {
 					const idx_c = findIndex(this.wom_data, m => f.properties.ADMIN_GR === m.country);
@@ -317,16 +322,18 @@ export default {
 						f.properties.RECOVERED = this.wom_data[idx_c].totalRecovered ? this.wom_data[idx_c].totalRecovered : 0;
 						f.properties.TOTALINDEX = parseInt((f.properties.CASES * 1000000) / f.properties.pop_11);
 						f.properties.DEATHSINDEX = parseInt((f.properties.DEATHS * 1000000) / f.properties.pop_11);
-						f.properties.UNKNOWN = this.typeOfMap === 'deaths' ? filter(this.greece, m => m.county_normalized === 'ΕΛΛΑΔΑ')[0].dead: filter(this.greece, m => m.county_normalized === 'ΕΛΛΑΔΑ')[0].cases;
-						f.properties.CRITICAL = filter(this.greece, m => m.county_normalized === 'ΕΛΛΑΔΑ')[0].critical;
+						f.properties.UNKNOWN = this.typeOfMap === 'deaths' ? filter(this.greece, m => m.name === 'Χωρίς Γεωγραφικό Προσδιορισμό')[0].dead: filter(this.greece, m => m.name === 'Χωρίς Γεωγραφικό Προσδιορισμό')[0].cases;
+						f.properties.NONGREEK = this.typeOfMap === 'deaths' ? filter(this.greece, m => m.name === 'Χωρίς Μόνιμη Κατοικία στην Ελλάδα')[0].dead: filter(this.greece, m => m.name === 'Χωρίς Μόνιμη Κατοικία στην Ελλάδα')[0].cases;
+						f.properties.CRITICAL = filter(this.greece, m => m.name === 'Χωρίς Γεωγραφικό Προσδιορισμό')[0].critical;
+
 						f.properties.TOOLTIP = this.setWorldToolTip(f.properties);
 
 						if (this.typeOfMap === 'deaths') {
 							f.properties.opacity = f.properties.DEATHS === 0 ? 0 : 0.9;
-							f.properties.color = scaleColorW(f.properties.DEATHSINDEX);
+							f.properties.color = !isFinite(f.properties.DEATHSINDEX) ? '#ccc' : scaleColorW(f.properties.DEATHSINDEX);
 						} else {
 							f.properties.opacity = f.properties.CASES === 0 ? 0 : 0.9;
-							f.properties.color = scaleColorW(f.properties.TOTALINDEX);
+							f.properties.color = !isFinite(f.properties.TOTALINDEX) ? '#ccc' : scaleColorW(f.properties.TOTALINDEX);
 						}
 					}
 				}
@@ -377,24 +384,40 @@ export default {
 				`;
 			}
 
-			if (data.ADMIN_GR === 'Ελλάδα' && data.UNKNOWN) {
-				let k = '';
-				if (this.typeOfMap === 'deaths') {
-					k = data.UNKNOWN > 1 ? this.$t('Θάνατοι') : this.$t('Θάνατος');
-				} else {
-					k = data.UNKNOWN > 1 ? this.$t('Κρούσματα') : this.$t('Κρούσμα');
+			if (data.ADMIN_GR === 'Ελλάδα') {
+				if (data.UNKNOWN) {
+					let k = '';
+					if (this.typeOfMap === 'deaths') {
+						k = data.UNKNOWN > 1 ? this.$t('Θάνατοι') : this.$t('Θάνατος');
+					} else {
+						k = data.UNKNOWN > 1 ? this.$t('Κρούσματα') : this.$t('Κρούσμα');
+					}
+					text += `
+					<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
+					<div class="row no-gutters justify-space-between">
+						<h3 class="body-2 pa-2">${this.$t('Διασωληνωμένοι')}</h3>
+						<h3 class="body-2 font-weight-bold pa-2">${new Intl.NumberFormat('el-GR').format(data.CRITICAL) || '-'}</h3>
+					</div>
+					<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
+					<div class="row no-gutters justify-space-between">
+						<h3 class="body-2 pa-2"><span class="font-weight-bold mr-1">${new Intl.NumberFormat('el-GR').format(data.UNKNOWN) || '-'}</span> ${ k } ${this.$t('χωρίς γεωγραφικό προσδιορισμό')}</h3>
+					</div>
+					`;
 				}
-				text += `
-				<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
-				<div class="row no-gutters justify-space-between">
-					<h3 class="body-2 pa-2">${this.$t('Διασωληνωμένοι')}</h3>
-					<h3 class="body-2 font-weight-bold pa-2">${new Intl.NumberFormat('el-GR').format(data.CRITICAL) || '-'}</h3>
-				</div>
-				<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
-				<div class="row no-gutters justify-space-between">
-					<h3 class="body-2 pa-2"><span class="font-weight-bold mr-1">${new Intl.NumberFormat('el-GR').format(data.UNKNOWN) || '-'}</span> ${ k } ${this.$t('χωρίς γεωγραφικό προσδιορισμό')}</h3>
-				</div>
-				`;
+
+				if (data.NONGREEK) {
+					let k = '';
+					if (this.typeOfMap === 'deaths') {
+						k = data.NONGREEK > 1 ? this.$t('Θάνατοι') : this.$t('Θάνατος');
+					} else {
+						k = data.NONGREEK > 1 ? this.$t('Κρούσματα') : this.$t('Κρούσμα');
+					}
+					text += `
+						<div class="row no-gutters justify-space-between">
+							<h3 class="body-2 pa-2"><span class="font-weight-bold mr-1">${new Intl.NumberFormat('el-GR').format(data.NONGREEK) || '-'}</span> ${ k } ${this.$t('χωρίς μόνιμη κατοικία στην Ελλάδα')}</h3>
+						</div>
+					`;
+				}
 			}
 
 			text += '</div>';
@@ -432,10 +455,13 @@ export default {
 			}
 			arr = uniq(arr);
 
-			const ckm = this.getCKMeans(arr, arr.length >= 16 ? 16 : arr.length);
+			let ckm = this.getCKMeans(arr, arr.length >= 12 ? 12 : 6).map(m => Math.ceil(m));
+			ckm = uniq(ckm);
+
 			this.stats.mean = ckm[Math.ceil(ckm.length / 2)] || null;
 			this.stats.max = ckm[ckm.length - 1] || null;
-			const scaleColorW = scaleThreshold().domain(uniq(ckm)).range(this.getColors(ckm.length >= 12 ? 12 : ckm.length + 1));
+			const scaleColorW = scaleThreshold().domain(ckm).range(this.getColors(ckm.length));
+
 			this.greeceGeoJson.features.forEach(f => {
 				if (this.value < this.dates.length - 1) {
 					f.properties.DATE =  this.dates[this.value];
@@ -443,20 +469,29 @@ export default {
 					f.properties.DEATHS = f.properties.deaths[this.value] ? f.properties.deaths[this.value] : 0;
 					f.properties.TOTALINDEX = f.properties.totalIndex[this.value] ? parseFloat(f.properties.totalIndex[this.value]) : 0;
 					f.properties.DEATHSINDEX = f.properties.deathsIndex[this.value] ? parseFloat(f.properties.deathsIndex[this.value]) : 0;
-					f.properties.UNKNOWN = this.typeOfMap === 'deaths' ? filter(this.greeceData, m => m.country === 'ΕΛΛΑΔΑ')[0].deaths[this.value] : filter(this.greeceData, m => m.country === 'ΕΛΛΑΔΑ')[0].cases[this.value];
-					f.properties.TOOLTIP = this.setGreeceToolTip(f.properties);
 
+					let unk = this.typeOfMap === 'deaths' ?
+						find(this.greeceData, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό').deaths :
+						find(this.greeceData, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό').cases;
+					let non = this.typeOfMap === 'deaths' ?
+						find(this.greeceData, m => m.district === 'Χωρίς Μόνιμη Κατοικία στην Ελλάδα').deaths :
+						find(this.greeceData, m => m.district === 'Χωρίς Μόνιμη Κατοικία στην Ελλάδα').cases;
+
+					f.properties.UNKNOWN = unk ? unk[this.value] : 0;
+					f.properties.NONGREEK = non ? non[this.value] : 0;
+
+					f.properties.TOOLTIP = this.setGreeceToolTip(f.properties);
 					if (this.typeOfMap === 'deaths') {
 						f.properties.opacity = f.properties.DEATHS === 0 ? 0 : 0.9;
-						f.properties.color = scaleColorW(f.properties.DEATHSINDEX);
+						f.properties.color = !isFinite(f.properties.DEATHSINDEX) ? '#ccc' : scaleColorW(f.properties.DEATHSINDEX);
 					} else {
 						f.properties.opacity = f.properties.CASES === 0 ? 0 : 0.9;
-						f.properties.color = scaleColorW(f.properties.TOTALINDEX);
+						f.properties.color = !isFinite(f.properties.TOTALINDEX) ? '#ccc' : scaleColorW(f.properties.TOTALINDEX);
 					}
 				} else {
 					f.properties.DATE = new Date();
 					const idx_c = findIndex(this.greece, m => {
-						return f.properties.ADMIN_GR === m.county;
+						return f.properties.ADMIN_GR === m.name;
 					});
 					if (idx_c > -1) {
 						f.properties.CASES = this.greece[idx_c].cases ? this.greece[idx_c].cases : 0;
@@ -464,15 +499,25 @@ export default {
 						f.properties.HOSPITALIZED = this.greece[idx_c].hospitalized ? this.greece[idx_c].hospitalized : 0;
 						f.properties.TOTALINDEX = parseFloat((f.properties.CASES * 100000) / f.properties.pop_11);
 						f.properties.DEATHSINDEX = parseFloat((f.properties.DEATHS * 100000) / f.properties.pop_11);
-						f.properties.UNKNOWN = this.typeOfMap === 'deaths' ? filter(this.greece, m => m.county_normalized === 'ΕΛΛΑΔΑ')[0].dead : filter(this.greece, m => m.county_normalized === 'ΕΛΛΑΔΑ')[0].cases;
+
+						let unk = this.typeOfMap === 'deaths' ?
+							find(this.greece, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό').dead :
+							find(this.greece, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό').cases;
+						let non = this.typeOfMap === 'deaths' ?
+							find(this.greece, m => m.district === 'Χωρίς Μόνιμη Κατοικία στην Ελλάδα').dead :
+							find(this.greece, m => m.district === 'Χωρίς Μόνιμη Κατοικία στην Ελλάδα').cases;
+
+						f.properties.UNKNOWN = unk ? unk : 0;
+						f.properties.NONGREEK = non ? non : 0;
+
 						f.properties.TOOLTIP = this.setGreeceToolTip(f.properties);
 
 						if (this.typeOfMap === 'deaths') {
 							f.properties.opacity = f.properties.DEATHS === 0 ? 0 : 0.9;
-							f.properties.color = scaleColorW(f.properties.DEATHSINDEX);
+							f.properties.color = !isFinite(f.properties.DEATHSINDEX) ? '#ccc' : scaleColorW(f.properties.DEATHSINDEX);
 						} else {
 							f.properties.opacity = f.properties.CASES === 0 ? 0 : 0.9;
-							f.properties.color = scaleColorW(f.properties.TOTALINDEX);
+							f.properties.color = !isFinite(f.properties.TOTALINDEX) ? '#ccc' : scaleColorW(f.properties.TOTALINDEX);
 						}
 					}
 				}
@@ -516,9 +561,24 @@ export default {
 					k = data.UNKNOWN > 1 ? this.$t('Κρούσματα') : this.$t('Κρούσμα');
 				}
 				text += `
-				<div class="pa-2">
+				<div class="px-2">
 					<div class="row no-gutters justify-space-between">
 						<h3 class="body-2 pa-2"><span class="font-weight-bold mr-1">${new Intl.NumberFormat('el-GR').format(data.UNKNOWN) || '-'}</span> ${ k } ${this.$t('χωρίς γεωγραφικό προσδιορισμό')}</h3>
+					</div>
+				</div>
+				`;
+			}
+			if (data.NONGREEK) {
+				let k = '';
+				if (this.typeOfMap === 'deaths') {
+					k = data.NONGREEK > 1 ? this.$t('Θάνατοι') : this.$t('Θάνατος');
+				} else {
+					k = data.NONGREEK > 1 ? this.$t('Κρούσματα') : this.$t('Κρούσμα');
+				}
+				text += `
+				<div class="px-2">
+					<div class="row no-gutters justify-space-between">
+						<h3 class="body-2 pa-2"><span class="font-weight-bold mr-1">${new Intl.NumberFormat('el-GR').format(data.NONGREEK) || '-'}</span> ${ k } ${this.$t('χωρίς μόνιμη κατοικία στην Ελλάδα')}</h3>
 					</div>
 				</div>
 				`;

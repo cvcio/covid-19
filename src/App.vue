@@ -181,29 +181,19 @@
 			</template>
 			<template v-else-if="activeMap === 'greece' && greece">
 				<v-data-table dense v-if="greece" class="mt-4 mb-3" :headers="[
-					{ text: $t('Νομός'), value: 'name', width: '40%', class: 'extra-small-text pr-1' },
+					{ text: $t('Περιφέρεια'), value: 'name', width: '40%', class: 'extra-small-text pr-1' },
 					{ text: $t('Κρούσματα'), value: 'cases', width: '20%', class: 'extra-small-text pl-0 pr-1' },
-					{ text: $t('Ανάρρωσαν'), value: 'recovered', width: '20%', class: 'extra-small-text pl-0 pr-1' },
 					{ text: $t('Θάνατοι'), value: 'dead', width: '20%', class: 'extra-small-text pl-0 pr-1' },
-				]" :items="greece" :sort-by="['cases', 'recovered', 'dead']" :sort-desc="[true, true, true]">
+				]" :items="greece" :sort-by="['cases', 'dead']" :sort-desc="[true, true]">
 					<template v-slot:item="props">
 						<tr>
-							<td class="caption" style="font-size: 9px !important;">{{ $i18n.locale === 'el' ? props.item.name : props.item.county_en }}</td>
+							<td class="caption" style="font-size: 9px !important;">{{ $i18n.locale === 'el' ? props.item.district.replace('Περιφέρεια ', '') : props.item.district_EN }}</td>
 							<td class="caption pl-0" style="position:relative; font-size: 9px;">
 								<h5 class="caption font-weight-bold primary--text" style="font-size: 9px !important;">
 									{{ new Intl.NumberFormat('el-GR').format(props.item.cases) }}
 									<div
 										class="small-rect cases primary"
 										:style="'width:' + (props.item.cases > 0 ? scale(props.item.cases, countCasesGR) : 0) + '%;'"></div>
-									<div class="small-rect grey lighten-2 bg"></div>
-								</h5>
-							</td>
-							<td class="caption pl-0" style="position:relative; font-size: 9px !important;">
-								<h5 class="caption font-weight-bold green--text " style="font-size: 9px !important;">
-									{{ new Intl.NumberFormat('el-GR').format(props.item.recovered) }}
-									<div
-										class="small-rect recovered green"
-										:style="'width:' + (props.item.recovered > 0 ? scale(props.item.recovered, countRecoveredGR) : 0) + '%;'"></div>
 									<div class="small-rect grey lighten-2 bg"></div>
 								</h5>
 							</td>
@@ -369,15 +359,19 @@ export default {
 		let unix = this.$moment().unix();
 		let jsonFiles = [
 			{ file: `${this.$BASE_URL}shared/countries-simplified.geojson`, key: 'worldGeoJson' },
-			{ file: `${this.$BASE_URL}shared/greece-simplified.geojson`, key: 'greeceGeoJson' }
+			// { file: `${this.$BASE_URL}shared/greece-simplified.geojson`, key: 'greeceGeoJson' }
+			{ file: `${this.$BASE_URL}shared/districts-simplified.geojson`, key: 'greeceGeoJson' }
 		];
 
 		let csvFiles = [
 			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/countries_names.csv?${unix}`, key: 'countries' },
 			{ file: `${this.$BASE_URL}shared/world-population.csv?${unix}`, key: 'worldPopulation' },
 
-			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greece_cases.csv?${unix}`, key: 'greece_cases' },
-			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greece_deaths.csv?${unix}`, key: 'greece_deaths' },
+			// { file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greece_cases.csv?${unix}`, key: 'greece_cases' },
+			// { file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greece_deaths.csv?${unix}`, key: 'greece_deaths' },
+
+			{ file: 'https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/regions_greece_cases.csv', key: 'greece_cases' },
+			{ file: 'https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/regions_greece_deaths.csv', key: 'greece_deaths' },
 
 			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/alerts.csv?${unix}`, key: 'alerts' },
 
@@ -386,7 +380,8 @@ export default {
 			{ file: 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv', key: 'recovered' },
 
 			{ file: 'https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/wom_data.csv', key: 'wom_data' },
-			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greece.csv?${unix}`, key: 'greece' },
+			// { file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greece.csv?${unix}`, key: 'greece' },
+			{ file: 'https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/regions_greece.csv', key: 'greece' },
 			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greeceTimeline.csv?${unix}`, key: 'greeceTimeline' }
 		];
 
@@ -446,8 +441,11 @@ export default {
 			});
 
 			this.greeceGeoJson.features.forEach(m => {
+				// let idx_m = findIndex(this.greece, f => {
+				// 	return m.properties.NAME_GR === 'Ν. ' + f.county_normalized || m.properties.NAME_GR === f.county_normalized;
+				// });
 				let idx_m = findIndex(this.greece, f => {
-					return m.properties.NAME_GR === 'Ν. ' + f.county_normalized || m.properties.NAME_GR === f.county_normalized;
+					return m.properties.PER_NAME === f.district;
 				});
 				m.properties.ADMIN_GR = idx_m > -1 ? this.greece[idx_m].name : '';
 
@@ -459,8 +457,8 @@ export default {
 				let idx_p = findIndex(this.greece, ['name', m.properties.ADMIN_GR]);
 				m.properties.pop_11 = idx_p > -1 ? this.greece[idx_p].population : 0;
 
-				let data = find(this.greeceData, ['state', m.properties.ADMIN_GR]) || null;
-
+				let data = find(this.greeceData, ['district', m.properties.ADMIN_GR]) || null;
+				m.properties.NAME_ENG = data.district_EN;
 				m.properties.cases = data ? data.cases : [];
 				m.properties.deaths = data ? data.deaths : [];
 				m.properties.totalIndex = data ? data.cases.map(x => {

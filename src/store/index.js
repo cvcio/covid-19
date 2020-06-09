@@ -322,17 +322,17 @@ export default new Vuex.Store({
 		set_greeceData (state, data) {
 			let cases = map(cloneDeep(data.cases), (m, i) => {
 				let o = {
-					country: m['county_normalized'],
-					state: m['county'],
-					pop_11: m['pop_11'],
+					district: m['district'],
+					district_EN: m['district_EN'],
+					pop_11: parseInt(m['pop_11']),
 					dates: [],
 					cases: []
 				};
 
-				delete m['Γεωγραφικό Διαμέρισμα'];
-				delete m['Περιφέρεια'];
-				delete m['county_normalized'];
-				delete m['county'];
+				// delete m['Γεωγραφικό Διαμέρισμα'];
+				// delete m['Περιφέρεια'];
+				// delete m['county_normalized'];
+				// delete m['county'];
 				delete m['pop_11'];
 
 				let kk = keys(m);
@@ -347,10 +347,10 @@ export default new Vuex.Store({
 				return o;
 			});
 
-			let red_cases = map(groupBy(cases, m => m.country), (v, k) => {
+			let red_cases = map(groupBy(cases, m => m.district), (v, k) => {
 				return {
-					country: k,
-					state: v[0].state,
+					district: k,
+					district_EN: v[0].district_EN,
 					pop_11: v[0].pop_11,
 					dates: v[0].dates,
 					cases: v.reduce((r, a) => a.cases.map((b, i) => (r[i] || 0) + b), [])
@@ -359,17 +359,17 @@ export default new Vuex.Store({
 
 			let deaths = map(cloneDeep(data.deaths), (m, i) => {
 				let o = {
-					country: m['county_normalized'],
-					state: m['county'],
+					district: m['district'],
+					district_EN: m['district_EN'],
 					pop_11: parseInt(m['pop_11']),
 					dates: [],
 					deaths: []
 				};
 
-				delete m['Γεωγραφικό Διαμέρισμα'];
-				delete m['Περιφέρεια'];
-				delete m['county_normalized'];
-				delete m['county'];
+				// delete m['Γεωγραφικό Διαμέρισμα'];
+				// delete m['Περιφέρεια'];
+				// delete m['county_normalized'];
+				// delete m['county'];
 				delete m['pop_11'];
 
 				let kk = keys(m);
@@ -384,16 +384,17 @@ export default new Vuex.Store({
 				return o;
 			});
 
-			let red_deaths = map(groupBy(deaths, m => m.country), (v, k) => {
+			let red_deaths = map(groupBy(deaths, m => m.district), (v, k) => {
 				return {
-					country: k,
+					district: k,
+					district_EN: v[0].district_EN,
 					dates: v[0].dates,
 					deaths: v.reduce((r, a) => a.deaths.map((b, i) => (r[i] || 0) + b), [])
 				};
 			});
 
 			let greeceData = red_cases.map((v, i) => {
-				v.deaths = filter(red_deaths, ['country', v.country]).length > 0 ? filter(red_deaths, ['country', v.country])[0].deaths : null;
+				v.deaths = filter(red_deaths, ['district', v.district]).length > 0 ? filter(red_deaths, ['district', v.district])[0].deaths : null;
 				v.totalIndex = v.cases ? v.cases.map(x => {
 					return parseFloat(((x / v.pop_11) * 100000).toFixed(2));
 				}) : [];
@@ -402,7 +403,6 @@ export default new Vuex.Store({
 				}) : [];
 				return v;
 			});
-
 			state.greeceData = greeceData;
 		},
 		set_cases (state, data) {
@@ -420,13 +420,17 @@ export default new Vuex.Store({
 				m.dead = parseInt(m.dead) || 0;
 				m.recovered = parseInt(m.recovered) || 0;
 				m.hospitalized = parseInt(m.hospitalized) || 0;
-				m.name = m.county_normalized === 'ΕΛΛΑΔΑ' ? m.county : `${m.county}`;
+				m.critical = parseInt(m.critical) || 0;
+				m.name = m.district; // m.county_normalized === 'ΕΛΛΑΔΑ' ? m.county : `${m.county}`;
+				m.name_en = m.district_EN; // m.county_normalized === 'ΕΛΛΑΔΑ' ? m.county : `${m.county}`;
 				m.population = parseInt(m.pop_11) || 0;
 				m.totalIndex = m.population ? (100000 * m.cases) / (m.population) : 0;
 				m.deathsIndex = m.population ? (100000 * m.dead) / (m.population) : 0;
-				m.cases_normalized = parseFloat(m.cases_normalized) ||  0;
+				m.cases_normalized = parseFloat(m.cases_normalized_2011) ||  0;
+				m.dead_normalized = parseFloat(m.dead_normalized_2011) ||  0;
 				return m;
 			});
+
 			state.greece = orderBy(state.greece, ['cases', 'asc']);
 		},
 		set_greeceTimeline (state, data) {
