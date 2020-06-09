@@ -439,6 +439,7 @@ export default new Vuex.Store({
 				});
 				return {
 					country: idx_m > -1 ? state.countries[idx_m].ADMIN_GR : m['Country,Other'],
+					country_en: m['Country,Other'],
 					totalCases: parseInt(m['TotalCases'].replace(',', '')) || 0,
 					newCases: parseInt(m['NewCases'].replace(',', '')) || 0,
 					totalDeaths: parseInt(m['TotalDeaths'].replace(',', '')) || 0,

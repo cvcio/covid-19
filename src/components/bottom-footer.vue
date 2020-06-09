@@ -1,10 +1,11 @@
 <template>
 	<v-footer app inset dark class="primary lighten-1" :class="$vuetify.breakpoint.mdAndUp ? '' : 'py-3 mb-8'">
 		<v-btn x-small text @click.stop="$store.commit('set_dialogAbout', true)" class="text-inherit">
-			Η Εφαρμογή & Τα Data
+			{{ $t('Η Εφαρμογή & Τα Data') }}
 		</v-btn>
 		<v-btn x-small text @click.stop="$store.commit('set_dialogTerms', true)" class="text-inherit">
-			<v-icon left small>mdi-creative-commons</v-icon>Όροι Χρήσης
+			<v-icon left small>mdi-creative-commons</v-icon>
+			{{ $t('Όροι Χρήσης') }}
 		</v-btn>
 		<v-btn x-small text href="https://mediawatch.io/" target="_blank" class="text-inherit">
 			Visualization by CVCIO

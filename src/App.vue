@@ -37,7 +37,7 @@
 						</v-list-item-title>
 						<p class="body-2 mb-0" v-html="$t('Η εξάπλωση της νόσου <br/>στην Ελλάδα και στον κόσμο')"></p>
 					</v-list-item-content>
-					<!-- <v-list-item-action>
+					<v-list-item-action>
 						<v-row no-gutters>
 							<v-btn-toggle v-model="$i18n.locale" small mandatory light class="mb-2">
 								<v-btn value="el" small>
@@ -48,7 +48,7 @@
 								</v-btn>
 							</v-btn-toggle>
 						</v-row>
-					</v-list-item-action> -->
+					</v-list-item-action>
 				</v-list-item>
 			</v-list>
 
@@ -147,7 +147,7 @@
 				]" :items="wom_data" :sort-by="['totalCases', 'totalRecovered', 'totalDeaths']" :sort-desc="[true, true, true]">
 					<template v-slot:item="props">
 						<tr>
-							<td class="caption" style="font-size: 9px !important;">{{ props.item.country }}</td>
+							<td class="caption" style="font-size: 9px !important;">{{ $i18n.locale === 'el' ? props.item.country : props.item.country_en }}</td>
 							<td class="caption pl-0" style="position:relative; font-size: 9px;">
 								<h5 class="caption font-weight-bold primary--text" style="font-size: 9px !important;">
 									{{ new Intl.NumberFormat('el-GR').format(props.item.totalCases) }}
@@ -188,7 +188,7 @@
 				]" :items="greece" :sort-by="['cases', 'recovered', 'dead']" :sort-desc="[true, true, true]">
 					<template v-slot:item="props">
 						<tr>
-							<td class="caption" style="font-size: 9px !important;">{{ props.item.name }}</td>
+							<td class="caption" style="font-size: 9px !important;">{{ $i18n.locale === 'el' ? props.item.name : props.item.county_en }}</td>
 							<td class="caption pl-0" style="position:relative; font-size: 9px;">
 								<h5 class="caption font-weight-bold primary--text" style="font-size: 9px !important;">
 									{{ new Intl.NumberFormat('el-GR').format(props.item.cases) }}
@@ -327,7 +327,7 @@ export default {
 		]),
 
 		alertText () {
-			return this.alerts ? find(this.alerts, ['key', 'alertText']).value : '';
+			return this.alerts ? find(this.alerts, ['key', 'alertText'])[this.$i18n.locale === 'el' ? 'value' : 'value_en'] : '';
 		},
 
 		navStats: {
@@ -356,6 +356,7 @@ export default {
 			if (to !== from) {
 				this.$vuetify.lang.current = to;
 				this.$moment.locale(to);
+				this.$router.push({ query: { lang: to } });
 			}
 		}
 	},
@@ -433,6 +434,7 @@ export default {
 				m.properties.deaths = data ? data.deaths : [];
 				m.properties.recovered = data ? data.recovered : [];
 				m.properties.NOTES = idx_m > -1 && this.countries[idx_m].tooltip_note ? this.countries[idx_m].tooltip_note : '';
+				m.properties.NOTES_EN = idx_m > -1 && this.countries[idx_m].tooltip_note_en ? this.countries[idx_m].tooltip_note_en : '';
 
 				m.properties.totalIndex = data ? data.cases.map(x => {
 					return parseFloat(((x / m.properties.pop_11) * 1000000).toFixed(2));

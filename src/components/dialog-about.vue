@@ -3,7 +3,7 @@
 		<v-card tile>
 			<v-card-title>
 				<span class="title text-truncate">
-					Η εφαρμογή και τα δεδομένα
+					{{ $t('Η εφαρμογή και τα δεδομένα') }}
 				</span>
 				<v-spacer></v-spacer>
 				<v-btn icon @click.stop="$store.commit('set_dialogAbout', false)">

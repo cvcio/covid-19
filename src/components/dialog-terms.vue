@@ -3,7 +3,7 @@
 		<v-card tile>
 			<v-card-title>
 				<span class="title text-truncate">
-					Όροι Χρήσης
+					{{ $t('Όροι Χρήσης') }}
 				</span>
 				<v-spacer></v-spacer>
 				<v-btn icon @click.stop="$store.commit('set_dialogTerms', false)">

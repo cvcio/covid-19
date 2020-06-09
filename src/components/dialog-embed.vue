@@ -3,7 +3,7 @@
 		<v-card tile>
 			<v-card-title>
 				<span class="title text-truncate">
-					Ενσωμάτωση Κώδικα
+					{{ $t('Ενσωμάτωση Κώδικα') }}
 				</span>
 				<v-spacer></v-spacer>
 				<v-btn icon @click.stop="$store.commit('set_dialogEmbed', false)">
@@ -16,7 +16,7 @@
 						<v-col cols="12" xs="12" md="8">
 							<div class="pa-6 mb-4 grey lighten-2 elevation-0 code" style="position: relative;">
 								<h4 class="accent--text">&lt;iframe</h4>
-								<h4 class="accent--text pl-6">src=&quot;{{'https://lab.imedd.org/covid19/'}}&quot;</h4>
+								<h4 class="accent--text pl-6">src=&quot;{{'https://lab.imedd.org/covid19/' + ($i18n.locale === 'el' ? '' : '?lang=en')}}&quot;</h4>
 								<h4 class="accent--text pl-6">style=&quot;border:0px #ffffff none;&quot;</h4>
 								<h4 class="accent--text pl-6">name=&quot;imedd-covid&quot;</h4>
 								<h4 class="accent--text pl-6">scrolling=&quot;no&quot;</h4>
@@ -29,7 +29,8 @@
 								<h4 class="accent--text">&lt;/iframe&gt;</h4>
 							</div>
 
-							<p>Με τον παραπάνω κώδικα μπορείτε να ενσωματώσετε την εφαρμογή στην ιστοσελίδα σας. Εάν παρατηρήσετε προβλήματα στην ενσωμάτωση, επικοινωνήστε μαζί μας στο <a href="mailto:lab@imedd.org" target="_blank">lab@imedd.org</a> ή χρησιμοποιήστε τη <a href="https://www.imedd.org/el/contact/" target="_blank">φόρμα επικοινωνίας</a> με το iMEdD.</p>
+							<p v-if="$i18n.locale === 'el'">Με τον παραπάνω κώδικα μπορείτε να ενσωματώσετε την εφαρμογή στην ιστοσελίδα σας. Εάν παρατηρήσετε προβλήματα στην ενσωμάτωση, επικοινωνήστε μαζί μας στο <a href="mailto:lab@imedd.org" target="_blank">lab@imedd.org</a> ή χρησιμοποιήστε τη <a href="https://www.imedd.org/el/contact/" target="_blank">φόρμα επικοινωνίας</a> με το iMEdD.</p>
+							<p v-else>With the code above you can integrate the application on your website. If you notice problems with integration, contact us at <a href="mailto:lab@imedd.org" target="_blank">lab@imedd.org</a> or use the <a href="https://www.imedd.org/el/contact/" target="_blank">contact form</a> at iMEdD.</p>
 						</v-col>
 					</v-row>
 				</v-container>

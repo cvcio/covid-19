@@ -7,10 +7,10 @@
 					<v-card class="pa-0" width="196">
 						<v-btn-toggle v-model="typeOfMap" mandatory light tile style="width: 100%;" borderless>
 							<v-btn value="deaths" tile x-small class="grow" >
-								Θανατοι
+								{{ $t('Θανατοι') }}
 							</v-btn>
 							<v-btn value="cases" tile x-small>
-								Κρουσματα
+								{{ $t('Κρουσματα') }}
 							</v-btn>
 						</v-btn-toggle>
 						<v-card-text class="pa-2 pt-0">
@@ -44,10 +44,10 @@
 							</v-row>
 							<v-row no-gutters justify="center" align="center" class="">
 								<v-col v-if="typeOfMap === 'cases'" class="extra-small-text font-weight-bold text-center">
-									ΚΡΟΥΣΜΑΤΑ / {{ level === 'greece' ? '100K' : '1M' }} ΠΛΗΘΥΣΜΟΥ
+									{{ $t('Κρουσματα') }} / {{ level === 'greece' ? '100K' : '1M' }} {{ $t('ΠΛΗΘΥΣΜΟΥ') }}
 								</v-col>
 								<v-col v-else class="extra-small-text font-weight-bold text-center">
-									ΘΑΝΑΤΟΙ / {{ level === 'greece' ? '100K' : '1M' }} ΠΛΗΘΥΣΜΟΥ
+									{{ $t('Θανατοι') }} / {{ level === 'greece' ? '100K' : '1M' }} {{ $t('ΠΛΗΘΥΣΜΟΥ') }}
 								</v-col>
 							</v-row>
 							<template v-for="(c, i) in colors">
@@ -115,6 +115,11 @@ export default {
 	watch: {
 		value (n, o) {
 			if (n !== o) {
+				this.setData();
+			}
+		},
+		'$i18n.locale' (to, from) {
+			if (to !== from) {
 				this.setData();
 			}
 		},
@@ -336,30 +341,30 @@ export default {
 			text += `
 			<div class="pa-2">
 				<h5 class="caption grey--text px-2">${this.$moment(data.DATE).format('ll')}</h5>
-				<h3 class="subtitle-2 pa-2 pt-0">${data.ADMIN_GR}</h3>
+				<h3 class="subtitle-2 pa-2 pt-0 text-capitalize">${this.$i18n.locale === 'el' ? data.ADMIN_GR : data.name}</h3>
 				<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 				<div class="row no-gutters justify-space-between">
-					<h3 class="body-2 pa-2">Κρούσματα</h3>
+					<h3 class="body-2 pa-2">${this.$t('Κρούσματα')}</h3>
 					<h3 class="body-2 font-weight-bold pa-2">${new Intl.NumberFormat('el-GR').format(data.CASES) || '-'}</h3>
 				</div>
 				<!--<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 				<div class="row no-gutters justify-space-between">
-					<h3 class="body-2 pa-2">Κρούσματα / 1Μ</h3>
+					<h3 class="body-2 pa-2">${this.$t('Κρούσματα')} / 1Μ</h3>
 					<h3 class="body-2 font-weight-bold pa-2">${new Intl.NumberFormat('el-GR').format(data.TOTALINDEX) || '-'}</h3>
 				</div>-->
 				<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 				<div class="row no-gutters justify-space-between">
-					<h3 class="body-2 pa-2">Θάνατοι</h3>
+					<h3 class="body-2 pa-2">${this.$t('Θάνατοι')}</h3>
 					<h3 class="body-2 font-weight-bold red--text pa-2">${new Intl.NumberFormat('el-GR').format(data.DEATHS) || '-'}</h3>
 				</div>
 				<!--<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 				<div class="row no-gutters justify-space-between">
-					<h3 class="body-2 pa-2">Θάνατοι / 1Μ</h3>
+					<h3 class="body-2 pa-2">${this.$t('Θάνατοι')} / 1Μ</h3>
 					<h3 class="body-2 font-weight-bold red--text pa-2">${new Intl.NumberFormat('el-GR').format(data.DEATHSINDEX) || '-'}</h3>
 				</div>-->
 				<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 				<div class="row no-gutters justify-space-between">
-					<h3 class="body-2 pa-2">Ανάρρωσαν</h3>
+					<h3 class="body-2 pa-2">${this.$t('Ανάρρωσαν')}</h3>
 					<h3 class="body-2 font-weight-bold pa-2">${new Intl.NumberFormat('el-GR').format(data.RECOVERED) || '-'}</h3>
 				</div>
 			`;
@@ -367,7 +372,7 @@ export default {
 				text += `
 					<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 					<div class="row no-gutters justify-space-between">
-						<h3 class="body-2 pa-2">${data.NOTES}</h3>
+						<h3 class="body-2 pa-2">${this.$i18n.locale === 'el' ? data.NOTES : data.NOTES_EN}</h3>
 					</div>
 				`;
 			}
@@ -375,19 +380,19 @@ export default {
 			if (data.ADMIN_GR === 'Ελλάδα' && data.UNKNOWN) {
 				let k = '';
 				if (this.typeOfMap === 'deaths') {
-					k = data.UNKNOWN > 1 ? ' θάνατοι' : 'θάνατος';
+					k = data.UNKNOWN > 1 ? this.$t('Θάνατοι') : this.$t('Θάνατος');
 				} else {
-					k = data.UNKNOWN > 1 ? ' κρούσματα' : 'κρούσμα';
+					k = data.UNKNOWN > 1 ? this.$t('Κρούσματα') : this.$t('Κρούσμα');
 				}
 				text += `
 				<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 				<div class="row no-gutters justify-space-between">
-					<h3 class="body-2 pa-2">Διασωληνωμένοι</h3>
+					<h3 class="body-2 pa-2">${this.$t('Διασωληνωμένοι')}</h3>
 					<h3 class="body-2 font-weight-bold pa-2">${new Intl.NumberFormat('el-GR').format(data.CRITICAL) || '-'}</h3>
 				</div>
 				<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 				<div class="row no-gutters justify-space-between">
-					<h3 class="body-2 pa-2"><span class="font-weight-bold mr-1">${new Intl.NumberFormat('el-GR').format(data.UNKNOWN) || '-'}</span> ${ k } χωρίς γεωγραφικό προσδιορισμό</h3>
+					<h3 class="body-2 pa-2"><span class="font-weight-bold mr-1">${new Intl.NumberFormat('el-GR').format(data.UNKNOWN) || '-'}</span> ${ k } ${this.$t('χωρίς γεωγραφικό προσδιορισμό')}</h3>
 				</div>
 				`;
 			}
@@ -483,21 +488,21 @@ export default {
 			text += `
 			<div class="pa-2 primary white--text border-top">
 				<h5 class="caption grey--text px-2">${this.$moment(data.DATE).format('ll')}</h5>
-				<h3 class="subtitle-2 pa-2 pt-0">${data.ADMIN_GR}</h3>
+				<h3 class="subtitle-2 pa-2 pt-0 text-capitalize">${this.$i18n.locale === 'el' ? data.ADMIN_GR : data.NAME_ENG}</h3>
 				<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 				<div class="row no-gutters justify-space-between">
-					<h3 class="body-2 pa-2">Κρούσματα</h3>
+					<h3 class="body-2 pa-2">${this.$t('Κρούσματα')}</h3>
 					<h3 class="body-2 font-weight-bold pa-2">${new Intl.NumberFormat('el-GR').format(data.CASES) || '-'}</h3>
 				</div>
 				<!--<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 				<div class="row no-gutters justify-space-between">
-					<h3 class="body-2 pa-2">Κρούσματα / 100K</h3>
+					<h3 class="body-2 pa-2">${this.$t('Κρούσματα')} / 100K</h3>
 					<h3 class="body-2 font-weight-bold pa-2">${new Intl.NumberFormat('el-GR').format(data.TOTALINDEX.toFixed(2)) || '-'}</h3>
 				</div>-->
 
 				<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 				<div class="row no-gutters justify-space-between">
-					<h3 class="body-2 pa-2">Θάνατοι</h3>
+					<h3 class="body-2 pa-2">${this.$t('Θάνατοι')}</h3>
 					<h3 class="body-2 font-weight-bold red--text pa-2">${new Intl.NumberFormat('el-GR').format(data.DEATHS) || '-'}</h3>
 				</div>
 			</div>
@@ -506,14 +511,14 @@ export default {
 			if (data.UNKNOWN) {
 				let k = '';
 				if (this.typeOfMap === 'deaths') {
-					k = data.UNKNOWN > 1 ? ' θάνατοι' : 'θάνατος';
+					k = data.UNKNOWN > 1 ? this.$t('Θάνατοι') : this.$t('Θάνατος');
 				} else {
-					k = data.UNKNOWN > 1 ? ' κρούσματα' : 'κρούσμα';
+					k = data.UNKNOWN > 1 ? this.$t('Κρούσματα') : this.$t('Κρούσμα');
 				}
 				text += `
 				<div class="pa-2">
 					<div class="row no-gutters justify-space-between">
-						<h3 class="body-2 pa-2"><span class="font-weight-bold mr-1">${new Intl.NumberFormat('el-GR').format(data.UNKNOWN) || '-'}</span> ${ k } χωρίς γεωγραφικό προσδιορισμό</h3>
+						<h3 class="body-2 pa-2"><span class="font-weight-bold mr-1">${new Intl.NumberFormat('el-GR').format(data.UNKNOWN) || '-'}</span> ${ k } ${this.$t('χωρίς γεωγραφικό προσδιορισμό')}</h3>
 					</div>
 				</div>
 				`;

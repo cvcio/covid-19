@@ -19,6 +19,11 @@ export default {
 			if (n !== o) {
 				this.draw();
 			}
+		},
+		'$i18n.locale' (to, from) {
+			if (to !== from) {
+				this.draw();
+			}
 		}
 	},
 	mounted () {
@@ -200,7 +205,7 @@ export default {
 
 				series: [
 					{
-						name: 'Σύνολο Κρουσμάτων',
+						name: this.$t('Σύνολο Κρουσμάτων'),
 						borderWidth: 1,
 						lineWidth: 1,
 						color: 'rgba(160, 160, 160, 0.8)',
@@ -217,7 +222,7 @@ export default {
 					},
 					{
 						isIntermediateSum: true,
-						name: 'Νέα Κρούσματα',
+						name: this.$t('Νέα Κρούσματα'),
 						borderWidth: 1,
 						lineWidth: 1,
 						color: 'rgba(17, 75, 95, 0.8)',
