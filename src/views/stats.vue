@@ -4,30 +4,6 @@
 			<span class="mb-12 mt-n12 grey--text text-center">{{ $t('Φορτώνεται ο παγκόσμιος χάρτης και η βάση δεδομένων κρουσμάτων με COVID-19. Η εφαρμογή ενημερώνεται διαρκώς – με force reload (ctrl ή cmd + shift + R) θα φορτώσετε την τελευταία έκδοση.') }}</span>
 			<v-progress-circular v-if="loading" class="loader mt-12" color="primary" indeterminate :size="24"/>
 		</v-row>
-		<v-row justify="center" align="center" v-if="!loading">
-			<v-col cols="12" xs="12" lg="6">
-				<pt-chart id="10_deaths" :key="'10_deaths_' + $i18n.locale"
-					:src="$CHARTS_URL + '10_deaths_' + $i18n.locale.toUpperCase() + '.json'"
-				/>
-			</v-col>
-			<v-col cols="12" xs="12" lg="6">
-				<pt-chart id="100_cases" :key="'100_cases_' + $i18n.locale"
-					:src="$CHARTS_URL + '100_cases_' + $i18n.locale.toUpperCase() + '.json'"
-				/>
-			</v-col>
-		</v-row>
-		<v-row justify="center" align="center" v-if="!loading">
-			<v-col cols="12" xs="12" lg="6">
-				<pt-chart id="create_scatterplot_casesVStests_logx" :key="'create_scatterplot_casesVStests_logx_' + $i18n.locale"
-					:src="$CHARTS_URL + 'create_scatterplot_casesVStests_logx_' + $i18n.locale.toUpperCase() + '.json'"
-					/>
-			</v-col>
-			<v-col cols="12" xs="12" lg="6">
-				<pt-chart id="deaths_growth" :key="'deaths_growth_' + $i18n.locale"
-					:src="$CHARTS_URL + 'deaths_growth_' + $i18n.locale.toUpperCase() + '.json'"
-					/>
-			</v-col>
-		</v-row>
 
 		<v-row justify="center" align="center" v-if="!loading">
 			<v-col cols="12" xs="12" lg="6">
@@ -44,6 +20,45 @@
 
 		<v-row justify="center" align="center" v-if="!loading">
 			<v-col cols="12" xs="12" lg="6">
+				<pt-chart id="create_non_residents_line_" :key="'create_non_residents_line_' + $i18n.locale"
+					:src="$CHARTS_URL + 'create_non_residents_line_' + $i18n.locale.toUpperCase() + '.json'"
+				/>
+			</v-col>
+			<v-col cols="12" xs="12" lg="6">
+				<pt-chart id="cases_growth_" :key="'cases_growth_' + $i18n.locale"
+					:src="$CHARTS_URL + 'cases_growth_' + $i18n.locale.toUpperCase() + '.json'"
+				/>
+			</v-col>
+		</v-row>
+
+		<v-row justify="center" align="center" v-if="!loading">
+			<v-col cols="12" xs="12" lg="6">
+				<pt-chart id="create_scatterplot_casesVStests_logx" :key="'create_scatterplot_casesVStests_logx_' + $i18n.locale"
+					:src="$CHARTS_URL + 'create_scatterplot_casesVStests_logx_' + $i18n.locale.toUpperCase() + '.json'"
+					/>
+			</v-col>
+			<v-col cols="12" xs="12" lg="6">
+				<pt-chart id="deaths_growth_" :key="'deaths_growth_' + $i18n.locale"
+					:src="$CHARTS_URL + 'deaths_growth_' + $i18n.locale.toUpperCase() + '.json'"
+					/>
+			</v-col>
+		</v-row>
+
+		<v-row justify="center" align="center" v-if="!loading">
+			<v-col cols="12" xs="12" lg="6">
+				<pt-chart id="10_deaths" :key="'10_deaths_' + $i18n.locale"
+					:src="$CHARTS_URL + '10_deaths_' + $i18n.locale.toUpperCase() + '.json'"
+				/>
+			</v-col>
+			<v-col cols="12" xs="12" lg="6">
+				<pt-chart id="100_cases" :key="'100_cases_' + $i18n.locale"
+					:src="$CHARTS_URL + '100_cases_' + $i18n.locale.toUpperCase() + '.json'"
+				/>
+			</v-col>
+		</v-row>
+
+		<v-row justify="center" align="center" v-if="!loading">
+			<v-col cols="12" xs="12" lg="6">
 				<pt-chart id="death_heat" :key="'death_heat_' + $i18n.locale"
 					:src="$CHARTS_URL + 'death_heat_' + $i18n.locale.toUpperCase() + '.json'"
 				/>
@@ -54,6 +69,7 @@
 				/>
 			</v-col>
 		</v-row>
+
 		<v-row justify="center" align="center" v-if="!loading">
 			<v-col cols="12" xs="12" lg="6">
 				<pt-chart id="create_chrolopleth_casesrate" :key="'create_chrolopleth_casesrate_' + $i18n.locale"

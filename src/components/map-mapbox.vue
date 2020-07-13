@@ -455,11 +455,12 @@ export default {
 			}
 			arr = uniq(arr);
 
-			let ckm = this.getCKMeans(arr, arr.length >= 12 ? 12 : 6).map(m => Math.ceil(m));
+			let ckm = this.getCKMeans(arr, arr.length >= 16 ? 16 : 6).map(m => Math.ceil(m));
 			ckm = uniq(ckm);
 
-			this.stats.mean = ckm[Math.ceil(ckm.length / 2)] || null;
+			this.stats.mean = ckm[Math.floor(ckm.length / 2)] || null;
 			this.stats.max = ckm[ckm.length - 1] || null;
+
 			const scaleColorW = scaleThreshold().domain(ckm).range(this.getColors(ckm.length));
 
 			this.greeceGeoJson.features.forEach(f => {
@@ -512,6 +513,7 @@ export default {
 
 						f.properties.TOOLTIP = this.setGreeceToolTip(f.properties);
 
+
 						if (this.typeOfMap === 'deaths') {
 							f.properties.opacity = f.properties.DEATHS === 0 ? 0 : 0.9;
 							f.properties.color = !isFinite(f.properties.DEATHSINDEX) ? '#ccc' : scaleColorW(f.properties.DEATHSINDEX);
@@ -529,6 +531,7 @@ export default {
 		},
 
 		setGreeceToolTip (data) {
+			console.info(data.ADMIN_GR, data.DEATHSINDEX, data.TOTALINDEX);
 			let text = '';
 			text += `
 			<div class="pa-2 primary white--text border-top">
