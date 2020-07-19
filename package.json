@@ -15,7 +15,7 @@
     "core-js": "^3.6.4",
     "d3": "^5.15.0",
     "highcharts": "^8.0.4",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "mapbox-gl": "^1.8.1",
     "moment": "^2.24.0",
     "moving-averages": "^4.0.5",
