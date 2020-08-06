@@ -347,7 +347,7 @@ export default {
 			let text = '';
 			text += `
 			<div class="pa-2">
-				<h5 class="caption grey--text px-2">${this.$moment(data.DATE).format('ll')}</h5>
+				<h5 class="caption grey--text px-2">${this.$t('Έως')} ${this.$moment(data.DATE).format('ll')}</h5>
 				<h3 class="subtitle-2 pa-2 pt-0 text-capitalize">${this.$i18n.locale === 'el' ? data.ADMIN_GR : data.name}</h3>
 				<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 				<div class="row no-gutters justify-space-between">
@@ -535,7 +535,7 @@ export default {
 			let text = '';
 			text += `
 			<div class="pa-2 primary white--text border-top">
-				<h5 class="caption grey--text px-2">${this.$moment(data.DATE).format('ll')}</h5>
+				<h5 class="caption grey--text px-2">${this.$t('Έως')} ${this.$moment(data.DATE).format('ll')}</h5>
 				<h3 class="subtitle-2 pa-2 pt-0 text-capitalize">${this.$i18n.locale === 'el' ? data.ADMIN_GR : data.NAME_ENG}</h3>
 				<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 				<div class="row no-gutters justify-space-between">
