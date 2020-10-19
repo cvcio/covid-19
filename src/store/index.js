@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { json, csv } from 'd3';
-import { sumBy,  map, groupBy, orderBy, findIndex, filter, keys, cloneDeep } from 'lodash';
+import { sumBy,  map, groupBy, orderBy, findIndex, filter, find, keys, cloneDeep } from 'lodash';
 import moment from 'moment';
 import { storage } from '@/services/storage';
 import { reduce } from 'highcharts';
@@ -33,15 +33,20 @@ export default new Vuex.Store({
 
 		worldGeoJson: null,
 		greeceGeoJson: null,
+		perGreeceGeoJson: null,
 		countries: null,
 
 		worldPopulation: null,
 
 		greece_cases: null,
 		greece_deaths: null,
+		greece_cases_pe: null,
+		greece_deaths_pe: null,
+		regions_greece: null,
 
 		globalData: [],
 		greeceData: [],
+		greeceDataPE: [],
 
 		cases: null,
 		deaths: null,
@@ -84,11 +89,14 @@ export default new Vuex.Store({
 
 		worldGeoJson: state => state.worldGeoJson,
 		greeceGeoJson: state => state.greeceGeoJson,
+		perGreeceGeoJson: state => state.perGreeceGeoJson,
 		countries: state => state.countries,
 		worldPopulation: state => state.worldPopulation,
 
 		globalData: state => state.globalData,
 		greeceData: state => state.greeceData,
+		greeceDataPE: state => state.greeceDataPE,
+		regions_greece: state => state.regions_greece,
 
 		cases: state => state.cases,
 		deaths: state => state.deaths,
@@ -135,6 +143,12 @@ export default new Vuex.Store({
 		},
 		greece_deaths: (state) => {
 			return state.greece_deaths;
+		},
+		greece_cases_pe: (state) => {
+			return state.greece_cases_pe;
+		},
+		greece_deaths_pe: (state) => {
+			return state.greece_deaths_pe;
 		},
 
 		lastUpdatedAt: (state) => {
@@ -185,6 +199,9 @@ export default new Vuex.Store({
 		},
 		set_greeceGeoJson (state, data) {
 			state.greeceGeoJson = data;
+		},
+		set_perGreeceGeoJson (state, data) {
+			state.perGreeceGeoJson = data;
 		},
 		set_countries (state, data) {
 			state.countries = data;
@@ -405,6 +422,106 @@ export default new Vuex.Store({
 			});
 			state.greeceData = greeceData;
 		},
+		set_greeceDataPE (state, data) {
+			let cases = map(cloneDeep(data.cases), (m, i) => {
+				let o = {
+					district: m['county'],
+					district_EN: m['county_EN'] || m['county'],
+					county_normalized: m['county_normalized'],
+					pop_11: parseInt(m['pop_11']) || 0,
+					dates: [],
+					cases: []
+				};
+
+				delete m['Γεωγραφικό Διαμέρισμα'];
+				delete m['Περιφέρεια'];
+				delete m['geographic_division'];
+				delete m['region'];
+				delete m['county_normalized'];
+				delete m['county'];
+				delete m['pop_11'];
+
+				let kk = keys(m);
+				o.dates = map(kk, (n) => {
+					return parseDate(n);
+				});
+
+				o.cases = map(kk, (n) => {
+					return parseInt(m[n]) || 0;
+				});
+
+				return o;
+			});
+
+			let red_cases = map(groupBy(cases, m => m.district), (v, k) => {
+				return {
+					district: k,
+					district_EN: v[0].district_EN,
+					county_normalized: v[0].county_normalized,
+					pop_11: v[0].pop_11,
+					dates: v[0].dates,
+					cases: v.reduce((r, a) => a.cases.map((b, i) => (r[i] || 0) + b), [])
+				};
+			});
+
+			let deaths = map(cloneDeep(data.deaths), (m, i) => {
+				let o = {
+					district: m['county'],
+					district_EN: m['county_EN'] || m['county'],
+					county_normalized: m['county_normalized'],
+					pop_11: parseInt(m['pop_11']),
+					dates: [],
+					deaths: []
+				};
+
+				delete m['Γεωγραφικό Διαμέρισμα'];
+				delete m['Περιφέρεια'];
+				delete m['geographic_division'];
+				delete m['region'];
+				delete m['county_normalized'];
+				delete m['county'];
+				delete m['pop_11'];
+
+				let kk = keys(m);
+				o.dates = map(kk, (n) => {
+					return parseDate(n);
+				});
+
+				o.deaths = map(kk, (n) => {
+					return parseInt(m[n]) || 0;
+				});
+
+				return o;
+			});
+
+			let red_deaths = map(groupBy(deaths, m => m.district), (v, k) => {
+				return {
+					district: k,
+					district_EN: v[0].district_EN,
+					county_normalized: v[0].county_normalized,
+					dates: v[0].dates,
+					deaths: v.reduce((r, a) => a.deaths.map((b, i) => (r[i] || 0) + b), [])
+				};
+			});
+
+			let greeceData = red_cases.map((v, i) => {
+				v.deaths = filter(red_deaths, ['district', v.district]).length > 0 ? filter(red_deaths, ['district', v.district])[0].deaths : null;
+				v.totalIndex = v.cases ? v.cases.map(x => {
+					return parseFloat(((x / v.pop_11) * 100000).toFixed(2));
+				}) : [];
+				v.deathsIndex = v.deaths ? v.deaths.map(x => {
+					return parseFloat(((x / v.pop_11) * 100000).toFixed(2));
+				}) : [];
+				return v;
+			});
+			state.greeceDataPE = greeceData;
+		},
+		set_greece_cases_pe (state, data) {
+			state.greece_cases_pe = data;
+		},
+		set_greece_deaths_pe (state, data) {
+			state.greece_deaths_pe = data;
+		},
 		set_cases (state, data) {
 			state.cases = data;
 		},
@@ -421,8 +538,10 @@ export default new Vuex.Store({
 				m.recovered = parseInt(m.recovered) || 0;
 				m.hospitalized = parseInt(m.hospitalized) || 0;
 				m.critical = parseInt(m.critical) || 0;
-				m.name = m.district; // m.county_normalized === 'ΕΛΛΑΔΑ' ? m.county : `${m.county}`;
-				m.name_en = m.district_EN; // m.county_normalized === 'ΕΛΛΑΔΑ' ? m.county : `${m.county}`;
+				m.district = m.county;
+				m.district_EN = m.county_en;
+				// m.name = m.district; // m.county_normalized === 'ΕΛΛΑΔΑ' ? m.county : `${m.county}`;
+				// m.name_en = m.district_EN; // m.county_normalized === 'ΕΛΛΑΔΑ' ? m.county : `${m.county}`;
 				m.population = parseInt(m.pop_11) || 0;
 				m.totalIndex = m.population ? (100000 * m.cases) / (m.population) : 0;
 				m.deathsIndex = m.population ? (100000 * m.dead) / (m.population) : 0;
@@ -432,6 +551,16 @@ export default new Vuex.Store({
 			});
 
 			state.greece = orderBy(state.greece, ['cases', 'asc']);
+		},
+		set_regions_greece (state, data) {
+			state.regions_greece = map(data, m => {
+				m.cases = parseInt(m.cases) || 0;
+				m.dead = parseInt(m.dead) || 0;
+				m.recovered = parseInt(m.recovered) || 0;
+				m.critical = parseInt(m.critical) || 0;
+				m.population = parseInt(m.pop_11) || 0;
+				return m;
+			});
 		},
 		set_greeceTimeline (state, data) {
 			state.greeceTimeline = data;

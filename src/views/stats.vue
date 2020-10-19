@@ -7,6 +7,19 @@
 
 		<v-row justify="center" align="center" v-if="!loading">
 			<v-col cols="12" xs="12" lg="6">
+				<pt-chart id="schools_map_greece" :key="'schools_map_greece_' + $i18n.locale"
+					:src="$CHARTS_URL + 'schools_map_greece_' + $i18n.locale.toUpperCase() + '.json'"
+				/>
+			</v-col>
+			<v-col cols="12" xs="12" lg="6">
+				<pt-chart id="schools_map_athens" :key="'schools_map_athens_' + $i18n.locale"
+					:src="$CHARTS_URL + 'schools_map_athens_' + $i18n.locale.toUpperCase() + '.json'"
+				/>
+			</v-col>
+		</v-row>
+
+		<v-row justify="center" align="center" v-if="!loading">
+			<v-col cols="12" xs="12" lg="6">
 				<pt-chart id="linechart_deaths_intubated_gr" :key="'linechart_deaths_intubated_gr_' + $i18n.locale"
 					:src="$CHARTS_URL + 'linechart_deaths_intubated_gr_' + $i18n.locale.toUpperCase() + '.json'"
 				/>

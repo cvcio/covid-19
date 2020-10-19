@@ -85,7 +85,7 @@ export default {
 	props: ['level'],
 	computed: {
 		...mapGetters([
-			'worldGeoJson', 'greeceGeoJson', 'greece', 'wom_data', 'globalData', 'greeceData' // , 'countries'
+			'worldGeoJson', 'greeceGeoJson', 'greece', 'wom_data', 'globalData', 'greeceData', 'greeceDataPE' // , 'countries'
 		]),
 		colors (n) {
 			return chroma.scale('YlOrRd').mode('hsl').colors(12);
@@ -294,10 +294,10 @@ export default {
 					f.properties.RECOVERED = f.properties.recovered[this.value] ? f.properties.recovered[this.value] : 0;
 					f.properties.TOTALINDEX = f.properties.totalIndex[this.value] ? f.properties.totalIndex[this.value] : 0;
 					f.properties.DEATHSINDEX = f.properties.deathsIndex[this.value] ? f.properties.deathsIndex[this.value] : 0;
+
 					f.properties.UNKNOWN = null;
 					f.properties.NONGREEK = null;
 					f.properties.CRITICAL = null;
-
 					// f.properties.NOTES = '';
 
 					f.properties.TOOLTIP = this.setWorldToolTip(f.properties);
@@ -322,9 +322,16 @@ export default {
 						f.properties.RECOVERED = this.wom_data[idx_c].totalRecovered ? this.wom_data[idx_c].totalRecovered : 0;
 						f.properties.TOTALINDEX = parseInt((f.properties.CASES * 1000000) / f.properties.pop_11);
 						f.properties.DEATHSINDEX = parseInt((f.properties.DEATHS * 1000000) / f.properties.pop_11);
-						f.properties.UNKNOWN = this.typeOfMap === 'deaths' ? filter(this.greece, m => m.name === 'Χωρίς Γεωγραφικό Προσδιορισμό')[0].dead: filter(this.greece, m => m.name === 'Χωρίς Γεωγραφικό Προσδιορισμό')[0].cases;
-						f.properties.NONGREEK = this.typeOfMap === 'deaths' ? filter(this.greece, m => m.name === 'Χωρίς Μόνιμη Κατοικία στην Ελλάδα')[0].dead: filter(this.greece, m => m.name === 'Χωρίς Μόνιμη Κατοικία στην Ελλάδα')[0].cases;
-						f.properties.CRITICAL = filter(this.greece, m => m.name === 'Χωρίς Γεωγραφικό Προσδιορισμό')[0].critical;
+
+						let unk = this.typeOfMap === 'deaths' ?
+							find(this.greece, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό').dead :
+							find(this.greece, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό').cases;
+						let non = this.typeOfMap === 'deaths' ?
+							find(this.greece, m => m.district === 'Εισαγόμενα (Αυτοβούλως)').dead + find(this.greece, m => m.district === 'Εισαγόμενα (Πύλες Εισόδου)').dead :
+							find(this.greece, m => m.district === 'Εισαγόμενα (Αυτοβούλως)').cases + find(this.greece, m => m.district === 'Εισαγόμενα (Πύλες Εισόδου)').cases;
+
+						f.properties.UNKNOWN = unk ? unk : 0;
+						f.properties.NONGREEK = non ? non : 0;
 
 						f.properties.TOOLTIP = this.setWorldToolTip(f.properties);
 
@@ -400,7 +407,7 @@ export default {
 					</div>
 					<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 					<div class="row no-gutters justify-space-between">
-						<h3 class="body-2 pa-2"><span class="font-weight-bold mr-1">${new Intl.NumberFormat('el-GR').format(data.UNKNOWN) || '-'}</span> ${ k } ${this.$t('χωρίς γεωγραφικό προσδιορισμό')}</h3>
+						<h3 class="body-2 pa-2"><span class="font-weight-bold">${new Intl.NumberFormat('el-GR').format(data.UNKNOWN) || '-'}</span> ${ k } ${this.$t('χωρίς γεωγραφικό προσδιορισμό')}</h3>
 					</div>
 					`;
 				}
@@ -410,11 +417,11 @@ export default {
 					if (this.typeOfMap === 'deaths') {
 						k = data.NONGREEK > 1 ? this.$t('Θάνατοι') : this.$t('Θάνατος');
 					} else {
-						k = data.NONGREEK > 1 ? this.$t('Κρούσματα') : this.$t('Κρούσμα');
+						k = data.NONGREEK > 1 ? this.$t('Εισαγόμενα Κρούσματα') : this.$t('Εισαγόμενo Κρούσμα');
 					}
 					text += `
 						<div class="row no-gutters justify-space-between">
-							<h3 class="body-2 pa-2"><span class="font-weight-bold mr-1">${new Intl.NumberFormat('el-GR').format(data.NONGREEK) || '-'}</span> ${ k } ${this.$t('χωρίς μόνιμη κατοικία στην Ελλάδα')}</h3>
+							<h3 class="body-2 pa-2"><span class="font-weight-bold">${new Intl.NumberFormat('el-GR').format(data.NONGREEK) || '-'}</span> ${ k }</h3>
 						</div>
 					`;
 				}
@@ -472,14 +479,11 @@ export default {
 					f.properties.DEATHSINDEX = f.properties.deathsIndex[this.value] ? parseFloat(f.properties.deathsIndex[this.value]) : 0;
 
 					let unk = this.typeOfMap === 'deaths' ?
-						find(this.greeceData, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό').deaths :
-						find(this.greeceData, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό').cases;
-					let non = this.typeOfMap === 'deaths' ?
-						find(this.greeceData, m => m.district === 'Χωρίς Μόνιμη Κατοικία στην Ελλάδα').deaths :
-						find(this.greeceData, m => m.district === 'Χωρίς Μόνιμη Κατοικία στην Ελλάδα').cases;
+						find(this.greeceDataPE, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό').deaths :
+						find(this.greeceDataPE, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό').cases;
 
 					f.properties.UNKNOWN = unk ? unk[this.value] : 0;
-					f.properties.NONGREEK = non ? non[this.value] : 0;
+					f.properties.NONGREEK = null;
 
 					f.properties.TOOLTIP = this.setGreeceToolTip(f.properties);
 					if (this.typeOfMap === 'deaths') {
@@ -492,7 +496,7 @@ export default {
 				} else {
 					f.properties.DATE = new Date();
 					const idx_c = findIndex(this.greece, m => {
-						return f.properties.ADMIN_GR === m.name;
+						return f.properties.ADMIN_GR === m.county;
 					});
 					if (idx_c > -1) {
 						f.properties.CASES = this.greece[idx_c].cases ? this.greece[idx_c].cases : 0;
@@ -502,17 +506,16 @@ export default {
 						f.properties.DEATHSINDEX = parseFloat((f.properties.DEATHS * 100000) / f.properties.pop_11);
 
 						let unk = this.typeOfMap === 'deaths' ?
-							find(this.greece, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό').dead :
-							find(this.greece, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό').cases;
+							find(this.greece, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό') :
+							find(this.greece, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό');
 						let non = this.typeOfMap === 'deaths' ?
-							find(this.greece, m => m.district === 'Χωρίς Μόνιμη Κατοικία στην Ελλάδα').dead :
-							find(this.greece, m => m.district === 'Χωρίς Μόνιμη Κατοικία στην Ελλάδα').cases;
+							find(this.greece, m => m.district === 'Εισαγόμενα (Αυτοβούλως)').dead + find(this.greece, m => m.district === 'Εισαγόμενα (Πύλες Εισόδου)').dead :
+							find(this.greece, m => m.district === 'Εισαγόμενα (Αυτοβούλως)').cases + find(this.greece, m => m.district === 'Εισαγόμενα (Πύλες Εισόδου)').cases;
 
-						f.properties.UNKNOWN = unk ? unk : 0;
+						f.properties.UNKNOWN = unk ? (this.typeOfMap === 'deaths' ? unk.dead : unk.cases) : 0;
 						f.properties.NONGREEK = non ? non : 0;
 
 						f.properties.TOOLTIP = this.setGreeceToolTip(f.properties);
-
 
 						if (this.typeOfMap === 'deaths') {
 							f.properties.opacity = f.properties.DEATHS === 0 ? 0 : 0.9;
@@ -531,7 +534,7 @@ export default {
 		},
 
 		setGreeceToolTip (data) {
-			console.info(data.ADMIN_GR, data.DEATHSINDEX, data.TOTALINDEX);
+			// console.info(data.ADMIN_GR, data.DEATHSINDEX, data.TOTALINDEX);
 			let text = '';
 			text += `
 			<div class="pa-2 primary white--text border-top">
@@ -566,7 +569,7 @@ export default {
 				text += `
 				<div class="px-2">
 					<div class="row no-gutters justify-space-between">
-						<h3 class="body-2 pa-2"><span class="font-weight-bold mr-1">${new Intl.NumberFormat('el-GR').format(data.UNKNOWN) || '-'}</span> ${ k } ${this.$t('χωρίς γεωγραφικό προσδιορισμό')}</h3>
+						<h3 class="body-2 pa-2"><span class="font-weight-bold">${new Intl.NumberFormat('el-GR').format(data.UNKNOWN) || '-'}</span> ${ k } ${this.$t('χωρίς γεωγραφικό προσδιορισμό')}</h3>
 					</div>
 				</div>
 				`;
@@ -576,12 +579,12 @@ export default {
 				if (this.typeOfMap === 'deaths') {
 					k = data.NONGREEK > 1 ? this.$t('Θάνατοι') : this.$t('Θάνατος');
 				} else {
-					k = data.NONGREEK > 1 ? this.$t('Κρούσματα') : this.$t('Κρούσμα');
+					k = data.NONGREEK > 1 ? this.$t('Εισαγόμενα Κρούσματα') : this.$t('Εισαγόμενo Κρούσμα');
 				}
 				text += `
 				<div class="px-2">
 					<div class="row no-gutters justify-space-between">
-						<h3 class="body-2 pa-2"><span class="font-weight-bold mr-1">${new Intl.NumberFormat('el-GR').format(data.NONGREEK) || '-'}</span> ${ k } ${this.$t('χωρίς μόνιμη κατοικία στην Ελλάδα')}</h3>
+						<h3 class="body-2 pa-2"><span class="font-weight-bold">${new Intl.NumberFormat('el-GR').format(data.NONGREEK) || '-'}</span> ${ k }</h3>
 					</div>
 				</div>
 				`;

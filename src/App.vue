@@ -181,13 +181,13 @@
 			</template>
 			<template v-else-if="activeMap === 'greece' && greece">
 				<v-data-table dense v-if="greece" class="mt-4 mb-3" :headers="[
-					{ text: $t('Περιφέρεια'), value: 'name', width: '40%', class: 'extra-small-text pr-1' },
+					{ text: $t('Περιοχή'), value: 'name', width: '40%', class: 'extra-small-text pr-1' },
 					{ text: $t('Κρούσματα'), value: 'cases', width: '20%', class: 'extra-small-text pl-0 pr-1' },
 					{ text: $t('Θάνατοι'), value: 'dead', width: '20%', class: 'extra-small-text pl-0 pr-1' },
-				]" :items="greece" :sort-by="['cases', 'dead']" :sort-desc="[true, true]">
+				]" :items="greece.filter(m => !['Difference_in_totals', 'Sum of Cases Announced' ,'Total Cases Announced_EODY'].includes(m.county))" :sort-by="['cases', 'dead']" :sort-desc="[true, true]">
 					<template v-slot:item="props">
 						<tr>
-							<td class="caption" style="font-size: 9px !important;">{{ $i18n.locale === 'el' ? props.item.district.replace('Περιφέρεια ', '') : props.item.district_EN }}</td>
+							<td class="caption" style="font-size: 9px !important;">{{ $i18n.locale === 'el' ? props.item.district : props.item.district_EN }}</td>
 							<td class="caption pl-0" style="position:relative; font-size: 9px;">
 								<h5 class="caption font-weight-bold primary--text" style="font-size: 9px !important;">
 									{{ new Intl.NumberFormat('el-GR').format(props.item.cases) }}
@@ -265,9 +265,9 @@
 			</v-row>
 		</v-navigation-drawer>
 
-		<v-content app>
+		<v-main app>
 			<router-view></router-view>
-		</v-content>
+		</v-main>
 
 		<dialog-about v-if="!loading" />
 		<dialog-terms v-if="!loading" />
@@ -310,7 +310,9 @@ export default {
 			'globalData', 'greeceData',
 			'greece', 'wom_data',
 
-			'worldGeoJson',   'greeceGeoJson',
+			'greeceDataPE', 'greece_cases_pe', 'greece_deaths_pe', 'regions_greece',
+
+			'worldGeoJson',   'greeceGeoJson', 'perGreeceGeoJson',
 
 			'countCases', 'countDeaths', 'countRecovered', 'countCritical',
 			'countCasesGR', 'countDeathsGR', 'countRecoveredGR', 'countCriticalGR', 'countHospitalizedGR'
@@ -359,16 +361,19 @@ export default {
 		let unix = this.$moment().unix();
 		let jsonFiles = [
 			{ file: `${this.$BASE_URL}shared/countries-simplified.geojson`, key: 'worldGeoJson' },
-			// { file: `${this.$BASE_URL}shared/greece-simplified.geojson`, key: 'greeceGeoJson' }
-			{ file: `${this.$BASE_URL}shared/districts-simplified.geojson`, key: 'greeceGeoJson' }
+			{ file: `${this.$BASE_URL}shared/greece-mixed.geojson`, key: 'greeceGeoJson' }
+			// { file: `${this.$BASE_URL}shared/greece-simplified.geojson`, key: 'greeceGeoJson' },
+			// { file: `${this.$BASE_URL}shared/districts-simplified.geojson`, key: 'perGreeceGeoJson' }
 		];
 
 		let csvFiles = [
 			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/countries_names.csv?${unix}`, key: 'countries' },
 			{ file: `${this.$BASE_URL}shared/world-population.csv?${unix}`, key: 'worldPopulation' },
 
-			// { file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greece_cases.csv?${unix}`, key: 'greece_cases' },
-			// { file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greece_deaths.csv?${unix}`, key: 'greece_deaths' },
+			// { file: `${this.$BASE_URL}shared/tmp/CONVID_19 - greece_cases_v2.csv`, key: 'greece_cases_pe' },
+			{ file: 'https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greece_cases_v2.csv', key: 'greece_cases_pe' },
+			// { file: `${this.$BASE_URL}shared/tmp/CONVID_19 - greece_deaths_v2.csv`, key: 'greece_deaths_pe' },
+			{ file: 'https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greece_deaths_v2.csv', key: 'greece_deaths_pe' },
 
 			{ file: 'https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/regions_greece_cases.csv', key: 'greece_cases' },
 			{ file: 'https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/regions_greece_deaths.csv', key: 'greece_deaths' },
@@ -381,7 +386,9 @@ export default {
 
 			{ file: 'https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/wom_data.csv', key: 'wom_data' },
 			// { file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greece.csv?${unix}`, key: 'greece' },
-			{ file: 'https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/regions_greece.csv', key: 'greece' },
+			// { file: 'https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/regions_greece.csv', key: 'greece' },
+			{ file: 'https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greece_v2.csv', key: 'greece' },
+			{ file: 'https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/regions_greece.csv', key: 'regions_greece' },
 			{ file: `https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/greeceTimeline.csv?${unix}`, key: 'greeceTimeline' }
 		];
 
@@ -412,6 +419,11 @@ export default {
 				deaths: this.greece_deaths
 			});
 
+			this.$store.commit('set_greeceDataPE', {
+				cases: this.greece_cases_pe,
+				deaths: this.greece_deaths_pe
+			});
+
 			this.worldGeoJson.features.forEach(m => {
 				let idx_m = findIndex(this.countries, ['ADMIN', m.properties.admin]);
 				m.properties.ADMIN_GR = idx_m > -1 ? this.countries[idx_m].ADMIN_GR : m.properties.admin;
@@ -437,28 +449,68 @@ export default {
 				m.properties.deathsIndex = data ? data.deaths.map(x => {
 					return parseFloat(((x / m.properties.pop_11) * 1000000).toFixed(2));
 				}) : [];
-
 			});
 
-			this.greeceGeoJson.features.forEach(m => {
-				// let idx_m = findIndex(this.greece, f => {
-				// 	return m.properties.NAME_GR === 'Ν. ' + f.county_normalized || m.properties.NAME_GR === f.county_normalized;
-				// });
-				let idx_m = findIndex(this.greece, f => {
-					return m.properties.PER_NAME === f.district;
-				});
-				m.properties.ADMIN_GR = idx_m > -1 ? this.greece[idx_m].name : '';
+			// let newGeoJson = {
+			// 	type: 'FeatureCollection',
+			// 	features: []
+			// };
 
+			// this.perGreeceGeoJson.features.forEach(m => {
+			// 	if (['Περιφέρεια Αττικής'].includes(m.properties.PER_NAME)) {
+			// 		let coordinates = [];
+			// 		let feature = m;
+			// 		feature.properties['NAME_ENG'] = 'ATTIKIS';
+			// 		feature.properties['NAME_GR'] = 'ΑΤΤΙΚΗΣ';
+			// 		feature.properties['pop'] = 0;
+			// 		newGeoJson.features.push(feature);
+			// 		m.properties.color = '#' + Math.floor(Math.random()*16777215).toString(16);
+			// 	} else {
+			// 		m.properties.color = '#ff0000';
+			// 	}
+			// });
+
+			// this.greeceGeoJson.features.forEach(m => {
+			// 	if (![
+			// 		'Ν. ΔΥΤΙΚΗΣ ΑΤΤΙΚΗΣ',
+			// 		'Ν. ΠΕΙΡΑΙΩΣ ΚΑΙ ΝΗΣΩΝ',
+			// 		'Ν. ΑΘΗΝΩΝ',
+			// 		'Ν. ΑΝΑΤΟΛΙΚΗΣ ΑΤΤΙΚΗΣ'
+			// 	].includes(m.properties.NAME_GR)) {
+			// 		newGeoJson.features.push(m);
+			// 		m.properties.color = '#' + Math.floor(Math.random()*16777215).toString(16);
+			// 	} else {
+			// 		m.properties.color = '#ff0000';
+			// 	}
+			// });
+
+			// newGeoJson.features.forEach(m => {
+			// 	delete m.properties.EDRA;
+			// 	delete m.properties.ESYE_ID;
+			// 	delete m.properties.PARENT;
+			// 	delete m.properties.shape_area;
+			// 	delete m.properties.shape_leng;
+			// });
+
+			// console.log(JSON.stringify(newGeoJson));
+			// console.log(this.greeceDataPE);
+			// console.log(this.greece);
+			this.greeceGeoJson.features.forEach(m => {
 				m.properties.count = 0;
 				m.properties.opacity = 0;
 				m.properties.totalIndex = 0;
 				m.properties.color = '#fafafa';
 
-				let idx_p = findIndex(this.greece, ['name', m.properties.ADMIN_GR]);
-				m.properties.pop_11 = idx_p > -1 ? this.greece[idx_p].population : 0;
+				let idx_m = findIndex(this.greece, f => {
+					return m.properties.NAME_GR.replace('Ν. ', '') === f.county_normalized;
+				});
+				m.properties.ADMIN_GR = idx_m > -1 ? this.greece[idx_m].county : '';
+				m.properties.NAME_ENG = idx_m > -1 ? this.greece[idx_m].county_en : '';
+				m.properties.pop_11 = idx_m > -1 ? this.greece[idx_m].population : 0;
 
-				let data = find(this.greeceData, ['district', m.properties.ADMIN_GR]) || null;
-				m.properties.NAME_ENG = data.district_EN;
+				let idx_p = findIndex(this.greece, ['county', m.properties.ADMIN_GR]);
+				let data = find(this.greeceDataPE, ['district', m.properties.ADMIN_GR]) || null;
+
 				m.properties.cases = data ? data.cases : [];
 				m.properties.deaths = data ? data.deaths : [];
 				m.properties.totalIndex = data ? data.cases.map(x => {
