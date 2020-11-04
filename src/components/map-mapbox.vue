@@ -145,7 +145,6 @@ export default {
 			if (n !== o) {
 				if (!n) {
 					clearInterval(this.interval);
-					return;
 				} else {
 					if (this.value === this.dates.length - 1) {
 						this.value = 0;
@@ -153,7 +152,6 @@ export default {
 					this.interval = setInterval(() => {
 						if (this.value === this.dates.length - 1) {
 							this.isPlaying = false;
-							return;
 						} else {
 							this.value++;
 						}
@@ -192,7 +190,7 @@ export default {
 			this.map.on('load', this.onLoad);
 		},
 		onLoad () {
-			let layers = this.map.getStyle().layers;
+			const layers = this.map.getStyle().layers;
 			for (let i = 0; i < layers.length; i++) {
 				if (layers[i].type === 'symbol') {
 					this.bottomLayer = layers[i].id;
@@ -218,8 +216,8 @@ export default {
 			this.map.on('mouseleave', 'okxe', this.onMouseLeave);
 		},
 		onMouseMove (e) {
-			let region = this.map.queryRenderedFeatures(e.point, {
-				layers: ['admin-0', 'okxe'],
+			const region = this.map.queryRenderedFeatures(e.point, {
+				layers: ['admin-0', 'okxe']
 			});
 
 			if (region.length > 0 && (region[0].properties.TOOLTIP)) {
@@ -288,7 +286,7 @@ export default {
 				if (this.value < this.dates.length - 1) {
 					f.properties.count = f.properties.cases[this.value] ? f.properties.cases[this.value] : 0;
 
-					f.properties.DATE =  this.dates[this.value];
+					f.properties.DATE = this.dates[this.value];
 					f.properties.CASES = f.properties.cases[this.value] ? f.properties.cases[this.value] : 0;
 					f.properties.DEATHS = f.properties.deaths[this.value] ? f.properties.deaths[this.value] : 0;
 					f.properties.RECOVERED = f.properties.recovered[this.value] ? f.properties.recovered[this.value] : 0;
@@ -323,15 +321,15 @@ export default {
 						f.properties.TOTALINDEX = parseInt((f.properties.CASES * 1000000) / f.properties.pop_11);
 						f.properties.DEATHSINDEX = parseInt((f.properties.DEATHS * 1000000) / f.properties.pop_11);
 
-						let unk = this.typeOfMap === 'deaths' ?
-							find(this.greece, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό').dead :
-							find(this.greece, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό').cases;
-						let non = this.typeOfMap === 'deaths' ?
-							find(this.greece, m => m.district === 'Εισαγόμενα (Αυτοβούλως)').dead + find(this.greece, m => m.district === 'Εισαγόμενα (Πύλες Εισόδου)').dead :
-							find(this.greece, m => m.district === 'Εισαγόμενα (Αυτοβούλως)').cases + find(this.greece, m => m.district === 'Εισαγόμενα (Πύλες Εισόδου)').cases;
+						const unk = this.typeOfMap === 'deaths'
+							? find(this.greece, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό').dead
+							: find(this.greece, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό').cases;
+						const non = this.typeOfMap === 'deaths'
+							? find(this.greece, m => m.district === 'Εισαγόμενα (Αυτοβούλως)').dead + find(this.greece, m => m.district === 'Εισαγόμενα (Πύλες Εισόδου)').dead
+							: find(this.greece, m => m.district === 'Εισαγόμενα (Αυτοβούλως)').cases + find(this.greece, m => m.district === 'Εισαγόμενα (Πύλες Εισόδου)').cases;
 
-						f.properties.UNKNOWN = unk ? unk : 0;
-						f.properties.NONGREEK = non ? non : 0;
+						f.properties.UNKNOWN = unk || 0;
+						f.properties.NONGREEK = non || 0;
 
 						f.properties.TOOLTIP = this.setWorldToolTip(f.properties);
 
@@ -407,7 +405,7 @@ export default {
 					</div>
 					<hr role="separator" aria-orientation="horizontal" class="v-divider theme--light">
 					<div class="row no-gutters justify-space-between">
-						<h3 class="body-2 pa-2"><span class="font-weight-bold">${new Intl.NumberFormat('el-GR').format(data.UNKNOWN) || '-'}</span> ${ k } ${this.$t('χωρίς γεωγραφικό προσδιορισμό')}</h3>
+						<h3 class="body-2 pa-2"><span class="font-weight-bold">${new Intl.NumberFormat('el-GR').format(data.UNKNOWN) || '-'}</span> ${k} ${this.$t('χωρίς γεωγραφικό προσδιορισμό')}</h3>
 					</div>
 					`;
 				}
@@ -421,7 +419,7 @@ export default {
 					}
 					text += `
 						<div class="row no-gutters justify-space-between">
-							<h3 class="body-2 pa-2"><span class="font-weight-bold">${new Intl.NumberFormat('el-GR').format(data.NONGREEK) || '-'}</span> ${ k }</h3>
+							<h3 class="body-2 pa-2"><span class="font-weight-bold">${new Intl.NumberFormat('el-GR').format(data.NONGREEK) || '-'}</span> ${k}</h3>
 						</div>
 					`;
 				}
@@ -472,15 +470,15 @@ export default {
 
 			this.greeceGeoJson.features.forEach(f => {
 				if (this.value < this.dates.length - 1) {
-					f.properties.DATE =  this.dates[this.value];
+					f.properties.DATE = this.dates[this.value];
 					f.properties.CASES = f.properties.cases[this.value] ? f.properties.cases[this.value] : 0;
 					f.properties.DEATHS = f.properties.deaths[this.value] ? f.properties.deaths[this.value] : 0;
 					f.properties.TOTALINDEX = f.properties.totalIndex[this.value] ? parseFloat(f.properties.totalIndex[this.value]) : 0;
 					f.properties.DEATHSINDEX = f.properties.deathsIndex[this.value] ? parseFloat(f.properties.deathsIndex[this.value]) : 0;
 
-					let unk = this.typeOfMap === 'deaths' ?
-						find(this.greeceDataPE, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό').deaths :
-						find(this.greeceDataPE, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό').cases;
+					const unk = this.typeOfMap === 'deaths'
+						? find(this.greeceDataPE, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό').deaths
+						: find(this.greeceDataPE, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό').cases;
 
 					f.properties.UNKNOWN = unk ? unk[this.value] : 0;
 					f.properties.NONGREEK = null;
@@ -505,15 +503,15 @@ export default {
 						f.properties.TOTALINDEX = parseFloat((f.properties.CASES * 100000) / f.properties.pop_11);
 						f.properties.DEATHSINDEX = parseFloat((f.properties.DEATHS * 100000) / f.properties.pop_11);
 
-						let unk = this.typeOfMap === 'deaths' ?
-							find(this.greece, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό') :
-							find(this.greece, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό');
-						let non = this.typeOfMap === 'deaths' ?
-							find(this.greece, m => m.district === 'Εισαγόμενα (Αυτοβούλως)').dead + find(this.greece, m => m.district === 'Εισαγόμενα (Πύλες Εισόδου)').dead :
-							find(this.greece, m => m.district === 'Εισαγόμενα (Αυτοβούλως)').cases + find(this.greece, m => m.district === 'Εισαγόμενα (Πύλες Εισόδου)').cases;
+						const unk = this.typeOfMap === 'deaths'
+							? find(this.greece, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό')
+							: find(this.greece, m => m.district === 'Χωρίς Γεωγραφικό Προσδιορισμό');
+						const non = this.typeOfMap === 'deaths'
+							? find(this.greece, m => m.district === 'Εισαγόμενα (Αυτοβούλως)').dead + find(this.greece, m => m.district === 'Εισαγόμενα (Πύλες Εισόδου)').dead
+							: find(this.greece, m => m.district === 'Εισαγόμενα (Αυτοβούλως)').cases + find(this.greece, m => m.district === 'Εισαγόμενα (Πύλες Εισόδου)').cases;
 
 						f.properties.UNKNOWN = unk ? (this.typeOfMap === 'deaths' ? unk.dead : unk.cases) : 0;
-						f.properties.NONGREEK = non ? non : 0;
+						f.properties.NONGREEK = non || 0;
 
 						f.properties.TOOLTIP = this.setGreeceToolTip(f.properties);
 
@@ -569,7 +567,7 @@ export default {
 				text += `
 				<div class="px-2">
 					<div class="row no-gutters justify-space-between">
-						<h3 class="body-2 pa-2"><span class="font-weight-bold">${new Intl.NumberFormat('el-GR').format(data.UNKNOWN) || '-'}</span> ${ k } ${this.$t('χωρίς γεωγραφικό προσδιορισμό')}</h3>
+						<h3 class="body-2 pa-2"><span class="font-weight-bold">${new Intl.NumberFormat('el-GR').format(data.UNKNOWN) || '-'}</span> ${k} ${this.$t('χωρίς γεωγραφικό προσδιορισμό')}</h3>
 					</div>
 				</div>
 				`;
@@ -584,7 +582,7 @@ export default {
 				text += `
 				<div class="px-2">
 					<div class="row no-gutters justify-space-between">
-						<h3 class="body-2 pa-2"><span class="font-weight-bold">${new Intl.NumberFormat('el-GR').format(data.NONGREEK) || '-'}</span> ${ k }</h3>
+						<h3 class="body-2 pa-2"><span class="font-weight-bold">${new Intl.NumberFormat('el-GR').format(data.NONGREEK) || '-'}</span> ${k}</h3>
 					</div>
 				</div>
 				`;
@@ -614,15 +612,15 @@ export default {
 				},
 				paint: {
 					'fill-color': {
-						'type': 'identity',
-						'property': 'color'
+						type: 'identity',
+						property: 'color'
 					},
 					'fill-opacity': {
-						'type': 'identity',
-						'property': 'opacity'
+						type: 'identity',
+						property: 'opacity'
 					},
 					'fill-outline-color': '#000'
-				},
+				}
 			}, this.bottomLayer);
 
 			this.map.addLayer({
@@ -634,17 +632,16 @@ export default {
 				},
 				paint: {
 					'fill-color': {
-						'type': 'identity',
-						'property': 'color'
+						type: 'identity',
+						property: 'color'
 					},
 					'fill-opacity': {
-						'type': 'identity',
-						'property': 'opacity'
+						type: 'identity',
+						property: 'opacity'
 					},
 					'fill-outline-color': '#000'
-				},
+				}
 			}, this.bottomLayer);
-
 		},
 		updateLayers (n) {
 			if (!this.map) return;
@@ -652,11 +649,9 @@ export default {
 			if (n === 'admin-0') {
 				this.map.setLayoutProperty('okxe', 'visibility', 'none');
 				this.map.setLayoutProperty('admin-0', 'visibility', 'visible');
-				return;
 			} else {
 				this.map.setLayoutProperty('okxe', 'visibility', 'visible');
 				this.map.setLayoutProperty('admin-0', 'visibility', 'none');
-				return;
 			}
 		},
 		setPosition (c, z) {

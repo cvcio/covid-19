@@ -26,9 +26,7 @@ export default {
 		...mapGetters(['alerts', 'alert', 'navStats', 'navNews']),
 		alertText () {
 			return this.alerts ? find(this.alerts, ['key', 'alertText']).value : '';
-		},
+		}
 	}
 };
 </script>
-
-

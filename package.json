@@ -22,10 +22,12 @@
     "simple-statistics": "^7.3.0",
     "vue": "^2.6.12",
     "vue-custom-scrollbar": "^1.4.0",
+    "vue-gtag": "^1.9.1",
     "vue-i18n": "^8.22.0",
     "vue-router": "^3.4.7",
     "vuetify": "^2.3.14",
-    "vuex": "^3.5.1"
+    "vuex": "^3.5.1",
+    "vuex-router-sync": "^5.0.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.2.0",
@@ -35,12 +37,15 @@
     "@vue/cli-plugin-vuex": "~4.2.0",
     "@vue/cli-service": "~4.2.0",
     "@vue/eslint-config-prettier": "^6.0.0",
+    "@vue/eslint-config-standard": "^5.1.2",
     "babel-eslint": "^10.0.3",
-    "babel-node": "^0.0.1-security",
     "compression-webpack-plugin": "^4.0.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-prettier": "^3.1.1",
-    "eslint-plugin-vue": "^6.1.2",
+    "eslint": "^7.11.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "eslint-plugin-vue": "^7.1.0",
     "less": "^3.11.1",
     "less-loader": "^5.0.0",
     "lint-staged": "^9.5.0",
@@ -50,7 +55,6 @@
     "vue-template-compiler": "^2.6.11"
   },
   "gitHooks": {
-    "pre-commit": "lint-staged"
   },
   "lint-staged": {
     "*.{js,jsx,vue}": [

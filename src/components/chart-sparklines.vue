@@ -43,28 +43,30 @@ export default {
 			data = data.map(m => {
 				delete m['Province/State'];
 				delete m['Country/Region'];
-				delete m['Lat'];
-				delete m['Long'];
-				delete m['Status'];
-				delete m['sum'];
+				delete m.Lat;
+				delete m.Long;
+				delete m.Status;
+				delete m.sum;
 
 				const ks = keys(m);
 				const vs = values(m);
-				return ks.map((k, i) => { return {
-					date: this.parseDate(k),
-					value: parseInt(vs[i])
-				}; });
+				return ks.map((k, i) => {
+					return {
+						date: this.parseDate(k),
+						value: parseInt(vs[i])
+					};
+				});
 			});
 			data = groupBy(flatten(data), 'date');
 			data = map(data, (v, k) => sumBy(v, 'value'));
-			let sma =  ma(data, 7).filter(function (el) {
+			const sma = ma(data, 7).filter(function (el) {
 				return el != null;
 			});
 
 			const DATA = sma;
 
 			var div = document.getElementById('sparklines');
-			while(div.firstChild){
+			while (div.firstChild) {
 				div.removeChild(div.firstChild);
 			}
 			this.chart = null;
@@ -131,9 +133,9 @@ export default {
 					if (DATA[DATA.length - 1] === DATA[DATA.length - 2]) return 'grey';
 				})
 				.text(() => {
-					if (diff > 0) return `+${ new Intl.NumberFormat('el-GR').format(Math.abs(diff)) }`;
-					if (diff < 0) return `-${ new Intl.NumberFormat('el-GR').format(Math.abs(diff)) }`;
-					return `${ new Intl.NumberFormat('el-GR').format(Math.abs(diff)) }`;
+					if (diff > 0) return `+${new Intl.NumberFormat('el-GR').format(Math.abs(diff))}`;
+					if (diff < 0) return `-${new Intl.NumberFormat('el-GR').format(Math.abs(diff))}`;
+					return `${new Intl.NumberFormat('el-GR').format(Math.abs(diff))}`;
 				});
 		}
 	}

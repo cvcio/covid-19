@@ -51,10 +51,10 @@ export default {
 			totalcases = totalcases.map(m => {
 				delete m['Province/State'];
 				delete m['Country/Region'];
-				delete m['Lat'];
-				delete m['Long'];
-				delete m['Status'];
-				delete m['sum'];
+				delete m.Lat;
+				delete m.Long;
+				delete m.Status;
+				delete m.sum;
 
 				const ks = keys(m);
 				const vs = values(m);
@@ -103,7 +103,7 @@ export default {
 						formatter: (m) => {
 							return this.$moment(m.value).format('DD/MM');
 						}
-					},
+					}
 				},
 				yAxis: {
 					labels: {
@@ -113,10 +113,10 @@ export default {
 						style: {
 							fontFamily: 'Roboto Mono',
 							fontSize: '9px'
-						},
+						}
 					},
 					showLastLabel: true,
-					showFirstLabel: true,
+					showFirstLabel: true
 				},
 
 				chart: {
@@ -127,7 +127,7 @@ export default {
 						fontSize: '9px'
 					},
 					height: 240,
-					margin: [0, 0, 60, 0],
+					margin: [0, 0, 60, 0]
 				},
 
 				legend: {
@@ -174,7 +174,7 @@ export default {
 								}
 								return false;
 							}
-						},
+						}
 					},
 					column: {
 						groupPadding: 0,
@@ -195,9 +195,9 @@ export default {
 					formatter: function () {
 						return `
 						<span style="">
-							<span class="grey--text">${ self.$moment(this.point.x).format('LL') }</span><br/>
-							<span>${ this.series.name }:</span>
-							<span class="font-weight-bold">${ new Intl.NumberFormat('el-GR').format(this.point.y) }</span>
+							<span class="grey--text">${self.$moment(this.point.x).format('LL')}</span><br/>
+							<span>${this.series.name}:</span>
+							<span class="font-weight-bold">${new Intl.NumberFormat('el-GR').format(this.point.y)}</span>
 						</span>
 						`;
 					}

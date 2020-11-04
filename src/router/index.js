@@ -1,7 +1,9 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import i18n from '@/locale';
-import vuetify from '@/plugins/vuetify';
+import i18n from '@/plugins/i18n';
+import store from '@/store';
+
+import { defaultLocale, getLocale } from '@/locale';
 
 Vue.use(VueRouter);
 
@@ -18,8 +20,14 @@ const routes = [
 	{
 		path: '/stats/',
 		name: 'stats',
-		props: { isNav: true, lang: ''  },
+		props: { isNav: true, lang: '' },
 		component: () => import(/* webpackChunkName: "stats" */ '@/views/stats.vue')
+	},
+	{
+		path: '/iframe/',
+		name: 'frame',
+		props: { isNav: true, lang: '' },
+		component: () => import(/* webpackChunkName: "frame" */ '@/views/frame.vue')
 	},
 	{
 		path: '*',
@@ -40,16 +48,24 @@ const hasQueryParams = (route) => {
 };
 
 router.beforeEach((to, from, next) => {
-	const lang = to.query.lang;
-	if (lang && lang !== i18n.locale) {
-		i18n.locale = lang;
-		vuetify.framework.lang.current = lang;
-	}
+	const locale = getLocale(to.query.lang || defaultLocale);
+	console.debug('Locale:', locale.name);
+	// const lang = to.query.lang;
+	// if (lang && lang !== i18n.locale) {
+	// 	i18n.locale = lang;
+	// 	vuetify.framework.lang.current = lang;
+	// }
 
-	if (!hasQueryParams(to) && hasQueryParams(from)) {
-		next({name: to.name, query: from.query});
+	// if (!hasQueryParams(to) && hasQueryParams(from)) {
+	// 	next({ name: to.name, query: from.query });
+	// }
+	// return next();
+	store.dispatch('setLocale', locale);
+	// get translations from params
+	if (locale) {
+		i18n.locale = locale.code;
 	}
-	return next();
+	next();
 });
 
 export default router;
