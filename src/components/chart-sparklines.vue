@@ -55,7 +55,9 @@ export default {
 					value: parseInt(vs[i])
 				}; });
 			});
+
 			data = groupBy(flatten(data), 'date');
+
 			data = map(data, (v, k) => sumBy(v, 'value'));
 			let sma =  ma(data, 7).filter(function (el) {
 				return el != null;

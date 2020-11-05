@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { json, csv } from 'd3';
-import { sumBy,  map, groupBy, orderBy, findIndex, filter, find, keys, cloneDeep } from 'lodash';
+import { sumBy,  map, groupBy, orderBy, findIndex, filter, find, keys, cloneDeep, remove } from 'lodash';
 import moment from 'moment';
 import { storage } from '@/services/storage';
 import { reduce } from 'highcharts';
@@ -322,7 +322,7 @@ export default new Vuex.Store({
 					recovered: v.reduce((r, a) => a.recovered.map((b, i) => (r[i] || 0) + b), [])
 				};
 			});
-
+			red_cases = remove(red_cases, (m) => m.country !== '');
 			let globalData = red_cases.map((v, i) => {
 				v.deaths = filter(red_deaths, ['country', v.country])[0].deaths;
 				v.recovered = filter(red_recovered, ['country', v.country])[0].recovered;
