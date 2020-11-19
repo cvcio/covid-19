@@ -1,5 +1,5 @@
 REGISTRY=reg.plagiari.sm
-PROJECT=covid
+PROJECT=covid-19
 TAG=`cat VERSION`
 
 REG_PROJ=$(REGISTRY)/$(PROJECT)
