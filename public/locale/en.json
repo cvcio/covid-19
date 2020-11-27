@@ -1,0 +1,21 @@
+{
+	"app.title": "",
+	"app.subtitle": "The spread of the disease in Greece and worldwide",
+	"view.greece": "Greece",
+	"view.global": "World",
+	"link.about": "about",
+	"cases": "cases | case",
+	"deaths": "deaths | death",
+	"total": "total",
+	"active": "active",
+	"intubated": "intubated",
+	"recovered": "recovered",
+	"tested": "tested",
+	"hospitals": "hospitals | hostpital",
+	"occupied": "occupied",
+	"total cases": "total cases",
+	"total deaths": "total deaths",
+	"note.widget.hospitals": "Activate this filter to see ...",
+	"button.in.greece": "INSIGHTS ON GREECE",
+	"button.in.world": "INSIGHTS ON THE WORLD"
+}

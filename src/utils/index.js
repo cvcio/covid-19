@@ -1,16 +1,21 @@
+import moment from 'moment';
 
-const isSafari = () => {
-	var is_safari = navigator.userAgent.toLowerCase().indexOf('safari/') > -1;
-	return is_safari;
+const normalizeNFD = (v) => {
+	return v.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 };
 
-const parseDate = (v) => {
-	if (!v || v === '') return '';
-	const dateString = v.split('/');
-	return moment(`20${dateString[2]}-${dateString[0]}-${dateString[1]}`, 'YYYY-MM-DD').toDate();
+const getDates = (from, to) => {
+	const dates = [];
+	let startDate = moment(from);
+	const endDate = moment(to);
+	while (startDate <= endDate) {
+		dates.push(moment(startDate));
+		startDate = moment(startDate).add(1, 'days');
+	}
+	return dates;
 };
 
 export {
-	isSafari,
-	parseDate
+	normalizeNFD,
+	getDates
 };

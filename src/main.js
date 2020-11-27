@@ -1,14 +1,16 @@
 import Vue from 'vue';
 import VueGtag from 'vue-gtag';
+
 import { sync } from 'vuex-router-sync';
-import '@/registerServiceWorker';
+// import '@/registerServiceWorker';
 
-// Import Plugins
-import vuetify from '@/plugins/vuetify';
-import i18n from '@/plugins/i18n';
-
+// Components
+import { api } from '@/api';
 import router from '@/router';
 import store from '@/store';
+import i18n from '@/plugins/i18n';
+import vuetify from '@/plugins/vuetify';
+import filters from '@/filters';
 
 import App from '@/App.vue';
 
@@ -16,9 +18,13 @@ import App from '@/App.vue';
 import moment from 'moment';
 // Set Global Packages
 Vue.prototype.$moment = moment;
+Vue.prototype.$http = api;
 
 Vue.config.productionTip = process.env.NODE_ENV === 'development';
 Vue.config.performance = process.env.NODE_ENV === 'development';
+Vue.config.devtools = process.env.NODE_ENV === 'development';
+Vue.config.debug = process.env.NODE_ENV === 'development';
+Vue.config.silent = process.env.NODE_ENV === 'production';
 
 Vue.prototype.$BASE_URL = process.env.VUE_APP_BASE_URL || '/';
 Vue.prototype.$BASE_API = process.env.VUE_APP_BASE_API || '';
@@ -26,13 +32,14 @@ Vue.prototype.$APP_DOMAINNAME = process.env.VUE_APP_DOMAINNAME;
 Vue.prototype.$APP_TITLE = process.env.VUE_APP_TITLE;
 Vue.prototype.$CHARTS_URL = 'https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/charts/';
 
+Vue.use(filters);
 Vue.use(VueGtag, {
 	config: { id: process.env.VUE_APP_GOOGLE_TAG || '' },
 	enabled: false
 }, router);
 
 // Init Base API Handler
-
+api.init(Vue.prototype.$BASE_API);
 sync(store, router);
 
 // Create Application

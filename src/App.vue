@@ -1,35 +1,16 @@
 <template>
 	<v-app id="app" :toolbar="!iframe" :footer="!iframe">
-		<template v-if="!iframe">
-			<app-header />
-			<v-main app light class="pt-0">
-				<v-scroll-y-transition mode="out-in">
-					<router-view />
-				</v-scroll-y-transition>
-			</v-main>
-			<app-footer />
-		</template>
-		<template v-else>
-			<v-main light class="pt-0">
-				<v-scroll-y-transition mode="out-in">
-					<router-view />
-				</v-scroll-y-transition>
-			</v-main>
-		</template>
+		<component :is="this.$route.meta.layout || 'div'">
+			<router-view />
+		</component>
 	</v-app>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 export default {
 	name: 'covid-19',
-	components: {
-		'app-header': require('@/components/app/app-header').default,
-		'app-footer': require('@/components/app/app-footer').default
-	},
+	components: {},
 	computed: {
-		...mapGetters([]),
 		iframe () {
 			return !!this.$route.path.includes('iframe');
 		}
@@ -46,7 +27,7 @@ export default {
 html, body, #app {
 	overflow: auto;
 	background: white;
-	// background: #E6ECEC;
+	font-size: 14px;
 }
 
 .mono {
@@ -87,5 +68,14 @@ a {
 }
 .small-caption {
 	font-size: 0.625;
+}
+.iframe-header .v-toolbar__content {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	padding: 0;
+}
+canvas {
+	border: none !important;
+	outline: none !important;
 }
 </style>

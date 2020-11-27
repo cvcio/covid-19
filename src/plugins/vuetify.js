@@ -13,7 +13,7 @@ el.dataFooter.itemsPerPageAll = 'Όλες';
 
 export default new Vuetify({
 	icons: {
-		iconfont: 'fa' // 'mdi' || 'mdiSvg' || 'md' || 'fa' || 'fa4' || 'faSvg'
+		iconfont: 'mdi' // 'mdi' || 'mdiSvg' || 'md' || 'fa' || 'fa4' || 'faSvg'
 	},
 	theme: {
 		themes: {

@@ -25,4 +25,4 @@ yarn-error.log*
 covid19/
 *tmp/
 
-design
+/design
