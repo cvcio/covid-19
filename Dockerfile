@@ -14,7 +14,7 @@ COPY package.json yarn.lock /app/
 RUN yarn install
 
 COPY . /app
-RUN NODE_ENV=$NODE_ENV yarn $NODE_ENV
+RUN yarn $NODE_ENV
 
 FROM nginx:stable-alpine as production-stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html
