@@ -1,6 +1,6 @@
 REGISTRY=reg.plagiari.sm
-PROJECT=covid
-TAG:=$(shell git rev-parse HEAD)
+PROJECT=covid-19
+TAG=`cat VERSION`
 
 REG_PROJ=$(REGISTRY)/$(PROJECT)
 REG_TAG=$(REGISTRY)/$(PROJECT):$(TAG)

@@ -24,5 +24,4 @@ yarn-error.log*
 *.zip
 covid19/
 *tmp/
-
 /design
