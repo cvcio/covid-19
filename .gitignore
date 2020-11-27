@@ -20,7 +20,7 @@ yarn-error.log*
 *.sln
 *.sw?
 
-*.env.*
+*.env.
 *.zip
 covid19/
 *tmp/
