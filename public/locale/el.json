@@ -1,0 +1,21 @@
+{
+	"app.title": "",
+	"app.subtitle": "Η εξάπλωση της νόσου στην Ελλάδα και στον κόσμο",
+	"view.greece": "Ελλάδα",
+	"view.global": "Κόσμος",
+	"link.about": "about",
+	"cases": "κρούσματα | κρούσμα",
+	"deaths": "θάνατοι | θάνοτος",
+	"total": "total",
+	"active": "active",
+	"intubated": "intubated",
+	"recovered": "recovered",
+	"tested": "tested",
+	"hospitals": "νοσοκομεία | νοσοκομείο",
+	"occupied": "occupied",
+	"total cases": "σύνολο κρουσμάτων",
+	"total deaths": "σύνολο θανάτων",
+	"note.widget.hospitals": "note.widget.hospitals",
+	"button.in.greece": "INSIGHTS ON GREECE",
+	"button.in.world": "INSIGHTS ON THE WORLD"
+}

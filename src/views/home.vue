@@ -1,11 +1,16 @@
 <template>
-	<div id="map" class="">
-		<v-row no-gutters justify="center" align="center" class="loader" v-if="loading" >
-			<span class="mb-12 mt-n12 grey--text text-center">{{ $t('Φορτώνεται ο παγκόσμιος χάρτης και η βάση δεδομένων κρουσμάτων με COVID-19. Η εφαρμογή ενημερώνεται διαρκώς – με force reload (ctrl ή cmd + shift + R) θα φορτώσετε την τελευταία έκδοση.') }}</span>
-			<v-progress-circular v-if="loading" class="loader mt-12" color="primary" indeterminate :size="24"/>
-		</v-row>
-		<map-mapbox v-if="!loading" :level="activeMap"/>
-	</div>
+	<v-container fluid class="pa-0" v-scroll="onScroll">
+		<v-container fluid class="pa-0">
+			<v-row no-gutters class="no-events">
+				<div id="map-container" class="d-block blue-grey lighten-4" :class="$vuetify.breakpoint.smAndDown ? 'mobile' : 'desktop'">
+					<map-view class="events"/>
+					<app-header class="no-events"/>
+					<tabs class="no-events" v-if="!$vuetify.breakpoint.smAndDown"/>
+				</div>
+			</v-row>
+		</v-container>
+		<content-list :showAltNav="showAltNav" v-if="!$vuetify.breakpoint.smAndDown"/>
+	</v-container>
 </template>
 
 <script>
@@ -14,12 +19,64 @@ import { mapGetters } from 'vuex';
 export default {
 	name: 'home',
 	components: {
-		'map-mapbox': require('@/components/map-mapbox').default,
+		'app-header': require('@/components/app/app-header').default,
+		tabs: require('@/components/content/tabs').default,
+		'content-list': require('@/components/content/content-list').default,
+		'map-view': require('@/components/charts/map-view').default
 	},
 	computed: {
-		...mapGetters([
-			'loading', 'activeMap'
-		])
+		...mapGetters(['locale'])
+	},
+	data () {
+		return {
+			tab: null,
+			showAltNav: false
+		};
+	},
+	methods: {
+		onScroll (e) {
+			this.showAltNav = e.target.scrollingElement.scrollTop > window.innerHeight * 0.9;
+		}
 	}
 };
 </script>
+
+<style lang="less" scoped>
+#map-container {
+	position: relative;
+	width: 100%;
+	height: 95vh;
+	z-index: 0;
+	&.mobile {
+		height: calc(100vh - 56px);
+	}
+	.top-offset {
+		margin-top: 76px;
+	}
+}
+.container.max-width {
+	max-width: 1264px;
+}
+
+.primary--opac {
+	background: #f2f7f7;
+}
+.accent--opac {
+	background: rgba(255,0,0,0.1);
+}
+.secondary--opac {
+	background: #f7f2f2;
+}
+.row.outlined {
+	border: 1px solid #f2f7f7;
+}
+
+.no-events {
+	pointer-events: none;
+}
+
+.events {
+	pointer-events: all;
+}
+
+</style>

@@ -15,7 +15,7 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <link rel="icon" href="<%= VUE_APP_BASE_URL %>favicon.ico">
 	<title><%= VUE_APP_TITLE %></title>
 
 	<meta name="description" content="COVID-19 Η εξάπλωση της νόσου στην Ελλάδα και στον κόσμο" />
@@ -32,13 +32,14 @@
 	<meta property="og:image" content="https://lab.imedd.org/covid19/img/TWITTER_600x314.jpg" />
 	<meta property="twitter:image" content="https://lab.imedd.org/covid19/img/TWITTER_600x314.jpg" />
 
-	<link rel="icon" type="image/png" sizes="32x32" href="<%= BASE_URL %>img/icons/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="<%= BASE_URL %>img/icons/favicon-16x16.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="<%= VUE_APP_BASE_URL %>img/icons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="<%= VUE_APP_BASE_URL %>img/icons/favicon-16x16.png">
 
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Roboto+Mono:400,500,700,900&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Roboto+Mono:400,500,700,900|Roboto+Slab:300,400,500,700,900&display=swap">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 
-	<script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+	<!-- <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> -->
   </head>
   <body>
     <noscript>
@@ -46,17 +47,9 @@
     </noscript>
 	<div id="app"></div>
 	<!-- built files will be auto injected -->
-	<% if (NODE_ENV != 'development') { %>
+	<!--<% if (NODE_ENV != 'development') { %> -->
 	<!-- Go to www.addthis.com/dashboard to customize your tools -->
-	<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5e6e40408bf2d5f7"></script>
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-129030467-1"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
-		gtag('js', new Date());
-		gtag('config', 'UA-129030467-1');
-	</script>
-	<% } %>
+	<!--<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5e6e40408bf2d5f7"></script> -->
+	<!--<% } %> -->
   </body>
 </html>

@@ -1,0 +1,26 @@
+{
+	"data": [
+		{
+			"title": {
+				"en": "",
+				"el": ""
+			},
+			"body": {
+				"en": [
+					""
+				],
+				"el": [
+					""
+				]
+			},
+			"component": {
+				"id": "",
+				"embed": true,
+				"footnote": {
+					"en": "",
+					"el": ""
+				}
+			}
+		}
+	]
+}

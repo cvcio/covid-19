@@ -12,6 +12,9 @@ el.dataFooter.pageText = '{0}-{1} από {2}';
 el.dataFooter.itemsPerPageAll = 'Όλες';
 
 export default new Vuetify({
+	icons: {
+		iconfont: 'mdi' // 'mdi' || 'mdiSvg' || 'md' || 'fa' || 'fa4' || 'faSvg'
+	},
 	theme: {
 		themes: {
 			light: {
@@ -44,5 +47,5 @@ export default new Vuetify({
 	lang: {
 		locales: { el, en },
 		current: 'el'
-	},
+	}
 });
