@@ -28,7 +28,7 @@ jobs:
         with:
           push: true
           context: .
-          file: ./Dockerfile
+          file: ./Dockerfile.staging
           platforms: linux/amd64
           build-args: NODE_ENV=staging,VUE_APP_GOOGLE_TAG=${{ secrets.VUE_APP_GOOGLE_TAG }},VUE_APP_MAPBOX=${{ secrets.VUE_APP_MAPBOX }}
           tags: |
