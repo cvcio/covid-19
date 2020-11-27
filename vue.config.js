@@ -10,7 +10,6 @@ module.exports = {
 		msTileColor: '#114B5F',
 		appleMobileWebAppCapable: 'yes',
 		manifestOptions: {
-			background_color: '#114B5F',
 			name: 'COVID—19',
 			short_name: 'COVID—19',
 			start_url: '',

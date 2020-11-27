@@ -42,7 +42,7 @@
 						<h4 class="subtitle-2 primary--text text-capitalize">
 							{{ $t("7-day moving average") }}
 						</h4>
-						<sparklines class="d-block" :data="point.data['new_' + mapKey]" style="height: 60px;"/>
+						<sparklines class="d-block" :data="point.data['new_' + mapKey]" id="sparklines" style="height: 60px;"/>
 					</v-card-subtitle>
 					<v-divider/>
 
@@ -196,7 +196,24 @@ export default {
 						m.properties.active = false;
 						m.properties.opacity = 0;
 						m.properties.color = '#fafafa';
+						let unk = [];
 						if (m.properties.group === this.mapLevel) {
+							if (m.properties.group === 'greece') {
+								unk = res.filter(m => m.geo_unit === '-').map(m => {
+									let x = [];
+									if (this.mapPeriodIDX === 0) {
+										x = m['new_' + this.mapKey][m['new_' + this.mapKey].length - 1];
+									} else {
+										x = sum(m['new_' + this.mapKey]);
+									}
+									if (x <= 0) return;
+									return `
+										<h4 class="caption grey--text">${this.$t(m.region)}: <span class="text-uppercase font-weight-bold">
+										${new Intl.NumberFormat('el-GR').format(x.toFixed(2))}</span></h4>
+									`;
+								});
+							}
+
 							const obj = res.find(o => o.uid === m.properties.uid);
 							if (obj) {
 								m.properties.data = obj;
@@ -218,20 +235,7 @@ export default {
 								m.properties.color = obj.population > 0 ? palette((v / obj.population) * 100000) : palette(0);
 								m.properties.opacity = v > 0 ? 0.9 : 0.9;
 
-								if (m.properties.uid === 'EL300') {
-									const unk = res.filter(m => m.geo_unit === '-').map(m => {
-										let x = [];
-										if (this.mapPeriodIDX === 0) {
-											x = m['new_' + this.mapKey][m['new_' + this.mapKey].length - 1];
-										} else {
-											x = sum(m['new_' + this.mapKey]);
-										}
-										if (x <= 0) return;
-										return `
-											<h4 class="caption grey--text">${this.$t(m.region)}: <span class="text-uppercase font-weight-bold">
-											${new Intl.NumberFormat('el-GR').format(x.toFixed(2))}</span></h4>
-										`;
-									});
+								if (m.properties.group === 'greece') {
 									m.properties.data.note = unk.length > 0 ? unk.join('') : null;
 								}
 							}

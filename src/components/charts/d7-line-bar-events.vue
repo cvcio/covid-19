@@ -29,7 +29,7 @@ import { ma } from 'moving-averages';
 import * as colors from '@/helper/colors';
 
 export default {
-	name: 'chart-d7-line-bar',
+	name: 'chart-d7-line-bar-events',
 	props: ['id', 'dates', 'values', 'point'],
 	data () {
 		return {
@@ -69,7 +69,7 @@ export default {
 			this.chart = null;
 
 			const width = div.clientWidth;
-			const height = 96;
+			const height = 280;
 			const margin = { top: 0, left: 0, bottom: 10, right: 0 };
 			const innerWidth = width - margin.left - margin.right;
 			const innerHeight = height - margin.top - margin.bottom;
@@ -102,7 +102,7 @@ export default {
 				.attr('transform', `translate(0, ${height - margin.bottom})`)
 				.call(
 					axisBottom(x)
-						.ticks(1)
+						.ticks(6)
 						.tickFormat(d => this.$moment(this.dates[d]).format('MM/Y'))
 				)
 				.call(g => g.select('.domain').remove());
@@ -167,7 +167,7 @@ export default {
 .d7-line-bar {
 	display: inline-block;
 	// width: 140px;
-	max-height: 96px;
+	max-height: 280px;
 	width: 100%;
 	svg {
 		.axis {

@@ -16,6 +16,7 @@
     "axios": "^0.21.0",
     "chroma-js": "^2.1.0",
     "d3": "^6.2.0",
+    "d3-svg-annotation": "^2.5.1",
     "lodash": "^4.17.20",
     "mapbox-gl": "^1.12.0",
     "moment": "^2.29.1",

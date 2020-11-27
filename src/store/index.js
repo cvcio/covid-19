@@ -2,6 +2,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import modules from '@/store/modules';
 import { getLocale } from '@/locale';
+import moment from 'moment';
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -21,6 +23,7 @@ export default new Vuex.Store({
 	},
 	mutations: {
 		setLocale (state, data) {
+			moment.locale(data.code);
 			state.locale = data;
 		},
 		setSidebar (state, data) {

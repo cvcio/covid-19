@@ -71,7 +71,6 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
 	const locale = getLocale(to.query.lang || defaultLocale);
-	console.debug('Locale:', locale.name);
 	store.dispatch('setLocale', locale);
 	if (locale) {
 		i18n.locale = locale.code;

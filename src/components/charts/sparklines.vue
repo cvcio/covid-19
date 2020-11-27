@@ -1,5 +1,5 @@
 <template>
-	<div id="sparklines" class=""></div>
+	<div :id="id" class="sparklines"></div>
 </template>
 
 <script>
@@ -8,7 +8,7 @@ import { ma } from 'moving-averages';
 
 export default {
 	name: 'chart-sparklines',
-	props: ['data'],
+	props: ['data', 'id'],
 	data () {
 		return {
 			chart: null
@@ -26,14 +26,17 @@ export default {
 	},
 	methods: {
 		draw () {
+			if (this.chart) {
+				this.chart.selectAll('*').remove();
+			}
 			const data = this.data;
-			const sma = ma(data, 7).filter(function (el) {
+			const sma = ma(data.map(m => Math.max(0, m)), 7).filter(function (el) {
 				return el != null;
 			});
 
 			const DATA = sma;
 
-			var div = document.getElementById('sparklines');
+			var div = document.getElementById(this.id);
 			while (div.firstChild) {
 				div.removeChild(div.firstChild);
 			}
@@ -45,11 +48,9 @@ export default {
 			const innerWidth = width - margin.left - margin.right;
 			const innerHeight = height - margin.top - margin.bottom;
 
-			this.chart = select(document.getElementById('sparklines')).append('svg')
+			this.chart = select(div).append('svg')
 				.attr('width', width + margin.left + margin.right)
 				.attr('height', height + margin.top + margin.bottom);
-
-			this.chart.selectAll('*').remove();
 
 			const x = scaleLinear().domain([0, DATA.length]).rangeRound([0, innerWidth]);
 			const y = scaleLinear().domain([0, max(DATA)]).rangeRound([innerHeight, 0]);
@@ -110,7 +111,7 @@ export default {
 </script>
 
 <style lang="less">
-#sparklines {
+.sparklines {
 	display: inline-block;
 	// width: 140px;
 	max-height: 60px;
@@ -120,7 +121,7 @@ export default {
 		// height: 60px;
 		text {
 			text-anchor: start;
-			font: normal 9px 'Roboto Mono', 'Courier New';
+			font: normal 9px 'Roboto';
 		}
 		line {
 			stroke-width: 3px;

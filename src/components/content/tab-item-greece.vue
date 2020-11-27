@@ -11,7 +11,7 @@
 					</v-col>
 				</v-row>
 				<v-row class="px-4" align="center" no-gutters>
-					<v-col cols="12" class="primary--opac pa-2 mb-1">
+					<v-col cols="12" class="primary--opac pa-2 mb-1" style="position:relative">
 						<h4 class="text-h5 font-weight-bold grey--text">
 							<span class="primary--text" v-if="mapPeriodIDX < 3">{{ new Intl.NumberFormat('el-GR').format(cases.toFixed(2)) }}</span>
 							<span class="primary--text" v-if="mapPeriodIDX === 3">{{ new Intl.NumberFormat('el-GR').format(totalCases.toFixed(2)) }}</span>
@@ -200,7 +200,9 @@ export default {
 			active: 0,
 			critical: 0,
 			recovered: 0,
-			tests: 0
+			tests: 0,
+			new_cases: [],
+			new_deaths: []
 		};
 	},
 	mounted () {

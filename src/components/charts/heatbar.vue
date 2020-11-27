@@ -1,23 +1,39 @@
 <template>
 	<div>
 		<v-scroll-y-reverse-transition>
-			<div class="tooltip elevation-4" :style="'top:'+py+'px;left:'+px+'px;'" v-show="tooltip">
+			<div class="tooltip elevation-4" :style="'top:'+py+'px;left:'+px+'px;'" v-if="d" v-show="tooltip">
 				<v-card class="elevation-0 white pa-0 arrow_box" min-width="180px">
 					<v-card-title class="pa-2 subtitle-2">
 						<span class="">
 							{{
-								$moment().week(week).isoWeekday(1).format("ll")
+								$moment().week(d.week).isoWeekday(1).format("ll")
 							}}
 							-
 							{{
-								$moment().week(week).isoWeekday(7).format("ll")
+								$moment().week(d.week).isoWeekday(7).format("ll")
 							}}
 						</span>
 					</v-card-title>
 					<v-divider/>
 					<v-card-subtitle class="pa-2">
 						<h4 class="subtitle-2 primary--text text-capitalize primary--text">
-							{{ $tc("cases", 1) }}: {{ value }}
+							{{ $tc(point, 1) }}: {{ new Intl.NumberFormat('el-GR').format(d.value.toFixed(0)) }}
+						</h4>
+					</v-card-subtitle>
+					<v-divider/>
+					<v-card-subtitle class="pa-2" v-if="isFinite(d.diff)">
+						<h4 class="subtitle-2 primary--text text-capitalize primary--text">
+							{{ $t("Μεταβολή") }}: {{d.diff > 0 ? '+' : ''}}{{ new Intl.NumberFormat('el-GR').format(d.diff.toFixed(0)) }}
+						</h4>
+					</v-card-subtitle>
+					<v-divider/>
+					<v-card-subtitle class="pa-2">
+						<h4 class="subtitle-2 primary--text text-capitalize primary--text">
+							{{ $t("Growth Rate") }}:
+							<span>{{ isFinite(d.growthRate) ? d.growthRate.toFixed(2) + '%' : '' }}</span>
+							<v-icon x-small class="mx-1"
+								:class="isFinite(d.growthRate) ? (d.growthRate > 0 ? 'secondary--text' : 'green--text') : 'grey--text'"
+								:style="'transform: rotate(' + d.angle + 'deg);'">{{ isFinite(d.growthRate) ? 'fa-arrow-right' : 'fa-minus' }}</v-icon>
 						</h4>
 					</v-card-subtitle>
 				</v-card>
@@ -42,8 +58,7 @@ export default {
 			px: 100,
 			py: 100,
 			tooltip: false,
-			week: 0,
-			value: 0
+			d: null
 		};
 	},
 	watch: {
@@ -78,15 +93,21 @@ export default {
 				return {
 					week: this.$moment(m).week(),
 					date: m,
-					value: this.values[i]
+					value: Math.max(0, this.values[i])
 				};
 			});
 
-			const entries = groups(data, (d) => d.week).map(m => {
+			let entries = groups(data, (d) => d.week).map((m, i) => {
 				return {
 					week: m[0],
 					value: sumBy(m[1], 'value')
 				};
+			});
+			entries = entries.map((m, i) => {
+				m.diff = i < 1 ? 0 : m.value - entries[i - 1].value;
+				m.growthRate = i < 1 ? 0 : 100 * (m.diff / entries[i - 1].value);
+				m.angle = isFinite(m.growthRate) ? Math.min(90, Math.abs(m.growthRate)) * Math.sign(m.growthRate) * (-1) : 0;
+				return m;
 			});
 
 			const values = entries.map(m => m.value);
@@ -95,7 +116,6 @@ export default {
 			const margin = { top: 4, left: 0, bottom: 0, right: 0 };
 			const innerWidth = width - margin.left - margin.right;
 			const innerHeight = height - margin.top - margin.bottom;
-
 			const min = Math.min(...values);
 			const max = Math.max(...values, 1);
 
@@ -130,8 +150,7 @@ export default {
 					this.tooltip = true;
 					this.px = e.clientX;
 					this.py = e.clientY;
-					this.week = d.week;
-					this.value = d.value;
+					this.d = d;
 				})
 				.on('mouseout', (e, d) => {
 					this.tooltip = false;

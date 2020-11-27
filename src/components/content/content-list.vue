@@ -2,12 +2,12 @@
 	<v-container class="max-width">
 		<v-scroll-y-transition>
 			<div class="follow-nav" v-if="showAltNav">
-				<v-btn fab tile left class="text-inherit" color="primary">
+				<v-btn fab tile left class="text-inherit" color="primary" @click="$vuetify.goTo(0)">
 					<v-icon small>fa-map</v-icon>
 				</v-btn>
-				<v-btn fab tile left class="text-inherit" color="accent">
+				<!-- <v-btn fab tile left class="text-inherit" color="accent">
 					<v-icon small>fa-home</v-icon>
-				</v-btn>
+				</v-btn> -->
 			</div>
 		</v-scroll-y-transition>
 		<v-row justify="center" class="pa-0 ma-0 my-n12" v-if="!$vuetify.breakpoint.smAndDown">
@@ -53,7 +53,7 @@ export default {
 .follow-nav {
 	position: fixed;
 	// top: 0;
-	top: 76px;
+	bottom: 48px;
 	left: 12px;
 	transform: translate(0, 0);
 	z-index: 1;

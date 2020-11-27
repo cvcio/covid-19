@@ -43,8 +43,24 @@ const activeCS = [
 	'#F6F0CC'
 ].reverse();
 
+const criticalCS = [
+	'#D38E01',
+	'#D5950E',
+	'#D89D1F',
+	'#DBA531',
+	'#DEAD41',
+	'#E1B552',
+	'#E6C26D',
+	'#EACD84',
+	'#EDD798',
+	'#F1E0AC',
+	'#F3E6B9',
+	'#F6F0CC'
+].reverse();
+
 export {
 	casesCS,
 	deathsCS,
-	activeCS
+	activeCS,
+	criticalCS
 };
