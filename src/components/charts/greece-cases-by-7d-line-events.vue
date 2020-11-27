@@ -38,7 +38,7 @@
 				<d7-line-bar-events v-if="item"
 					:key="'gcb7l-' + item.uid + '-' + point" :id="'gcb7l-uid-' + item.uid + '-' + point"
 					:point="point" :values="item[point]"
-					:dates="item.dates"/>
+					:dates="item.dates" :annotations="annotations"/>
 				</v-col>
 			</v-row>
 		</v-container>
@@ -61,7 +61,8 @@ export default {
 	},
 	computed: {
 		...mapGetters(['locale']),
-		...mapGetters('filters', ['periodInterval'])
+		...mapGetters('filters', ['periodInterval']),
+		...mapGetters('internal', ['annotations'])
 	},
 	data () {
 		return {
@@ -70,14 +71,16 @@ export default {
 		};
 	},
 	mounted () {
+		if (this.annotations.length === 0) {
+			this.$store.dispatch('internal/getAnnotations');
+		}
 		this.load();
 	},
 	methods: {
 		load () {
+			this.$http.get()
 			this.$store.dispatch('external/getGlobalAGG', 'GRC/all/' + this.periodInterval[3].value)
 				.then(res => {
-					console.log(res);
-
 					this.item = res.map(m => {
 						m.cases = m.new_cases.map(m => Math.max(0, m));
 						m.deaths = m.new_deaths.map(m => Math.max(0, m));
@@ -96,7 +99,8 @@ export default {
 							dates: getDates(m.from, m.to),
 							cases: m.cases,
 							deaths: m.deaths,
-							critical: m.critical
+							critical: m.critical,
+							sources: m.sources
 						};
 					});
 

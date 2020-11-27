@@ -24,13 +24,19 @@
 </template>
 
 <script>
-import { line, select, scaleLinear, axisBottom, axisRight, max } from 'd3';
+import { mapGetters } from 'vuex';
+
+import { line, select, scaleLinear, scaleTime, axisBottom, axisRight, max } from 'd3';
 import { ma } from 'moving-averages';
 import * as colors from '@/helper/colors';
+import annotation from 'd3-svg-annotation';
 
 export default {
 	name: 'chart-d7-line-bar-events',
-	props: ['id', 'dates', 'values', 'point'],
+	props: ['id', 'dates', 'values', 'point', 'annotations'],
+	computed: {
+		...mapGetters(['locale'])
+	},
 	data () {
 		return {
 			chart: null,
@@ -55,6 +61,7 @@ export default {
 			if (this.chart) {
 				this.chart.selectAll('*').remove();
 			}
+
 			const data = this.dates.map((m, i) => {
 				return {
 					date: m,
@@ -85,6 +92,31 @@ export default {
 			const x = scaleLinear().range([0, innerWidth]).domain([0, data.length]);
 			const y = scaleLinear().range([innerHeight, 0]).domain([0, max(this.values)]).nice(10);
 
+			const annotations = this.annotations.map(m => {
+				const idx = this.dates.findIndex(moment => moment.format('DD/MM/YYYY') === m.date);
+				return {
+					note: {
+						title: this.$moment(m.date, 'DD/MM/YYYY').format('LL'),
+						label: m['name_' + this.locale.code],
+						padding: 6,
+						wrap: 180,
+						align: "middle"
+					},
+					type: annotation.annotationCalloutCircle,
+					x: x(idx),
+					y: y(data[idx].value),
+					dy: 80 - y(data[idx].value),
+					dx: 200 - x(idx),
+					subject: { radius: 8 },
+					color: m.importance > 10 ? 'black' : 'lightgrey',
+					connector: {
+						end: "dot",
+						type: "line",
+						lineType : "horizontal",
+						endScale: 1
+					},
+				};
+			});
 			const l = line()
 				.x((d, i) => x(i))
 				.y(d => {
@@ -158,6 +190,19 @@ export default {
 				.attr('stroke', colors[this.point + 'CS'][10])
 				.attr('stroke-width', 2)
 				.attr('d', l);
+
+			const makeAnnotations = annotation.annotation()
+				.annotations(annotations)
+				.on('subjectover', function(a) {
+					a.type.a.selectAll("g.annotation-connector, g.annotation-note")
+						.classed("hidden", false)
+				})
+				.on('subjectout', function(a) {
+					a.type.a.selectAll("g.annotation-connector, g.annotation-note")
+					.classed("hidden", true)
+				})
+			this.chart.append('g').call(makeAnnotations);
+			this.chart.selectAll("g.annotation-connector, g.annotation-note").classed("hidden", true);
 		}
 	}
 };
@@ -204,6 +249,28 @@ export default {
 			text-anchor: start;
 			font: normal 9px 'Roboto';
 		}
+	}
+	.annotation path {
+		stroke: 'red';
+		fill: 'red';
+	}
+	.annotation path.connector-arrow,
+	.title text, .annotation text,
+	.annotation.callout.circle .annotation-subject path {
+		fill: rgba(140, 140, 140, 1);
+	}
+
+	.annotation-note-title  {
+		font-weight: bold;
+		fill: rgba(100, 100, 100, 1);
+	}
+
+	.annotation.xythreshold {
+		cursor: move;
+	}
+
+	.hidden {
+		display: none;
 	}
 }
 

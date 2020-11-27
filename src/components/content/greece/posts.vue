@@ -1,6 +1,6 @@
 <template>
 	<v-container class="pa-4">
-		<v-row class="pt-12 my-12" align="stretch">
+		<!-- <v-row class="pt-12 my-12" align="stretch">
 			<v-col cols="12" md="4">
 				<h4 class="text-h4 primary--text mb-8">
 					<span class="font-weight-thin slab">Greece</span>
@@ -45,7 +45,7 @@
 			<v-col cols="12" md="8">
 				<greece-cases-by-7d-line/>
 			</v-col>
-		</v-row>
+		</v-row> -->
 		<v-row class="my-12" align="center">
 			<v-col cols="12" md="4">
 				<h4 class="text-h4 primary--text mb-8">
