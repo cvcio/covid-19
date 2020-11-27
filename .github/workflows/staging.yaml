@@ -2,7 +2,7 @@ name: Staging
 on:
   push:
     branches:
-      - "!main"
+      - "v2"
 jobs:
   build:
     if: github.event_name == 'push' && contains(toJson(github.event.commits), '***NO_CI***') == false && contains(toJson(github.event.commits), '[ci skip]') == false && contains(toJson(github.event.commits), '[skip ci]') == false
