@@ -78,4 +78,7 @@ canvas {
 	border: none !important;
 	outline: none !important;
 }
+.tooltip {
+	z-index: 9999 !important;
+}
 </style>

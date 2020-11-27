@@ -39,7 +39,7 @@
 						<v-col
 							v-for="item in props.items"
 							:key="'col-gcb7l-' + item.uid"
-							cols="4"
+							cols="12" xs="12" md="4"
 							class="px-4"
 						>
 							<v-card-subtitle class="body-2 font-weight-bold px-0">

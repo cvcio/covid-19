@@ -89,6 +89,6 @@ export default {
 	pointer-events: all;
 }
 .app-header {
-	z-index: 10;
+	z-index: 0;
 }
 </style>

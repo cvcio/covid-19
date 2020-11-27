@@ -30,11 +30,11 @@ export default {
 				this.chart.selectAll('*').remove();
 			}
 			const data = this.data;
-			const sma = ma(data.map(m => Math.max(0, m)), 7).filter(function (el) {
+			let sma = ma(data.map(m => Math.max(0, m)), 7).filter(function (el) {
 				return el != null;
 			});
 
-			const DATA = sma;
+			if (sma[sma.length - 1] === 0) sma.pop();
 
 			var div = document.getElementById(this.id);
 			while (div.firstChild) {
@@ -52,8 +52,8 @@ export default {
 				.attr('width', width + margin.left + margin.right)
 				.attr('height', height + margin.top + margin.bottom);
 
-			const x = scaleLinear().domain([0, DATA.length]).rangeRound([0, innerWidth]);
-			const y = scaleLinear().domain([0, max(DATA)]).rangeRound([innerHeight, 0]);
+			const x = scaleLinear().domain([0, sma.length]).rangeRound([0, innerWidth]);
+			const y = scaleLinear().domain([0, max(sma)]).rangeRound([innerHeight, 0]);
 
 			const l = line()
 				.x((d, i) => x(i))
@@ -68,7 +68,7 @@ export default {
 				.attr('width', innerWidth)
 				.attr('height', innerHeight);
 
-			this.chart.append('path').datum(DATA)
+			this.chart.append('path').datum(sma)
 				.attr('fill', 'none')
 				.attr('stroke', '#bbb')
 				.attr('stroke-width', 2)
@@ -77,28 +77,28 @@ export default {
 			this.chart.append('circle')
 				.attr('r', 3)
 				.attr('cx', x(0))
-				.attr('cy', y(DATA[0]))
+				.attr('cy', y(sma[0]))
 				.attr('fill', 'lightgrey');
 
 			this.chart.append('circle')
 				.attr('r', 3)
-				.attr('cx', x(DATA.length - 1))
-				.attr('cy', y(DATA[DATA.length - 1]))
+				.attr('cx', x(sma.length - 1))
+				.attr('cy', y(sma[sma.length - 1]))
 				.attr('fill', () => {
-					if (DATA[DATA.length - 1] < DATA[DATA.length - 2]) return 'green';
-					if (DATA[DATA.length - 1] > DATA[DATA.length - 2]) return 'tomato';
-					if (DATA[DATA.length - 1] === DATA[DATA.length - 2]) return 'grey';
+					if (sma[sma.length - 1] < sma[sma.length - 2]) return 'green';
+					if (sma[sma.length - 1] > sma[sma.length - 2]) return 'tomato';
+					if (sma[sma.length - 1] === sma[sma.length - 2]) return 'grey';
 				});
 
-			const diff = ((DATA[DATA.length - 1] - DATA[DATA.length - 2])).toFixed(0);
+			const diff = ((sma[sma.length - 1] - sma[sma.length - 2])).toFixed(0);
 			this.chart.append('text')
 				.attr('r', 3)
-				.attr('x', x(DATA.length - 1) + 6)
-				.attr('y', y(DATA[DATA.length - 1]) + 3)
+				.attr('x', x(sma.length - 1) + 6)
+				.attr('y', y(sma[sma.length - 1]) + 3)
 				.attr('fill', () => {
-					if (DATA[DATA.length - 1] < DATA[DATA.length - 2]) return 'green';
-					if (DATA[DATA.length - 1] > DATA[DATA.length - 2]) return 'tomato';
-					if (DATA[DATA.length - 1] === DATA[DATA.length - 2]) return 'grey';
+					if (sma[sma.length - 1] < sma[sma.length - 2]) return 'green';
+					if (sma[sma.length - 1] > sma[sma.length - 2]) return 'tomato';
+					if (sma[sma.length - 1] === sma[sma.length - 2]) return 'grey';
 				})
 				.text(() => {
 					if (diff > 0) return `+${new Intl.NumberFormat('el-GR').format(Math.abs(diff))}`;
