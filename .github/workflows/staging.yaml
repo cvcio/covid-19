@@ -23,6 +23,11 @@ jobs:
           registry: ${{ secrets.CVCIO_CONTAINER_REGISTRY }}
           username: ${{ secrets.CVCIO_CLIENT_ID }}
           password: ${{ secrets.CVCIO_CLIENT_SECRET }}
+      - name: Create .env file
+        run: |
+          touch .env
+          echo ${{ secrets.APP_ENV_STAGING }} >> .env
+          cat .env
       - name: Build and push Docker images
         uses: docker/build-push-action@v2.1.0
         with:
