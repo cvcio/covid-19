@@ -9,7 +9,7 @@
 								{{( $vuetify.breakpoint.smAndDown ? $tc('cases', 1).substr(1, 1) : $tc('cases', 1)) | normalizeNFD }}
 							</v-btn>
 							<v-btn x-small class="primary--text" value="deaths">
-								{{ $vuetify.breakpoint.smAndDown ? 'A' : 'deaths' }}
+								{{( $vuetify.breakpoint.smAndDown ? $tc('deaths', 1).substr(1, 1) : $tc('deaths', 1)) | normalizeNFD }}
 							</v-btn>
 						</v-btn-toggle>
 					</v-col>
