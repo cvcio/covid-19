@@ -72,7 +72,10 @@
 			</v-container>
 			<v-divider></v-divider>
 			<v-card-text class="mt-0 px-6 pt-2 pb-1 my-4">
-				<ssh-pre language="html-vue" reactive>
+				<ssh-pre language="html-vue" reactive label="HTML" copy-button @copied="onCopied">
+					<template v-slot:copy-button>
+						<v-icon small class="ma-2" :color="color">{{ icon }}</v-icon>
+					</template>
 					{{getIframe()}}
 				</ssh-pre>
 			</v-card-text>
@@ -90,7 +93,7 @@
 				<v-btn
 					color="primary"
 					text
-					@click="$store.commit('setEmbedDialog', false)"
+					@click.native="copy"
 				>
 					Copy
 				</v-btn>
@@ -124,7 +127,9 @@ export default {
 	},
 	data () {
 		return {
-			dialog: true
+			dialog: true,
+			color: 'grey',
+			icon: 'fa-copy'
 		};
 	},
 	methods: {
@@ -139,6 +144,20 @@ export default {
 	name="covid"
 	allowfullscreen>
 </iframe>`);
+		},
+		onCopied () {
+			this.color = 'success';
+			this.icon = 'fa-check';
+			setTimeout(() => {
+				this.color = 'grey';
+				this.icon = 'fa-copy';
+			}, 2500);
+		},
+		copy () {
+			navigator.clipboard.writeText(this.getIframe())
+				.then(() => {
+					this.onCopied();
+				});
 		}
 	}
 };

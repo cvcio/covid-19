@@ -114,7 +114,7 @@ export default {
 			key: 'cases',
 			headers: [
 				{
-					text: this.$t('Area'),
+					text: this.$t('Country'),
 					align: 'start',
 					sortable: true,
 					value: 'region',
