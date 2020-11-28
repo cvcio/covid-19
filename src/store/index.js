@@ -13,7 +13,9 @@ export default new Vuex.Store({
 		loading: false,
 		empty: false,
 		view: 'greece',
-		lastUpdatedAt: null
+		lastUpdatedAt: null,
+		embedDialog: false,
+		embed: {}
 	},
 	getters: {
 		locale: state => state.locale,
@@ -21,7 +23,9 @@ export default new Vuex.Store({
 		loading: state => state.loading,
 		empty: state => state.empty,
 		view: state => state.view,
-		lastUpdatedAt: state => state.lastUpdatedAt
+		lastUpdatedAt: state => state.lastUpdatedAt,
+		embedDialog: state => state.embedDialog,
+		embed: state => state.embed
 	},
 	mutations: {
 		setLocale (state, data) {
@@ -42,6 +46,12 @@ export default new Vuex.Store({
 		},
 		setLastUpdatedAt (state, data) {
 			state.lastUpdatedAt = data;
+		},
+		setEmbedDialog (state, data) {
+			state.embedDialog = data;
+		},
+		setEmbed (state, data) {
+			state.embed = data;
 		}
 	},
 	actions: {
@@ -57,77 +67,3 @@ export default new Vuex.Store({
 	},
 	modules
 });
-
-/*
-import { json, csv } from 'd3';
-import { storageSVC } from '@/services/storage.service';
-
-Vue.use(Vuex);
-
-function IsSafari () {
-	var is_safari = navigator.userAgent.toLowerCase().indexOf('safari/') > -1;
-	return is_safari;
-}
-
-export default new Vuex.Store({
-	state: {
-		locale: {},
-		sidebar: true,
-		geo: storageSVC.get('geo') || null
-	},
-	getters: {
-		locale: state => state.locale,
-		sidebar: state => state.sidebar,
-		geo: state => state.geo,
-	},
-	mutations: {
-		setLocale (state, playload) {
-			state.locale = playload;
-		},
-		setSidebar (state, playload) {
-			state.sidebar = playload;
-		}
-	},
-	actions: {
-		setLocale ({ commit }, playload) {
-			commit('setLocale', playload);
-		},
-		setSidebar ({ commit }, playload) {
-			commit('setSidebar', playload);
-		},
-		async fetchStaticData ({ commit, state }, data) {
-			if (!IsSafari() && state[data.key] !== null) return;
-			return json(data.file)
-				.then(f => {
-					commit(`set_${data.key}`, f);
-					return f;
-				})
-				.catch(err => {
-					console.log(`Error while fetching Static File ${data.key}: ${err}`);
-					return err;
-				});
-		},
-		async fetchDynamicData ({ commit }, data) {
-			return csv(data.file)
-				.then(f => {
-					commit(`set_${data.key}`, f);
-					return f;
-				})
-				.catch(err => {
-					console.log(`Error while fetching Dynamic File ${data.key}: ${err}`);
-					return err;
-				});
-		},
-		async getGEO ({ commit }) {
-			try {
-				const res = await accountSVC.getOrganization(state.profile.organization);
-				storageSVC.set(JSON.stringify('geo', res.data));
-				return res;
-			} catch (err) {
-				// commit('errors/REQUEST_ERROR', error, { root: true });
-				return false;
-			}
-		}
-	}
-});
-*/

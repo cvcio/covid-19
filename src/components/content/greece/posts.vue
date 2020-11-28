@@ -29,7 +29,8 @@ export default {
 	components: {
 		'greece-cases-by-region': require('@/components/content/greece/greece-cases-by-region').default,
 		'greece-cases-by-7d-line': require('@/components/content/greece/greece-cases-by-7d-line').default,
-		'greece-cases-by-7d-line-events': require('@/components/content/greece/greece-cases-by-7d-line-events').default
+		'greece-cases-by-7d-line-events': require('@/components/content/greece/greece-cases-by-7d-line-events').default,
+		'greece-cases-by-7d-line-events-intubated': require('@/components/content/greece/greece-cases-by-7d-line-events-intubated').default
 	},
 	computed: {
 		...mapGetters(['locale']),

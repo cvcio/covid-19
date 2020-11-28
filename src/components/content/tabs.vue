@@ -17,10 +17,10 @@
 							fa-sliders-h
 						</v-icon>
 					</v-btn>
-					<v-tab class="white " active-class="grey lighten-2"
+					<v-tab :ripple="false" class="white tab-item"
 						:class="$vuetify.breakpoint.smAndDown ? '' : 'mr-1 rounded-t elevation-2'"
 						@click="$store.state.filters.mapLevel = 'greece'">{{ $t('view.greece') | normalizeNFD }}</v-tab>
-					<v-tab class="white" active-class="grey lighten-2"
+					<v-tab :ripple="false" class="white tab-item"
 						:class="$vuetify.breakpoint.smAndDown ? '' : 'ml-1 rounded-t elevation-2'"
 						@click="$store.state.filters.mapLevel = 'global'">{{ $t('view.global') | normalizeNFD }}</v-tab>
 				</v-tabs>
@@ -60,4 +60,8 @@ export default {
 .tabs {
 	z-index: 0;
 }
+.tab-item {
+
+}
+
 </style>

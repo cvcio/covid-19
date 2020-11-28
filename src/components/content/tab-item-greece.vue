@@ -18,7 +18,7 @@
 							<span class="" v-if="mapPeriodIDX < 3"> / {{ new Intl.NumberFormat('el-GR').format(totalCases.toFixed(2)) }}</span>
 						</h4>
 						<p class="caption small-caption text-uppercase primary--text mb-0">
-							{{ $tc('cases', 1) | normalizeNFD }} / {{ $t('total cases') | normalizeNFD }}
+							<span v-if="mapPeriodIDX < 3">{{ $tc('cases', 1) | normalizeNFD }} / </span>{{ $t('total cases') | normalizeNFD }}
 						</p>
 					</v-col>
 					<v-col cols="12" class="secondary--opac pa-2">
@@ -28,14 +28,14 @@
 							<span class="" v-if="mapPeriodIDX < 3"> / {{ new Intl.NumberFormat('el-GR').format(totalDeaths.toFixed(2)) }}</span>
 						</h4>
 						<p class="caption small-caption text-uppercase secondary--text mb-0">
-							{{ $tc('deaths', 1) | normalizeNFD }} / {{ $t('total deaths') | normalizeNFD }}
+							<span v-if="mapPeriodIDX < 3">{{ $tc('deaths', 1) | normalizeNFD }} / </span>{{ $t('total deaths') | normalizeNFD }}
 						</p>
 					</v-col>
 				</v-row>
 				<v-row class="mt-1 mb-4 px-7 py-0" align="center">
 					<v-col cols="12" class="py-0 px-3">
 						<v-row class="outlined">
-							<v-col class="pa-2 primary--text">
+							<v-col class="pa-2 primary--text" v-if="mapPeriodIDX === 0">
 								<h4 class="subtitle-2 font-weight-bold">
 									{{ new Intl.NumberFormat('el-GR').format(active.toFixed(2)) }}
 								</h4>
@@ -43,7 +43,7 @@
 									{{ $t('Active Cases') | normalizeNFD }}
 								</p>
 							</v-col>
-							<v-col class="pa-2 orange--text">
+							<v-col class="pa-2 orange--text" v-if="mapPeriodIDX === 0">
 								<h4 class="subtitle-2 font-weight-bold">
 									{{ new Intl.NumberFormat('el-GR').format(critical.toFixed(2)) || '-' }}
 								</h4>

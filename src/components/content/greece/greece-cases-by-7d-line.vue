@@ -1,9 +1,9 @@
 <template>
-	<v-card color="white">
-		<v-app-bar flat color="grey iframe-header lighten-5 px-4 mx-0">
-			<v-container class="pa-0 ma-0">
+	<v-card color="white" :class="$route.meta.iframe ? 'elevation-0' : ''" :tile="$route.meta.iframe">
+		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'">
+			<v-container class="pa-0 ma-0" fluid>
 				<v-row class="pa-0 ma-0" justify="space-between">
-					<v-col cols="5" sm="5" class="pa-0" align-self="center">
+					<v-col class="pa-0" align-self="center">
 						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory>
 							<v-btn x-small class="primary--text" value="cases">
 								{{( $vuetify.breakpoint.smAndDown ? $tc('cases', 1).substr(1, 1) : $tc('cases', 1)) | normalizeNFD }}
@@ -14,18 +14,18 @@
 						</v-btn-toggle>
 					</v-col>
 					<v-spacer/>
-					<v-col class="pa-0 text-end justify-end" align-self="center">
-						<v-btn x-small fab color="grey" dark class="mx-2 elevation-0" @click="update">
+					<v-col class="grow pa-0 text-end justify-end" align-self="center" v-if="!$route.meta.iframe">
+						<!-- <v-btn x-small fab color="grey" dark class="mx-2 elevation-0" @click="update">
 							<v-icon x-small>fa-redo</v-icon>
-						</v-btn>
-						<v-btn x-small fab color="primary" dark class="mx-0 elevation-0">
+						</v-btn> -->
+						<v-btn x-small fab color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
 							<v-icon x-small>fa-code</v-icon>
 						</v-btn>
 					</v-col>
 				</v-row>
 			</v-container>
 		</v-app-bar>
-		<v-divider/>
+		<v-divider v-if="!$route.meta.iframe"/>
 		<v-container class="px-4" fluid>
 			<v-data-iterator
 				:items="items"
@@ -57,7 +57,12 @@
 		</v-container>
 		<v-divider class="mx-4"/>
 		<v-footer class="white caption small-caption pa-4 pt-2">
-			<span class="font-weight-bold">IMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
+			<a href="https://lab.imedd.org/" v-if="$route.meta.iframe">
+				<v-icon x-small class="mr-2" color="primary">fa-link</v-icon><span class="font-weight-bold">IMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
+			</a>
+			<span v-else>
+				<span class="font-weight-bold">IMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
+			</span>
 		</v-footer>
 	</v-card>
 </template>
@@ -74,20 +79,35 @@ export default {
 	},
 	computed: {
 		...mapGetters(['locale']),
-		...mapGetters('filters', ['periodInterval'])
+		...mapGetters('filters', ['periodInterval']),
+		embed () {
+			return {
+				title: '',
+				subtitle: '',
+				text: '',
+				mapLevel: null,
+				period: null,
+				lang: this.locale.code,
+				id: 'greece-cases-by-7d-line'
+			};
+		}
 	},
 	data () {
 		return {
 			point: 'cases',
 			items: [],
 			page: 1,
-			itemsPerPage: 60
+			itemsPerPage: 15
 		};
 	},
 	mounted () {
 		this.load();
 	},
 	methods: {
+		setEmbed () {
+			this.$store.commit('setEmbedDialog', true);
+			this.$store.commit('setEmbed', this.embed);
+		},
 		load () {
 			this.$store.dispatch('external/getGreeceAGG', 'all/all/' + this.periodInterval[3].value)
 				.then(res => {

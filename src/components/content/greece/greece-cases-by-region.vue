@@ -1,7 +1,7 @@
 <template>
-	<v-card color="white">
-		<v-app-bar flat color="grey iframe-header lighten-5 px-4 mx-0">
-			<v-container class="pa-0 ma-0">
+	<v-card color="white" :class="$route.meta.iframe ? 'elevation-0' : ''" :tile="$route.meta.iframe">
+		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'">
+			<v-container class="pa-0 ma-0" fluid>
 				<v-row class="pa-0 ma-0" justify="space-between">
 					<v-col cols="5" sm="5" class="pa-0" align-self="center">
 						<v-btn-toggle dense class="mr-2" rounded v-model="key" mandatory>
@@ -14,28 +14,28 @@
 						</v-btn-toggle>
 					</v-col>
 					<v-spacer/>
-					<v-col class="pa-0 text-end justify-end" align-self="center">
-						<v-btn x-small fab color="grey" dark class="mx-2 elevation-0" @click="update">
+					<v-col class="pa-0 text-end justify-end" align-self="center" v-if="!$route.meta.iframe">
+						<!-- <v-btn x-small fab color="grey" dark class="mx-2 elevation-0" @click="update">
 							<v-icon x-small>fa-redo</v-icon>
-						</v-btn>
-						<v-btn x-small fab color="primary" dark class="mx-0 elevation-0">
+						</v-btn> -->
+						<v-btn x-small fab color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
 							<v-icon x-small>fa-code</v-icon>
 						</v-btn>
 					</v-col>
 				</v-row>
 			</v-container>
 		</v-app-bar>
-		<v-divider/>
-		<v-container class="px-0">
+		<v-divider v-if="!$route.meta.iframe"/>
+		<v-container class="px-0" fluid :class="$route.meta.iframe ? 'px-4' : ''">
 			<v-row class="px-3">
 				<v-col class="px-0" align="center">
 					<v-data-table
 						dense
 						:headers="headers"
 						:items="items"
-						:sort-by="['totalCases', 'p100pCases']"
+						:sort-by="['p100p_' + key]"
    						:sort-desc="[true, true]"
-						:items-per-page="10"
+						:items-per-page="20"
 						class="elevation-0"
 					>
 						<template v-slot:item="props">
@@ -44,10 +44,10 @@
 									{{ $t(props.item.region) }}
 								</td>
 								<td class="caption" style="">
-									{{ new Intl.NumberFormat('el-GR').format(props.item.totalCases.toFixed(2)) }}
+									{{ new Intl.NumberFormat('el-GR').format(props.item['total_' + key].toFixed(2)) }}
 								</td>
 								<td class="caption">
-									{{ typeof props.item.p100pCases !== 'string' ? new Intl.NumberFormat('el-GR').format(props.item.p100pCases.toFixed(2)) : '-'}}
+									{{ typeof props.item['p100p_' + key] !== 'string' ? new Intl.NumberFormat('el-GR').format(props.item['p100p_' + key].toFixed(2)) : '-'}}
 								</td>
 								<td class="caption" v-if="!$vuetify.breakpoint.smAndDown">
 									<heatbar
@@ -77,7 +77,12 @@
 		</v-container>
 		<v-divider class="mx-4"/>
 		<v-footer class="white caption small-caption pa-4 pt-2">
-			<span class="font-weight-bold">IMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
+			<a href="https://lab.imedd.org/" v-if="$route.meta.iframe">
+				<v-icon x-small class="mr-2" color="primary">fa-link</v-icon><span class="font-weight-bold">IMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
+			</a>
+			<span v-else>
+				<span class="font-weight-bold">IMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
+			</span>
 		</v-footer>
 	</v-card>
 </template>
@@ -94,7 +99,18 @@ export default {
 	},
 	computed: {
 		...mapGetters(['locale']),
-		...mapGetters('filters', ['periodInterval'])
+		...mapGetters('filters', ['periodInterval']),
+		embed () {
+			return {
+				title: '',
+				subtitle: '',
+				text: '',
+				mapLevel: null,
+				period: null,
+				lang: this.locale.code,
+				id: 'greece-cases-by-region'
+			};
+		}
 	},
 	data () {
 		return {
@@ -112,7 +128,7 @@ export default {
 					text: this.$t('Total'),
 					align: 'start',
 					sortable: true,
-					value: 'totalCases',
+					// value: 'totalCases',
 					class: 'text-capitalize',
 					width: '15%'
 				},
@@ -120,7 +136,7 @@ export default {
 					text: this.$t('Per 100K'),
 					align: 'start',
 					sortable: true,
-					value: 'p100pCases',
+					// value: 'p100pCases',
 					class: 'text-capitalize',
 					width: '15%'
 				},
@@ -140,23 +156,27 @@ export default {
 		this.load();
 	},
 	methods: {
+		setEmbed () {
+			this.$store.commit('setEmbedDialog', true);
+			this.$store.commit('setEmbed', this.embed);
+		},
 		load () {
 			this.$store.dispatch('external/getGreeceAGG', 'all/new_cases,new_deaths/' + this.periodInterval[3].value)
 				.then(res => {
 					this.items = res.map(m => {
 						m.new_cases = m.new_cases.map(m => Math.max(0, m));
 						m.new_deaths = m.new_deaths.map(m => Math.max(0, m));
-						const totalCases = sum(m.new_cases);
-						const totalDeaths = sum(m.new_deaths);
-						const p100pCases = m.population > 0 ? ((sum(m.new_cases) / m.population) * 100000) : '-';
-						const p100pDeaths = m.population > 0 ? ((sum(m.new_deaths) / m.population) * 100000) : '-';
+						const total_cases = sum(m.new_cases);
+						const total_deaths = sum(m.new_deaths);
+						const p100p_cases = m.population > 0 ? ((sum(m.new_cases) / m.population) * 100000) : '-';
+						const p100p_deaths = m.population > 0 ? ((sum(m.new_deaths) / m.population) * 100000) : '-';
 						return {
 							uid: m.uid,
 							region: m.region,
-							totalCases,
-							totalDeaths,
-							p100pCases,
-							p100pDeaths,
+							total_cases,
+							total_deaths,
+							p100p_cases,
+							p100p_deaths,
 							dates: getDates(m.from, m.to),
 							cases: m.new_cases,
 							deaths: m.new_deaths,

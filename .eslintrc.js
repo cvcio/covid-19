@@ -22,7 +22,8 @@ module.exports = {
 		// tabs
 		indent: [2, 'tab'],
 		'no-tabs': 0,
-		semi: ['error', 'always']
+		semi: ['error', 'always'],
+		camelcase: 0
 	},
 	parserOptions: {
 		parser: 'babel-eslint'

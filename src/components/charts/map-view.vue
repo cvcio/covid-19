@@ -1,6 +1,12 @@
 <template>
-	<div id="map" class="d-block primary lighten-5" :class="$vuetify.breakpoint.smAndDown ? 'mobile' : 'desktop'">
-		<v-btn-toggle class="key-toggle elevation-2" rounded dense v-model="mapKey">
+	<div id="map" class="d-block"
+		:class="
+			[
+				($vuetify.breakpoint.smAndDown ? 'mobile' : 'desktop'),
+				($route.meta.iframe ? '' : ''),
+			].join(' ')
+		">
+		<v-btn-toggle class="key-toggle elevation-2" rounded dense v-model="mapKey" :class="$route.meta.iframe ? 'mt-n12 frame' : ''">
 			<v-btn text small class="font-weight-bold" value="cases">
 				{{ $tc("cases", 1) | normalizeNFD }}
 			</v-btn>
@@ -11,6 +17,14 @@
 				{{ $tc("active", 1) | normalizeNFD }}
 			</v-btn> -->
 		</v-btn-toggle>
+
+		<v-btn v-if="$route.meta.iframe" small class="font-weight-bold link-to-map mt-7 text-inherit white" rounded target="_blank" href="https://lab.imedd.org/" >
+			<v-icon x-small class="mr-2" color="primary">fa-link</v-icon><span class="font-weight-bold">IMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
+		</v-btn>
+
+		<v-btn v-if="!$route.meta.iframe" small class="font-weight-bold embed-map text-inherit primary" fab @click="setEmbed">
+			<v-icon x-small>fa-code</v-icon>
+		</v-btn>
 
 		<v-scroll-y-reverse-transition>
 			<div class="tooltip elevation-4" :style="'top:'+y+'px;left:'+x+'px;'" ref="tooltipGlobal" v-if="point !== null" v-show="tooltip && point !== null">
@@ -113,6 +127,17 @@ export default {
 			set (value) {
 				this.$store.commit('filters/setMapKey', value);
 			}
+		},
+		embed () {
+			return {
+				title: '',
+				subtitle: '',
+				text: '',
+				mapLevel: this.mapLevel,
+				period: this.mapPeriodIDX,
+				lang: this.locale.code,
+				id: 'map-view'
+			};
 		}
 	},
 	watch: {
@@ -152,6 +177,12 @@ export default {
 		};
 	},
 	mounted () {
+		if (this.$route.query.mapLevel) {
+			this.$store.commit('filters/setMapLevel', this.$route.query.mapLevel);
+		}
+		if (this.$route.query.period) {
+			this.$store.commit('filters/setMapPeriodFromIDX', parseInt(this.$route.query.period));
+		}
 		if (this.geo) {
 			console.debug('geo loaded from storage');
 			this.load();
@@ -164,6 +195,10 @@ export default {
 		}
 	},
 	methods: {
+		setEmbed () {
+			this.$store.commit('setEmbedDialog', true);
+			this.$store.commit('setEmbed', this.embed);
+		},
 		beforeDestroy () {
 			if (!this.map) return;
 			this.map.off('load', this.onLoad);
@@ -262,7 +297,7 @@ export default {
 					});
 
 					if (this.map) {
-						this.map.getSource(this.mapSource).setData(this.geo);
+						// this.map.getSource(this.mapSource).setData(this.geo);
 					} else {
 						this.draw();
 					}
@@ -422,11 +457,25 @@ export default {
 	bottom: 0;
 	right: 0;
 	position: absolute;
-	z-index: -1;
+
 	border: none !important;
 	canvas {
 		border: none !important;
 		outline: none !important;
+	}
+
+	.link-to-map {
+		position: absolute;
+		z-index: 1;
+		right: 24px;
+		top: 0;
+	}
+
+	.embed-map {
+		position: absolute;
+		z-index: 1;
+		right: 24px;
+		top: 76px;
 	}
 
 	.key-toggle {
@@ -435,6 +484,10 @@ export default {
 		left: 50%;
 		transform: translate(-50%, 0);
 		position: absolute;
+		&.frame {
+			left: 24px;
+			transform: translate(0, 0);
+		}
 	}
 
 	.tooltip {

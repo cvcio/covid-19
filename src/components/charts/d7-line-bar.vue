@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div v-resize="draw">
 		<v-scroll-y-reverse-transition>
 			<div class="tooltip elevation-4" :style="'top:'+py+'px;left:'+px+'px;'" v-if="d" v-show="tooltip">
 				<v-card class="elevation-0 white pa-0 arrow_box" min-width="180px">

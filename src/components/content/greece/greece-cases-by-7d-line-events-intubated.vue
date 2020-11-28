@@ -3,20 +3,7 @@
 		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'">
 			<v-container class="pa-0 ma-0" fluid>
 				<v-row class="pa-0 ma-0" justify="space-between">
-					<v-col  class="pa-0 shrink" align-self="center">
-						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory>
-							<v-btn x-small class="primary--text" value="cases">
-								{{( $vuetify.breakpoint.smAndDown ? $tc('cases', 1).substr(1, 1) : $tc('cases', 1)) | normalizeNFD }}
-							</v-btn>
-							<v-btn x-small class="primary--text" value="deaths">
-								{{( $vuetify.breakpoint.smAndDown ? $tc('deaths', 1).substr(1, 1) : $tc('deaths', 1)) | normalizeNFD }}
-							</v-btn>
-						</v-btn-toggle>
-					</v-col>
 					<v-col class="pa-0 grow text-end" align-self="center" v-if="!$route.meta.iframe">
-						<!-- <v-btn x-small fab color="grey" dark class="mx-2 elevation-0" @click="update">
-							<v-icon x-small>fa-redo</v-icon>
-						</v-btn> -->
 						<v-btn x-small fab color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
 							<v-icon x-small>fa-code</v-icon>
 						</v-btn>
@@ -71,13 +58,13 @@ export default {
 				mapLevel: null,
 				period: null,
 				lang: this.locale.code,
-				id: 'greece-cases-by-7d-line-events'
+				id: 'greece-cases-by-7d-line-events-intubated'
 			};
 		}
 	},
 	data () {
 		return {
-			point: 'cases',
+			point: 'critical',
 			item: null
 		};
 	},
@@ -93,17 +80,16 @@ export default {
 			this.$store.commit('setEmbed', this.embed);
 		},
 		load () {
-			this.$store.dispatch('external/getGlobalAGG', 'GRC/all/' + this.periodInterval[3].value)
+			this.$store.dispatch('external/getGlobalAGG', 'GRC/critical/' + this.periodInterval[3].value)
 				.then(res => {
 					this.item = res.map(m => {
-						m.cases = m.new_cases.map(m => Math.max(0, m));
-						m.deaths = m.new_deaths.map(m => Math.max(0, m));
+						m.critical = m.critical.map(m => Math.max(0, m));
+						m.critical.unshift(...Array(getDates(m.from, m.to).length - m.critical.length).fill(0));
 						return {
 							uid: m.uid,
 							region: m.country,
 							dates: getDates(m.from, m.to),
-							cases: m.cases,
-							deaths: m.deaths,
+							critical: m.critical,
 							sources: m.sources
 						};
 					});

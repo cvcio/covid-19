@@ -11,11 +11,17 @@
 			</div>
 		</v-scroll-y-transition>
 		<v-row justify="center" class="pa-0 ma-0 my-n12" v-if="!$vuetify.breakpoint.smAndDown">
-			<v-btn tile class="mx-1 rounded-t top-shadow" @click="$vuetify.goTo('#posts');$store.commit('setView', 'greece');">
+			<v-btn tile
+				class="mx-1 rounded-t top-shadow"
+				:class="view === 'greece' ? 'white' : 'grey lighten-3 grey--text'"
+				@click="$vuetify.goTo('#posts');$store.commit('setView', 'greece');">
 				{{ $t('button.in.greece') | normalizeNFD}}
 				<v-icon right small>mdi-chevron-down</v-icon>
 			</v-btn>
-			<v-btn  tile class="mx-1 rounded-t top-shadow" @click="$vuetify.goTo('#posts');$store.commit('setView', 'global');">
+			<v-btn  tile
+				class="mx-1 rounded-t top-shadow"
+				:class="view === 'global' ? 'white' : 'grey lighten-3 grey--text'"
+				@click="$vuetify.goTo('#posts');$store.commit('setView', 'global');">
 				{{ $t('button.in.world') | normalizeNFD }}
 				<v-icon right small>mdi-chevron-down</v-icon>
 			</v-btn>

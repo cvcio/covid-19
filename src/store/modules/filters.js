@@ -38,6 +38,9 @@ export default {
 		timeInterval: state => state.timeInterval
 	},
 	mutations: {
+		setMapLevel (state, data) {
+			state.mapLevel = data;
+		},
 		setMapKey (state, data) {
 			state.mapKey = data;
 		},
@@ -47,6 +50,10 @@ export default {
 		setMapPeriod (state, data) {
 			state.mapPeriod = data;
 			state.mapPeriodIDX = state.periodInterval.findIndex(m => m.value === data);
+		},
+		setMapPeriodFromIDX (state, data) {
+			state.mapPeriodIDX = data;
+			state.mapPeriod = state.periodInterval[data].value;
 		}
 	},
 	actions: {}
