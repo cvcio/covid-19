@@ -17,7 +17,7 @@ export default {
 	props: ['label', 'disabled'],
 	computed: {
 		...mapGetters(['locale']),
-		...mapGetters('filters', ['periodInterval']),
+		...mapGetters('filters', ['periodInterval', 'mapLevel', 'mapKey']),
 		mapPeriod: {
 			get () {
 				return this.$store.state.filters.mapPeriod;

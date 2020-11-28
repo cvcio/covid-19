@@ -27,7 +27,9 @@ import { mapGetters } from 'vuex';
 export default {
 	name: 'posts-global',
 	components: {
-		'global-cases-by-country': require('@/components/content/global/global-cases-by-country').default
+		'global-cases-by-country': require('@/components/iframes/global-cases-by-country').default,
+		'global-cases-by-7d-line-no-events': require('@/components/iframes/global-cases-by-7d-line-no-events').default,
+		'global-cases-by-7d-line': require('@/components/iframes/global-cases-by-7d-line').default
 	},
 	computed: {
 		...mapGetters(['locale']),

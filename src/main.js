@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueGtag from 'vue-gtag';
 
 import { sync } from 'vuex-router-sync';
-// import '@/registerServiceWorker';
+import '@/registerServiceWorker';
 
 // Components
 import { api } from '@/api';

@@ -53,15 +53,41 @@
 						</v-col>
 					</v-row>
 				</template>
+				<template v-slot:footer>
+					<v-row
+						class="mt-2"
+						align="center"
+						justify="center"
+					>
+
+						<v-spacer></v-spacer>
+						<v-btn
+							icon
+							class="mx-2"
+							@click="formerPage"
+							:disabled="page === 1"
+						>
+							<v-icon>mdi-chevron-left</v-icon>
+						</v-btn>
+						<v-btn
+							icon
+							class="mx-2"
+							@click="nextPage"
+							:disabled="page === numberOfPages"
+						>
+							<v-icon>mdi-chevron-right</v-icon>
+						</v-btn>
+					</v-row>
+				</template>
 			</v-data-iterator>
 		</v-container>
 		<v-divider class="mx-4"/>
 		<v-footer class="white caption small-caption pa-4 pt-2">
 			<a href="https://lab.imedd.org/" v-if="$route.meta.iframe">
-				<v-icon x-small class="mr-2" color="primary">fa-link</v-icon><span class="font-weight-bold">IMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
+				<v-icon x-small class="mr-2" color="primary">fa-link</v-icon><span class="font-weight-bold">iMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
 			</a>
 			<span v-else>
-				<span class="font-weight-bold">IMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
+				<span class="font-weight-bold">iMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
 			</span>
 		</v-footer>
 	</v-card>
@@ -97,6 +123,7 @@ export default {
 			point: 'cases',
 			items: [],
 			page: 1,
+			numberOfPages: 0,
 			itemsPerPage: 15
 		};
 	},
@@ -133,7 +160,14 @@ export default {
 					});
 
 					this.items = items.filter(m => m.totalDeaths > 0).sort((a, b) => b.totalCases - a.totalCases);
+					this.numberOfPages = Math.ceil(this.items.length / this.itemsPerPage);
 				});
+		},
+		nextPage () {
+			if (this.page + 1 <= this.numberOfPages) this.page += 1;
+		},
+		formerPage () {
+			if (this.page - 1 >= 1) this.page -= 1;
 		},
 		update () {
 			this.load();

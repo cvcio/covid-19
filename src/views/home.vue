@@ -23,7 +23,7 @@ export default {
 		'app-header': require('@/components/app/app-header').default,
 		tabs: require('@/components/content/tabs').default,
 		'content-list': require('@/components/content/content-list').default,
-		'map-view': require('@/components/charts/map-view').default,
+		'map-view': require('@/components/iframes/map-view').default,
 		'embed-dialog': require('@/components/content/embeds/dialog').default
 	},
 	computed: {

@@ -79,7 +79,12 @@
 		</v-container>
 		<v-divider class="mx-4"/>
 		<v-footer class="white caption small-caption pa-4 pt-2">
-			<span class="font-weight-bold">IMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
+			<a href="https://lab.imedd.org/" v-if="$route.meta.iframe">
+				<v-icon x-small class="mr-2" color="primary">fa-link</v-icon><span class="font-weight-bold">iMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
+			</a>
+			<span v-else>
+				<span class="font-weight-bold">iMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
+			</span>
 		</v-footer>
 	</v-card>
 </template>

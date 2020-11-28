@@ -6,11 +6,11 @@
 				($route.meta.iframe ? '' : ''),
 			].join(' ')
 		">
-		<v-btn-toggle class="key-toggle elevation-2" rounded dense v-model="mapKey" :class="$route.meta.iframe ? 'mt-n12 frame' : ''">
+		<v-btn-toggle class="key-toggle elevation-2" rounded mandatory dense v-model="mapKey" :class="$route.meta.iframe ? 'mt-n12 frame' : ''">
 			<v-btn text small class="font-weight-bold" value="cases">
 				{{ $tc("cases", 1) | normalizeNFD }}
 			</v-btn>
-			<v-btn text small class="font-weight-bold" value="deaths">
+			<v-btn text small class="font-weight-bold" value="deaths" :disabled="mapLevel === 'greece' && mapPeriodIDX < 3">
 				{{ $tc("deaths", 1) | normalizeNFD }}
 			</v-btn>
 			<!-- <v-btn text small class="font-weight-bold" value="active" v-if="mapLevel === 'global'">
@@ -46,7 +46,10 @@
 						</h4>
 						<h4 class="subtitle-2 primary--text text-capitalize secondary--text">
 							{{ $tc("deaths", 1) }}:
-							<span class="font-weight-bold">
+							<span class="font-weight-bold" v-if="mapPeriodIDX < 3 && mapLevel === 'greece'">
+								- ({{ $t('No Data') }})
+							</span>
+							<span class="font-weight-bold" v-else>
 								{{ new Intl.NumberFormat('el-GR').format(point.data.vD.toFixed(2)) }}
 							</span>
 						</h4>
@@ -74,11 +77,10 @@
 								</h4>
 							</template>
 						</v-card-subtitle>
-						<!-- <v-card-subtitle class="pa-2" v-html="point.data.note"></v-card-subtitle> -->
 						<v-divider/>
 					</template>
 					<v-card-subtitle class="pa-2">
-						<h4 class="caption grey--text">{{ $t("Source") }}: <span class="text-uppercase font-weight-bold">{{ point.data.sources.join(', ') }}</span></h4>
+						<h4 class="caption grey--text">{{ $t("Source") }}: <span class="font-weight-bold">{{ point.data.sources.map(m => m.toUpperCase().replace('IMEDD', 'iMEdD LAB')).join(', ') }}</span></h4>
 					</v-card-subtitle>
 				</v-card>
 			</div>
@@ -177,10 +179,10 @@ export default {
 		};
 	},
 	mounted () {
-		if (this.$route.query.mapLevel) {
+		if (this.$route.query.mapLevel && this.$route.query.mapLevel !== '') {
 			this.$store.commit('filters/setMapLevel', this.$route.query.mapLevel);
 		}
-		if (this.$route.query.period) {
+		if (this.$route.query.period && this.$route.query.period !== '') {
 			this.$store.commit('filters/setMapPeriodFromIDX', parseInt(this.$route.query.period));
 		}
 		if (this.geo) {
@@ -297,7 +299,7 @@ export default {
 					});
 
 					if (this.map) {
-						// this.map.getSource(this.mapSource).setData(this.geo);
+						this.map.getSource(this.mapSource).setData(this.geo);
 					} else {
 						this.draw();
 					}

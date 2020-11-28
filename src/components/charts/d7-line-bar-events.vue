@@ -18,7 +18,7 @@
 					</v-card-subtitle>
 					<v-divider/>
 					<v-card-subtitle class="pa-2">
-						<h4 class="caption grey--text">{{ $t("Source") }}: <span class="text-uppercase font-weight-bold">{{ sources.join(', ') }}</span></h4>
+						<h4 class="caption grey--text">{{ $t("Source") }}: <span class="font-weight-bold">{{ sources.map(m => m.toUpperCase().replace('IMEDD', 'iMEdD LAB')).join(', ') }}</span></h4>
 					</v-card-subtitle>
 				</v-card>
 			</div>
@@ -101,31 +101,6 @@ export default {
 			const x = scaleLinear().range([0, innerWidth]).domain([0, data.length]);
 			const y = scaleLinear().range([innerHeight, 0]).domain([0, max(this.values)]).nice(10);
 
-			const annotations = this.annotations.map(m => {
-				const idx = this.dates.findIndex(moment => moment.format('DD/MM/YYYY') === m.date);
-				return {
-					note: {
-						title: this.$moment(m.date, 'DD/MM/YYYY').format('LL'),
-						label: m['name_' + this.locale.code],
-						padding: 6,
-						wrap: 180,
-						align: 'middle'
-					},
-					type: annotation.annotationCalloutCircle,
-					x: x(idx),
-					y: y(data[idx].value),
-					dy: 80 - y(data[idx].value),
-					dx: 200 - x(idx),
-					subject: { radius: 8 },
-					color: m.importance > 10 ? 'black' : 'lightgrey',
-					connector: {
-						end: 'dot',
-						type: 'line',
-						lineType: 'horizontal',
-						endScale: 1
-					}
-				};
-			});
 			const l = line()
 				.x((d, i) => x(i))
 				.y(d => {
@@ -200,18 +175,46 @@ export default {
 				.attr('stroke-width', 2)
 				.attr('d', l);
 
-			const makeAnnotations = annotation.annotation()
-				.annotations(annotations)
-				.on('subjectover', function (a) {
-					a.type.a.selectAll('g.annotation-connector, g.annotation-note')
-						.classed('hidden', false);
-				})
-				.on('subjectout', function (a) {
-					a.type.a.selectAll('g.annotation-connector, g.annotation-note')
-						.classed('hidden', true);
+			if (this.annotations) {
+				const annotations = this.annotations.map(m => {
+					const idx = this.dates.findIndex(moment => moment.format('DD/MM/YYYY') === m.date);
+					return {
+						note: {
+							title: this.$moment(m.date, 'DD/MM/YYYY').format('LL'),
+							label: m['name_' + this.locale.code],
+							padding: 6,
+							wrap: 180,
+							align: 'middle'
+						},
+						type: annotation.annotationCalloutCircle,
+						x: x(idx),
+						y: y(data[idx].value),
+						dy: 80 - y(data[idx].value),
+						dx: 200 - x(idx),
+						subject: { radius: 8 },
+						color: m.importance > 10 ? 'black' : 'lightgrey',
+						connector: {
+							end: 'dot',
+							type: 'line',
+							lineType: 'horizontal',
+							endScale: 1
+						}
+					};
 				});
-			this.chart.append('g').call(makeAnnotations);
-			this.chart.selectAll('g.annotation-connector, g.annotation-note').classed('hidden', true);
+
+				const makeAnnotations = annotation.annotation()
+					.annotations(annotations)
+					.on('subjectover', function (a) {
+						a.type.a.selectAll('g.annotation-connector, g.annotation-note')
+							.classed('hidden', false);
+					})
+					.on('subjectout', function (a) {
+						a.type.a.selectAll('g.annotation-connector, g.annotation-note')
+							.classed('hidden', true);
+					});
+				this.chart.append('g').call(makeAnnotations);
+				this.chart.selectAll('g.annotation-connector, g.annotation-note').classed('hidden', true);
+			}
 		}
 	}
 };

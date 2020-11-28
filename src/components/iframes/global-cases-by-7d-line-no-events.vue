@@ -13,6 +13,16 @@
 							</v-btn>
 						</v-btn-toggle>
 					</v-col>
+					<v-col  class="pa-0 shrink" align-self="center">
+						<v-btn-toggle dense class="mr-2" rounded v-model="calc" mandatory>
+							<v-btn x-small class="primary--text" value="new">
+								{{( $vuetify.breakpoint.smAndDown ? $tc('D', 1).substr(1, 1) : $tc('Daily', 1)) | normalizeNFD }}
+							</v-btn>
+							<v-btn x-small class="primary--text" value="sum">
+								{{( $vuetify.breakpoint.smAndDown ? $tc('C', 1).substr(1, 1) : $tc('Cumulative', 1)) | normalizeNFD }}
+							</v-btn>
+						</v-btn-toggle>
+					</v-col>
 					<v-col class="pa-0 grow text-end" align-self="center" v-if="!$route.meta.iframe">
 						<!-- <v-btn x-small fab color="grey" dark class="mx-2 elevation-0" @click="update">
 							<v-icon x-small>fa-redo</v-icon>
@@ -32,19 +42,19 @@
 					class="px-4"
 				>
 				<d7-line-bar-events v-if="item"
-					:key="'gcb7l-' + item.uid + '-' + point" :id="'gcb7l-uid-' + item.uid + '-' + point"
-					:point="point" :values="item[point]"
-					:dates="item.dates" :annotations="annotations" :sources="item.sources"/>
+					:key="'gacb7ln-' + '-' + calc + '-' + point" :id="'gacb7ln-uid-' + '-' + calc + '-' + point"
+					:point="point" :values="item[calc === 'new' ? 'new_' + point : point]"
+					:dates="item.dates" :sources="item.sources"/>
 				</v-col>
 			</v-row>
 		</v-container>
 		<v-divider class="mx-4"/>
 		<v-footer class="white caption small-caption pa-4 pt-2">
 			<a href="https://lab.imedd.org/" v-if="$route.meta.iframe">
-				<v-icon x-small class="mr-2" color="primary">fa-link</v-icon><span class="font-weight-bold">IMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
+				<v-icon x-small class="mr-2" color="primary">fa-link</v-icon><span class="font-weight-bold">iMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
 			</a>
 			<span v-else>
-				<span class="font-weight-bold">IMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
+				<span class="font-weight-bold">iMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
 			</span>
 		</v-footer>
 	</v-card>
@@ -55,14 +65,13 @@ import { mapGetters } from 'vuex';
 import { getDates } from '@/utils';
 
 export default {
-	name: 'greece-cases-by-7d-line-events',
+	name: 'global-cases-by-7d-line-no-events',
 	components: {
 		'd7-line-bar-events': require('@/components/charts/d7-line-bar-events').default
 	},
 	computed: {
 		...mapGetters(['locale']),
 		...mapGetters('filters', ['periodInterval']),
-		...mapGetters('internal', ['annotations']),
 		embed () {
 			return {
 				title: '',
@@ -71,20 +80,19 @@ export default {
 				mapLevel: null,
 				period: null,
 				lang: this.locale.code,
-				id: 'greece-cases-by-7d-line-events'
+				id: 'global-cases-by-7d-line-no-events'
 			};
 		}
 	},
 	data () {
 		return {
 			point: 'cases',
-			item: null
+			item: null,
+			items: null,
+			calc: 'new'
 		};
 	},
 	mounted () {
-		if (this.annotations.length === 0) {
-			this.$store.dispatch('internal/getAnnotations');
-		}
 		this.load();
 	},
 	methods: {
@@ -93,22 +101,42 @@ export default {
 			this.$store.commit('setEmbed', this.embed);
 		},
 		load () {
-			this.$store.dispatch('external/getGlobalAGG', 'GRC/all/' + this.periodInterval[3].value)
+			this.$store.dispatch('external/getGlobalAGG', 'all/new_cases,new_deaths,cases,deaths/' + this.periodInterval[3].value)
 				.then(res => {
-					this.item = res.map(m => {
-						m.cases = m.new_cases.map(m => Math.max(0, m));
-						m.deaths = m.new_deaths.map(m => Math.max(0, m));
+					this.items = res.map(m => {
+						m.new_cases = m.new_cases.map(m => Math.max(0, m));
+						m.new_deaths = m.new_deaths.map(m => Math.max(0, m));
+						m.cases = m.cases.map(m => Math.max(0, m));
+						m.deaths = m.deaths.map(m => Math.max(0, m));
 						return {
 							uid: m.uid,
 							region: m.country,
 							dates: getDates(m.from, m.to),
 							cases: m.cases,
 							deaths: m.deaths,
+							new_cases: m.new_cases,
+							new_deaths: m.new_deaths,
 							sources: m.sources
 						};
 					});
+					const obj = {
+						cases: this.items.map(m => m.cases),
+						deaths: this.items.map(m => m.deaths),
+						new_cases: this.items.map(m => m.new_cases),
+						new_deaths: this.items.map(m => m.new_deaths),
+						dates: getDates(res[0].from, res[0].to),
+						sources: [...new Set(this.items.map(m => m.sources).flat())]
+					};
 
-					this.item = this.item[0];
+					// eslint-disable-next-line
+					const sum = (r, a) => r.map((b, i) => (a[i] ? a[i] : 0) + (b ? b : 0));
+
+					obj.cases = obj.cases.reduce(sum);
+					obj.deaths = obj.deaths.reduce(sum);
+					obj.new_cases = obj.new_cases.reduce(sum);
+					obj.new_deaths = obj.new_deaths.reduce(sum);
+
+					this.item = obj;
 				});
 		},
 		update () {

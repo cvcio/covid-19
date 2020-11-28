@@ -1,59 +1,59 @@
 <template>
 	<v-dialog v-model="embedDialog" max-width="720" persistent>
 		<v-card>
-			<v-card-title class="headline white mb-0">
+			<v-card-title class="headline white pt-6 mb-0">
 				{{ $t('Embed Code')}}
 			</v-card-title>
 			<v-card-text class="mt-4 body-1">
 				{{ $t('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.') }}
 			</v-card-text>
 			<v-card-subtitle class="white mb-0 py-0">
-				Customize View
+				{{ $t('Customize View')}}
 			</v-card-subtitle>
 			<v-container class="px-6 py-0">
 				<v-row>
 					<v-col v-if="embed.mapLevel !== null">
-						<h5>Geographical Coverage</h5>
+						<h5>{{ $t('Geographical Coverage') }}</h5>
 						<v-radio-group
 							v-model="embed.mapLevel"
 							mandatory
 						>
 							<v-radio
-								label="Greece"
+								:label="$t('Greece')"
 								value="greece"
 							></v-radio>
 							<v-radio
-								label="World"
+								:label="$t('World')"
 								value="global"
 							></v-radio>
 						</v-radio-group>
 					</v-col>
 					<v-col v-if="embed.period !== null">
-						<h5>Time Frame</h5>
+						<h5>{{ $t('Time Period') }}</h5>
 						<v-radio-group
 							v-model="embed.period"
 							mandatory
 						>
 							<v-radio
-								label="Now"
+								:label="$t('Last day')"
 								value="0"
 							></v-radio>
 							<v-radio
-								label="Last 14 Days"
+								:label="$t('Last 14 days')"
 								value="1"
 							></v-radio>
 							<v-radio
-								label="Last 3 Months"
+								:label="$t('Last 3 months')"
 								value="2"
 							></v-radio>
 							<v-radio
-								label="Historical"
+								:label="$t('Historical data')"
 								value="3"
 							></v-radio>
 						</v-radio-group>
 					</v-col>
 					<v-col v-if="embed.lang !== null">
-						<h5>Language</h5>
+						<h5>{{ $t('Language') }}</h5>
 						<v-radio-group
 							v-model="embed.lang"
 							mandatory
@@ -81,21 +81,21 @@
 			</v-card-text>
 			<v-divider></v-divider>
 
-			<v-card-actions>
+			<v-card-actions class="pa-6">
 				<v-spacer></v-spacer>
 				<v-btn
 					color="primary"
 					text
 					@click="$store.commit('setEmbedDialog', false)"
 				>
-					Close
+					{{ $t('Close')}}
 				</v-btn>
 				<v-btn
 					color="primary"
 					text
 					@click.native="copy"
 				>
-					Copy
+					{{ $t('Copy')}}
 				</v-btn>
 			</v-card-actions>
 		</v-card>

@@ -38,7 +38,7 @@
 					</v-card-subtitle>
 					<v-divider/>
 					<v-card-subtitle class="pa-2">
-						<h4 class="caption grey--text">{{ $t("Source") }}: <span class="text-uppercase font-weight-bold">{{ sources.join(', ') }}</span></h4>
+						<h4 class="caption grey--text">{{ $t("Source") }}: <span class="font-weight-bold">{{ sources.map(m => m.toUpperCase().replace('IMEDD', 'iMEdD LAB')).join(', ') }}</span></h4>
 					</v-card-subtitle>
 				</v-card>
 			</div>
