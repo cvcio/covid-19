@@ -50,12 +50,24 @@
 									{{ typeof props.item.p100pCases !== 'string' ? new Intl.NumberFormat('el-GR').format(props.item.p100pCases.toFixed(2)) : '-'}}
 								</td>
 								<td class="caption" v-if="!$vuetify.breakpoint.smAndDown">
-									<heatbar :key="props.item.uid + '-' + key" :id="'uid-' + props.item.uid + '-' + key" :point="key" :values="props.item[key]" :dates="props.item.dates"/>
+									<heatbar
+										:key="'gcbr-' + props.item.uid + '-' + key"
+										:id="'gcbr-uid-' + props.item.uid + '-' + key"
+										:point="key"
+										:values="props.item[key]"
+										:dates="props.item.dates"
+										:sources="props.item.sources"/>
 								</td>
 							</tr>
 							<tr v-if="$vuetify.breakpoint.smAndDown" style="width:100%" class="">
 								<td class="caption" style="width:100%">
-									<heatbar :key="'gcbr-' + props.item.uid + '-' + key" :id="'gcbr-uid-' + props.item.uid + '-' + key" :point="key" :values="props.item[key]" :dates="props.item.dates"/>
+									<heatbar
+										:key="'gcbr-' + props.item.uid + '-' + key"
+										:id="'gcbr-uid-' + props.item.uid + '-' + key"
+										:point="key"
+										:values="props.item[key]"
+										:dates="props.item.dates"
+										:sources="props.item.sources"/>
 								</td>
 							</tr>
 						</template>
@@ -147,13 +159,14 @@ export default {
 							p100pDeaths,
 							dates: getDates(m.from, m.to),
 							cases: m.new_cases,
-							deaths: m.new_deaths
+							deaths: m.new_deaths,
+							sources: m.sources
 						};
 					});
 				});
 		},
 		update () {
-			console.debug('Update Data', this.name);
+			this.load();
 		}
 	}
 };

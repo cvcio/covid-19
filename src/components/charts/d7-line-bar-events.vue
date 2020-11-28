@@ -6,7 +6,7 @@
 					<v-card-title class="pa-2 subtitle-2">
 						<span class="">
 							{{
-								$moment(d.date).format("LL")
+								$moment(d.date).locale(locale.code).format("ll")
 							}}
 						</span>
 					</v-card-title>
@@ -15,6 +15,10 @@
 						<h4 class="subtitle-2 primary--text text-capitalize primary--text">
 							{{ $tc(point, 1) }}: {{ new Intl.NumberFormat('el-GR').format(d.value.toFixed(0)) }}
 						</h4>
+					</v-card-subtitle>
+					<v-divider/>
+					<v-card-subtitle class="pa-2">
+						<h4 class="caption grey--text">{{ $t("Source") }}: <span class="text-uppercase font-weight-bold">{{ sources.join(', ') }}</span></h4>
 					</v-card-subtitle>
 				</v-card>
 			</div>
@@ -26,14 +30,14 @@
 <script>
 import { mapGetters } from 'vuex';
 
-import { line, select, scaleLinear, scaleTime, axisBottom, axisRight, max } from 'd3';
+import { line, select, scaleLinear, axisBottom, axisRight, max } from 'd3';
 import { ma } from 'moving-averages';
 import * as colors from '@/helper/colors';
 import annotation from 'd3-svg-annotation';
 
 export default {
 	name: 'chart-d7-line-bar-events',
-	props: ['id', 'dates', 'values', 'point', 'annotations'],
+	props: ['id', 'dates', 'values', 'point', 'annotations', 'sources'],
 	computed: {
 		...mapGetters(['locale'])
 	},
@@ -48,6 +52,11 @@ export default {
 	},
 	watch: {
 		point (value, old) {
+			if (value !== old) {
+				this.draw();
+			}
+		},
+		'locale.code' (value, old) {
 			if (value !== old) {
 				this.draw();
 			}
@@ -100,7 +109,7 @@ export default {
 						label: m['name_' + this.locale.code],
 						padding: 6,
 						wrap: 180,
-						align: "middle"
+						align: 'middle'
 					},
 					type: annotation.annotationCalloutCircle,
 					x: x(idx),
@@ -110,11 +119,11 @@ export default {
 					subject: { radius: 8 },
 					color: m.importance > 10 ? 'black' : 'lightgrey',
 					connector: {
-						end: "dot",
-						type: "line",
-						lineType : "horizontal",
+						end: 'dot',
+						type: 'line',
+						lineType: 'horizontal',
 						endScale: 1
-					},
+					}
 				};
 			});
 			const l = line()
@@ -193,16 +202,16 @@ export default {
 
 			const makeAnnotations = annotation.annotation()
 				.annotations(annotations)
-				.on('subjectover', function(a) {
-					a.type.a.selectAll("g.annotation-connector, g.annotation-note")
-						.classed("hidden", false)
+				.on('subjectover', function (a) {
+					a.type.a.selectAll('g.annotation-connector, g.annotation-note')
+						.classed('hidden', false);
 				})
-				.on('subjectout', function(a) {
-					a.type.a.selectAll("g.annotation-connector, g.annotation-note")
-					.classed("hidden", true)
-				})
+				.on('subjectout', function (a) {
+					a.type.a.selectAll('g.annotation-connector, g.annotation-note')
+						.classed('hidden', true);
+				});
 			this.chart.append('g').call(makeAnnotations);
-			this.chart.selectAll("g.annotation-connector, g.annotation-note").classed("hidden", true);
+			this.chart.selectAll('g.annotation-connector, g.annotation-note').classed('hidden', true);
 		}
 	}
 };

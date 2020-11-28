@@ -3,7 +3,8 @@
 	"app.subtitle": "The spread of the disease in Greece and worldwide",
 	"view.greece": "Greece",
 	"view.global": "World",
-	"link.about": "about",
+	"link.about": "Our App & the Data",
+	"lastupdate": "Last update",
 	"cases": "cases | case",
 	"deaths": "deaths | death",
 	"total": "total",
@@ -17,5 +18,6 @@
 	"total deaths": "total deaths",
 	"note.widget.hospitals": "Activate this filter to see ...",
 	"button.in.greece": "INSIGHTS ON GREECE",
-	"button.in.world": "INSIGHTS ON THE WORLD"
+	"button.in.world": "INSIGHTS ON THE WORLD",
+	"label.period": "time period"
 }

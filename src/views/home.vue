@@ -35,7 +35,7 @@ export default {
 	},
 	methods: {
 		onScroll (e) {
-			this.showAltNav = e.target.scrollingElement.scrollTop > window.innerHeight * 0.9;
+			this.showAltNav = e.target.scrollingElement.scrollTop > window.innerHeight * 0.85;
 		}
 	}
 };

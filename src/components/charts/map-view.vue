@@ -17,7 +17,7 @@
 				<v-card class="elevation-0 white pa-0 arrow_box" min-width="180px">
 					<v-card-title class="pa-2 subtitle-2">
 						<span class="">
-							{{ point["name_" + locale.code]}}
+							{{ point["name_" + locale.code] }}
 						</span>
 					</v-card-title>
 					<v-divider/>
@@ -38,20 +38,33 @@
 						</h4>
 					</v-card-subtitle>
 					<v-divider/>
-					<v-card-subtitle class="pa-2">
-						<h4 class="subtitle-2 primary--text text-capitalize">
-							{{ $t("7-day moving average") }}
-						</h4>
-						<sparklines class="d-block" :data="point.data['new_' + mapKey]" id="sparklines" style="height: 60px;"/>
-					</v-card-subtitle>
-					<v-divider/>
+					<template v-if="mapPeriodIDX > 0">
+						<v-card-subtitle class="pa-2">
+							<h4 class="subtitle-2 primary--text text-capitalize">
+								{{ $t("7-Day Moving Average") }}
+							</h4>
+							<sparklines class="d-block" :data="point.data['new_' + mapKey]" id="sparklines" style="height: 60px;"/>
+						</v-card-subtitle>
+						<v-divider/>
+					</template>
 
 					<template v-if="point.data.note">
-						<v-card-subtitle class="pa-2" v-html="point.data.note"></v-card-subtitle>
+						<v-card-subtitle class="pa-2">
+							<template v-for="(m, i) in point.data.note">
+								<h4 :key="'unk-' + i">
+									<h4 class="caption grey--text">
+										{{ $t(m.region) }}:
+									<span class="text-uppercase font-weight-bold">
+										{{ new Intl.NumberFormat('el-GR').format(m.value.toFixed(2)) }}
+									</span></h4>
+								</h4>
+							</template>
+						</v-card-subtitle>
+						<!-- <v-card-subtitle class="pa-2" v-html="point.data.note"></v-card-subtitle> -->
 						<v-divider/>
 					</template>
 					<v-card-subtitle class="pa-2">
-						<h4 class="caption grey--text">{{ $tc("Source", point.data.sources.length) }}: <span class="text-uppercase font-weight-bold">{{ point.data.sources.join(', ') }}</span></h4>
+						<h4 class="caption grey--text">{{ $t("Source") }}: <span class="text-uppercase font-weight-bold">{{ point.data.sources.join(', ') }}</span></h4>
 					</v-card-subtitle>
 				</v-card>
 			</div>
@@ -60,7 +73,7 @@
 		<div class="legend" :class="$vuetify.breakpoint.smAndDown ? 'center': ''">
 			<v-row no-gutters>
 				<v-col class="caption font-weight-bold" :class="$vuetify.breakpoint.smAndDown ? 'text-center' : ''">
-					Per 100K of population
+					{{ $t("Per 100K of population")}}
 				</v-col>
 			</v-row>
 			<v-row no-gutters>
@@ -206,11 +219,16 @@ export default {
 									} else {
 										x = sum(m['new_' + this.mapKey]);
 									}
-									if (x <= 0) return;
-									return `
-										<h4 class="caption grey--text">${this.$t(m.region)}: <span class="text-uppercase font-weight-bold">
-										${new Intl.NumberFormat('el-GR').format(x.toFixed(2))}</span></h4>
-									`;
+									if (x <= 0) return false;
+									if (!m.region) return false;
+									return {
+										region: m.region,
+										value: x
+									};
+									// return `
+									// 	<h4 class="caption grey--text">${this.$t(m.region)}: <span class="text-uppercase font-weight-bold">
+									// 	${new Intl.NumberFormat('el-GR').format(x.toFixed(2))}</span></h4>
+									// `;
 								});
 							}
 
@@ -236,7 +254,7 @@ export default {
 								m.properties.opacity = v > 0 ? 0.9 : 0.9;
 
 								if (m.properties.group === 'greece') {
-									m.properties.data.note = unk.length > 0 ? unk.join('') : null;
+									m.properties.data.note = unk.filter(m => !!m); // unk.length > 0 ? unk.join('') : null;
 								}
 							}
 						}

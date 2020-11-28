@@ -6,7 +6,7 @@
 					<v-card-title class="pa-2 subtitle-2">
 						<span class="">
 							{{
-								$moment(d.date).format("LL")
+								$moment(d.date).locale(locale.code).format("ll")
 							}}
 						</span>
 					</v-card-title>
@@ -16,6 +16,10 @@
 							{{ $tc(point, 1) }}: {{ new Intl.NumberFormat('el-GR').format(d.value.toFixed(0)) }}
 						</h4>
 					</v-card-subtitle>
+					<v-divider/>
+					<v-card-subtitle class="pa-2">
+						<h4 class="caption grey--text">{{ $t("Source") }}: <span class="text-uppercase font-weight-bold">{{ sources.join(', ') }}</span></h4>
+					</v-card-subtitle>
 				</v-card>
 			</div>
 		</v-scroll-y-reverse-transition>
@@ -24,13 +28,18 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 import { line, select, scaleLinear, axisBottom, axisRight, max } from 'd3';
 import { ma } from 'moving-averages';
 import * as colors from '@/helper/colors';
 
 export default {
 	name: 'chart-d7-line-bar',
-	props: ['id', 'dates', 'values', 'point'],
+	props: ['id', 'dates', 'values', 'point', 'sources'],
+	computed: {
+		...mapGetters(['locale'])
+	},
 	data () {
 		return {
 			chart: null,
@@ -42,6 +51,11 @@ export default {
 	},
 	watch: {
 		point (value, old) {
+			if (value !== old) {
+				this.draw();
+			}
+		},
+		'locale.code' (value, old) {
 			if (value !== old) {
 				this.draw();
 			}

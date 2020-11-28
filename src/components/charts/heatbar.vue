@@ -36,6 +36,10 @@
 								:style="'transform: rotate(' + d.angle + 'deg);'">{{ isFinite(d.growthRate) ? 'fa-arrow-right' : 'fa-minus' }}</v-icon>
 						</h4>
 					</v-card-subtitle>
+					<v-divider/>
+					<v-card-subtitle class="pa-2">
+						<h4 class="caption grey--text">{{ $t("Source") }}: <span class="text-uppercase font-weight-bold">{{ sources.join(', ') }}</span></h4>
+					</v-card-subtitle>
 				</v-card>
 			</div>
 		</v-scroll-y-reverse-transition>
@@ -51,7 +55,7 @@ import * as colors from '@/helper/colors';
 
 export default {
 	name: 'heatbar',
-	props: ['id', 'values', 'point', 'dates'],
+	props: ['id', 'values', 'point', 'dates', 'sources'],
 	data () {
 		return {
 			chart: null,
@@ -93,7 +97,7 @@ export default {
 				return {
 					week: this.$moment(m).week(),
 					date: m,
-					value: Math.max(0, this.values[i])
+					value: this.values[i] ? Math.max(0, this.values[i]) : 0
 				};
 			});
 
@@ -103,6 +107,7 @@ export default {
 					value: sumBy(m[1], 'value')
 				};
 			});
+
 			entries = entries.map((m, i) => {
 				m.diff = i < 1 ? 0 : m.value - entries[i - 1].value;
 				m.growthRate = i < 1 ? 0 : 100 * (m.diff / entries[i - 1].value);

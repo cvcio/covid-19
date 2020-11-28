@@ -3,11 +3,11 @@
 		<v-card flat>
 			<v-container fluid class="px-0">
 				<v-row class="px-4" align="center">
-					<v-col cols="7">
+					<v-col cols="6">
 						<switch-map-source :label="'COVID—19'" :val="'covid'" disabled/>
 					</v-col>
-					<v-col cols="5">
-						<autocomplete-map-period :label="'period'"/>
+					<v-col cols="6">
+						<autocomplete-map-period :label="$t('label.period')"/>
 					</v-col>
 				</v-row>
 				<v-row class="px-4" align="center" no-gutters>
@@ -40,7 +40,7 @@
 									{{ new Intl.NumberFormat('el-GR').format(active.toFixed(2)) }}
 								</h4>
 								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
-									{{ $t('active') | normalizeNFD }} {{ $tc('cases', 1) | normalizeNFD }}
+									{{ $t('Active Cases') | normalizeNFD }}
 								</p>
 							</v-col>
 							<v-col class="pa-2 orange--text">
@@ -48,7 +48,7 @@
 									-
 								</h4>
 								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
-									{{ $t('intubated') | normalizeNFD }}
+									{{ $t('Intubated') | normalizeNFD }}
 								</p>
 							</v-col>
 							<v-col class="pa-2 success--text">
@@ -56,7 +56,7 @@
 									{{ new Intl.NumberFormat('el-GR').format(recovered.toFixed(2)) }}
 								</h4>
 								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
-									{{ $t('recovered') | normalizeNFD }}
+									{{ $t('Recovered') | normalizeNFD }}
 								</p>
 							</v-col>
 							<v-col class="pa-2 grey--text">
@@ -64,7 +64,7 @@
 									-
 								</h4>
 								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
-									{{ $t('tested') | normalizeNFD }}
+									{{ $t('Tests') | normalizeNFD }}
 								</p>
 							</v-col>
 						</v-row>

@@ -10,19 +10,19 @@ export default {
 		mapPeriod: moment().subtract(14, 'days').format('YYYY-MM-DD'),
 		periodInterval: [
 			{
-				text: 'Now',
+				text: { en: 'Last day', el: 'Τελευταία ημέρα' },
+				value: moment().subtract(7, 'days').format('YYYY-MM-DD')
+			},
+			{
+				text: { en: 'Last 14 days', el: 'Τελευταίες 14 ημέρες' },
 				value: moment().subtract(14, 'days').format('YYYY-MM-DD')
 			},
 			{
-				text: 'Last 15 Days',
-				value: moment().subtract(15, 'days').format('YYYY-MM-DD')
-			},
-			{
-				text: 'Last 3 Months',
+				text: { en: 'Last 3 months', el: 'Τελευταίο τρίμηνο' },
 				value: moment().subtract(3, 'months').format('YYYY-MM-DD')
 			},
 			{
-				text: 'Historical',
+				text: { en: 'Historical data', el: 'Από την αρχή' },
 				value: '2020-01-01'
 			}
 		],

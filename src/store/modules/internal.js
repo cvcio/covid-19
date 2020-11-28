@@ -5,11 +5,13 @@ export default {
 	namespaced: true,
 	state: {
 		geo: storageSVC.get('geo') || null,
-		annotations: []
+		annotations: [],
+		posts: { greece: [], global: [] }
 	},
 	getters: {
 		geo: state => state.geo,
 		annotations: state => state.annotations,
+		posts: state => state.posts
 	},
 	mutations: {
 		setGeo (state, data) {
@@ -17,6 +19,9 @@ export default {
 		},
 		setAnnotations (state, data) {
 			state.annotations = data;
+		},
+		setPosts (state, data) {
+			state.posts = data;
 		}
 	},
 	actions: {
@@ -35,6 +40,16 @@ export default {
 			try {
 				const res = await internalSVC.getAnnotations();
 				commit('setAnnotations', res);
+				return res;
+			} catch (error) {
+				commit('errors/REQUEST_ERROR', error, { root: true });
+				return false;
+			}
+		},
+		async getPosts ({ commit }) {
+			try {
+				const res = await internalSVC.getPosts();
+				commit('setPosts', res);
 				return res;
 			} catch (error) {
 				commit('errors/REQUEST_ERROR', error, { root: true });

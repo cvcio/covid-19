@@ -12,14 +12,16 @@ export default new Vuex.Store({
 		sidebar: false,
 		loading: false,
 		empty: false,
-		view: 'greece'
+		view: 'greece',
+		lastUpdatedAt: null
 	},
 	getters: {
 		locale: state => state.locale,
 		sidebar: state => state.sidebar,
 		loading: state => state.loading,
 		empty: state => state.empty,
-		view: state => state.view
+		view: state => state.view,
+		lastUpdatedAt: state => state.lastUpdatedAt
 	},
 	mutations: {
 		setLocale (state, data) {
@@ -37,6 +39,9 @@ export default new Vuex.Store({
 		},
 		setView (state, data) {
 			state.view = data;
+		},
+		setLastUpdatedAt (state, data) {
+			state.lastUpdatedAt = data;
 		}
 	},
 	actions: {

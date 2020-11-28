@@ -30,7 +30,7 @@ export default {
 				this.chart.selectAll('*').remove();
 			}
 			const data = this.data;
-			let sma = ma(data.map(m => Math.max(0, m)), 7).filter(function (el) {
+			const sma = ma(data.map(m => Math.max(0, m)), 7).filter(function (el) {
 				return el != null;
 			});
 

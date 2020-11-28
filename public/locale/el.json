@@ -3,7 +3,8 @@
 	"app.subtitle": "Η εξάπλωση της νόσου στην Ελλάδα και στον κόσμο",
 	"view.greece": "Ελλάδα",
 	"view.global": "Κόσμος",
-	"link.about": "about",
+	"link.about": "Η Εφαρμογή & τα Δεδομένα",
+	"lastupdate": "Tελευταία ενημέρωση",
 	"cases": "κρούσματα | κρούσμα",
 	"deaths": "θάνατοι | θάνοτος",
 	"total": "total",
@@ -16,6 +17,7 @@
 	"total cases": "σύνολο κρουσμάτων",
 	"total deaths": "σύνολο θανάτων",
 	"note.widget.hospitals": "note.widget.hospitals",
-	"button.in.greece": "INSIGHTS ON GREECE",
-	"button.in.world": "INSIGHTS ON THE WORLD"
+	"button.in.greece": "Αναλύσεις για την Ελλάδα",
+	"button.in.world": "Αναλύσεις για τον Κόσμο",
+	"label.period": "χρονική περίοδος"
 }

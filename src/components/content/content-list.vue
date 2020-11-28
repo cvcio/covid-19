@@ -11,25 +11,27 @@
 			</div>
 		</v-scroll-y-transition>
 		<v-row justify="center" class="pa-0 ma-0 my-n12" v-if="!$vuetify.breakpoint.smAndDown">
-			<v-btn tile class="mx-1 rounded-t top-shadow" @click="$store.commit('setView', 'greece')">
-				{{ $t('button.in.greece') }}
+			<v-btn tile class="mx-1 rounded-t top-shadow" @click="$vuetify.goTo('#posts');$store.commit('setView', 'greece');">
+				{{ $t('button.in.greece') | normalizeNFD}}
 				<v-icon right small>mdi-chevron-down</v-icon>
 			</v-btn>
-			<v-btn  tile class="mx-1 rounded-t top-shadow" @click="$store.commit('setView', 'global')">
-				{{ $t('button.in.world') }}
+			<v-btn  tile class="mx-1 rounded-t top-shadow" @click="$vuetify.goTo('#posts');$store.commit('setView', 'global');">
+				{{ $t('button.in.world') | normalizeNFD }}
 				<v-icon right small>mdi-chevron-down</v-icon>
 			</v-btn>
 		</v-row>
-		<template v-if="view === 'greece'">
-			<v-scroll-x-transition>
-				<greece/>
-			</v-scroll-x-transition>
-		</template>
-		<template v-else>
-			<v-scroll-x-transition>
-				<global/>
-			</v-scroll-x-transition>
-		</template>
+		<div id="posts">
+			<template v-if="view === 'greece'">
+				<v-scroll-x-transition>
+					<greece/>
+				</v-scroll-x-transition>
+			</template>
+			<template v-else>
+				<v-scroll-x-transition>
+					<global/>
+				</v-scroll-x-transition>
+			</template>
+		</div>
 	</v-container>
 </template>
 

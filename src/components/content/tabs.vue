@@ -1,7 +1,7 @@
 <template>
 	<v-row class="tabs" no-gutters :class="$vuetify.breakpoint.smAndDown ? 'elevation-0' : 'px-3 mt-8'">
 		<v-col cols="12" sm="6" md="5" lg="4" xl="2" class="events">
-			<h6 class="caption text-end" v-if="!$vuetify.breakpoint.smAndDown">{{ $t('lastupdate') }}{{ $moment().format('LLL') }}</h6>
+			<h6 class="caption text-end" v-if="!$vuetify.breakpoint.smAndDown">{{ $t('lastupdate') }} {{ $moment.utc(lastUpdatedAt).format('LLL') }}</h6>
 			<v-card class="transparent" :class="$vuetify.breakpoint.smAndDown ? 'elevation-0' : ''" light>
 				<v-tabs
 						v-model="tab"
@@ -43,7 +43,7 @@ export default {
 		'tab-item-global': require('@/components/content/tab-item-global').default
 	},
 	computed: {
-		...mapGetters(['locale', 'sidebar'])
+		...mapGetters(['locale', 'sidebar', 'lastUpdatedAt'])
 	},
 	data () {
 		return {
