@@ -27,6 +27,7 @@
 	"Tests": "Τεστ",
 	"Recovered": "Ανάρρωσαν",
 	"Intubated": "Διασωληνωμένοι",
+	"critical": "Διασωληνωμένοι",
 	"Per 100K of population": "Ανά 100 χιλ. πληθυσμού",
 	"Active Cases" : "Ενεργά Κρούσματα" ,
 	"No Location Provided" : "Χωρίς Γεωγραφικό Προσδιορισμό" ,
