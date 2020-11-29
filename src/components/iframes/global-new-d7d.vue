@@ -3,7 +3,6 @@
 		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'">
 			<v-container class="pa-0 ma-0" fluid>
 				<v-row class="pa-0 ma-0" justify="space-between">
-					<v-spacer/>
 					<v-autocomplete
 						dense
 						outlined
@@ -32,9 +31,9 @@
 					cols="12"
 					class="px-4"
 				>
-				<d7d-lines v-if="similar && search"
+				<d7d-lines v-if="similar.length > 0"
 					:point="point" :uid="search"
-					:key="'gnd7d'" :id="'gnd7d'" :data="similar"/>
+					:key="'gnd7d-'+search" :id="'gnd7d-'+search" :data="similar"/>
 				</v-col>
 			</v-row>
 		</v-container>
@@ -79,9 +78,8 @@ export default {
 	data () {
 		return {
 			point: 'new_deaths',
-			item: null,
 			items: [],
-			similar: null,
+			similar: [],
 			search: 'U300',
 			title: { en: '', el: '' }
 		};
