@@ -80,10 +80,10 @@
 		<v-divider class="mx-4"/>
 		<v-footer class="white caption small-caption pa-4 pt-2">
 			<a href="https://lab.imedd.org/" v-if="$route.meta.iframe">
-				<v-icon x-small class="mr-2" color="primary">fa-link</v-icon><span class="font-weight-bold">iMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
+				<v-icon x-small class="mr-2" color="primary">fa-link</v-icon><span class="font-weight-bold">iMΕdD LAB</span>: {{ title[locale.code] }}
 			</a>
 			<span v-else>
-				<span class="font-weight-bold">iMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
+				<span class="font-weight-bold">iMΕdD LAB</span>: {{ title[locale.code] }}
 			</span>
 		</v-footer>
 	</v-card>
@@ -102,6 +102,7 @@ export default {
 	computed: {
 		...mapGetters(['locale']),
 		...mapGetters('filters', ['periodInterval']),
+		...mapGetters('internal', ['posts']),
 		embed () {
 			return {
 				title: '',
@@ -151,11 +152,19 @@ export default {
 					class: 'text-capitalize'
 				}
 			],
-			items: []
+			items: [],
+			title: { en: '', el: ''}
 		};
 	},
 	mounted () {
-		this.load();
+		if (this.posts.global.length === 0) {
+			this.$store.dispatch('internal/getPosts')
+				.then(() => {
+					this.load();
+				});
+		} else {
+			this.load();
+		}
 	},
 	methods: {
 		setEmbed () {
@@ -163,6 +172,7 @@ export default {
 			this.$store.commit('setEmbed', this.embed);
 		},
 		load () {
+			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
 			this.$store.dispatch('external/getGlobalAGG', 'all/new_cases,new_deaths,new_recovered/' + this.periodInterval[3].value)
 				.then(res => {
 					this.items = res.map(m => {

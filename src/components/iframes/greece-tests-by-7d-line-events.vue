@@ -6,7 +6,7 @@
 					<v-col  class="pa-0 shrink" align-self="center">
 						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory>
 							<v-btn x-small class="primary--text" value="tests">
-								{{( $tc('All', 1)) | normalizeNFD }}
+								{{( $t('All')) | normalizeNFD }}
 							</v-btn>
 							<v-btn x-small class="primary--text" value="pcr">
 								{{( $tc('RT-PCR', 1)) | normalizeNFD }}
@@ -54,10 +54,10 @@
 		<v-divider class="mx-4"/>
 		<v-footer class="white caption small-caption pa-4 pt-2">
 			<a href="https://lab.imedd.org/" v-if="$route.meta.iframe">
-				<v-icon x-small class="mr-2" color="primary">fa-link</v-icon><span class="font-weight-bold">iMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
+				<v-icon x-small class="mr-2" color="primary">fa-link</v-icon><span class="font-weight-bold">iMΕdD LAB</span>: {{ title[locale.code] }}
 			</a>
 			<span v-else>
-				<span class="font-weight-bold">iMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
+				<span class="font-weight-bold">iMΕdD LAB</span>: {{ title[locale.code] }}
 			</span>
 		</v-footer>
 	</v-card>
@@ -76,6 +76,7 @@ export default {
 		...mapGetters(['locale']),
 		...mapGetters('filters', ['periodInterval']),
 		...mapGetters('internal', ['annotations']),
+		...mapGetters('internal', ['posts']),
 		embed () {
 			return {
 				title: '',
@@ -92,14 +93,22 @@ export default {
 		return {
 			point: 'tests',
 			item: null,
-			calc: 'new'
+			calc: 'new',
+			title: { en: '', el: ''}
 		};
 	},
 	mounted () {
 		if (this.annotations.length === 0) {
 			this.$store.dispatch('internal/getAnnotations');
 		}
-		this.load();
+		if (this.posts.global.length === 0) {
+			this.$store.dispatch('internal/getPosts')
+				.then(() => {
+					this.load();
+				});
+		} else {
+			this.load();
+		}
 	},
 	methods: {
 		setEmbed () {
@@ -107,6 +116,7 @@ export default {
 			this.$store.commit('setEmbed', this.embed);
 		},
 		load () {
+			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
 			this.$store.dispatch('external/getGlobalAGG', 'GRC/cumulative_rtpcr_tests_raw,estimated_new_rtpcr_tests,cumulative_rapid_tests_raw,esitmated_new_rapid_tests,estimated_new_total_tests/' + this.periodInterval[3].value)
 				.then(res => {
 					this.item = res.map(m => {
