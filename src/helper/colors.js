@@ -43,24 +43,30 @@ const activeCS = [
 	'#F6F0CC'
 ].reverse();
 
-const criticalCS = [
-	'#D38E01',
-	'#D5950E',
-	'#D89D1F',
-	'#DBA531',
-	'#DEAD41',
-	'#E1B552',
-	'#E6C26D',
-	'#EACD84',
-	'#EDD798',
-	'#F1E0AC',
-	'#F3E6B9',
-	'#F6F0CC'
+const criticalCS = activeCS;
+
+const testsCS = [
+	'#111313',
+	'#2B2F2F',
+	'#484E4E',
+	'#666F6F',
+	'#8F9797',
+	'#B9C0C0',
+	'#E6ECEC',
+	'#ECF1F1',
+	'#F2F5F5',
+	'#F8FAFA',
 ].reverse();
+
+const pcrCS = testsCS;
+const rapidCS = testsCS;
 
 export {
 	casesCS,
 	deathsCS,
 	activeCS,
-	criticalCS
+	criticalCS,
+	testsCS,
+	pcrCS,
+	rapidCS
 };
