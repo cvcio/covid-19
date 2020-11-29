@@ -62,49 +62,56 @@ const routes = [
 				name: 'greece-cases-by-7d-line-events-intubated',
 				props: {},
 				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "greece-cases-by-7d-line-events-intubated" */ '@/components/iframes/greece-cases-by-7d-line-events-intubated.vue')
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-cases-by-7d-line-events-intubated.vue')
 			},
 			{
 				path: 'greece-cases-by-7d-line-events',
 				name: 'greece-cases-by-7d-line-events',
 				props: {},
 				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "greece-cases-by-7d-line-events" */ '@/components/iframes/greece-cases-by-7d-line-events.vue')
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-cases-by-7d-line-events.vue')
 			},
 			{
 				path: 'greece-cases-by-7d-line',
 				name: 'greece-cases-by-7d-line',
 				props: {},
 				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "greece-cases-by-7d-line" */ '@/components/iframes/greece-cases-by-7d-line.vue')
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-cases-by-7d-line.vue')
 			},
 			{
 				path: 'greece-cases-by-region',
 				name: 'greece-cases-by-region',
 				props: {},
 				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "greece-cases-by-region" */ '@/components/iframes/greece-cases-by-region.vue')
+				component: () => import(/* webpackChunkName: "d-frame" */ '@/components/iframes/greece-cases-by-region.vue')
+			},
+			{
+				path: 'greece-tests-by-7d-line-events',
+				name: 'greece-tests-by-7d-line-events',
+				props: {},
+				meta: { iframe: true },
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-tests-by-7d-line-events.vue')
 			},
 			{
 				path: 'global-cases-by-country',
 				name: 'global-cases-by-country',
 				props: {},
 				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "global-cases-by-country" */ '@/components/iframes/global-cases-by-country.vue')
+				component: () => import(/* webpackChunkName: "d-frame" */ '@/components/iframes/global-cases-by-country.vue')
 			},
 			{
 				path: 'global-cases-by-7d-line',
 				name: 'global-cases-by-7d-line',
 				props: {},
 				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "global-cases-by-7d-line" */ '@/components/iframes/global-cases-by-7d-line.vue')
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/global-cases-by-7d-line.vue')
 			},
 			{
 				path: 'global-cases-by-7d-line-no-events',
 				name: 'global-cases-by-7d-line-no-events',
 				props: {},
 				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "global-cases-by-7d-line-no-events" */ '@/components/iframes/global-cases-by-7d-line-no-events.vue')
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/global-cases-by-7d-line-no-events.vue')
 			},
 			{
 				path: 'map-view',
