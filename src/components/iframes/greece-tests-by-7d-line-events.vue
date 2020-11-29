@@ -5,11 +5,14 @@
 				<v-row class="pa-0 ma-0" justify="space-between">
 					<v-col  class="pa-0 shrink" align-self="center">
 						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory>
-							<v-btn x-small class="primary--text" value="cases">
-								{{( $vuetify.breakpoint.smAndDown ? $tc('cases', 1).substr(1, 1) : $tc('cases', 1)) | normalizeNFD }}
+							<v-btn x-small class="primary--text" value="tests">
+								{{( $tc('All', 1)) | normalizeNFD }}
 							</v-btn>
-							<v-btn x-small class="primary--text" value="deaths">
-								{{( $vuetify.breakpoint.smAndDown ? $tc('deaths', 1).substr(1, 1) : $tc('deaths', 1)) | normalizeNFD }}
+							<v-btn x-small class="primary--text" value="pcr">
+								{{( $tc('RT-PCR', 1)) | normalizeNFD }}
+							</v-btn>
+							<v-btn x-small class="primary--text" value="rapid">
+								{{( $tc('Rapid Ag', 1)) | normalizeNFD }}
 							</v-btn>
 						</v-btn-toggle>
 					</v-col>
@@ -87,7 +90,7 @@ export default {
 	},
 	data () {
 		return {
-			point: 'cases',
+			point: 'tests',
 			item: null,
 			calc: 'new'
 		};
@@ -104,21 +107,32 @@ export default {
 			this.$store.commit('setEmbed', this.embed);
 		},
 		load () {
-			this.$store.dispatch('external/getGlobalAGG', 'GRC/all/' + this.periodInterval[3].value)
+			this.$store.dispatch('external/getGlobalAGG', 'GRC/cumulative_rtpcr_tests_raw,estimated_new_rtpcr_tests,cumulative_rapid_tests_raw,esitmated_new_rapid_tests,estimated_new_total_tests/' + this.periodInterval[3].value)
 				.then(res => {
 					this.item = res.map(m => {
-						m.new_cases = m.new_cases.map(m => Math.max(0, m));
-						m.new_deaths = m.new_deaths.map(m => Math.max(0, m));
-						m.cases = m.cases.map(m => Math.max(0, m));
-						m.deaths = m.deaths.map(m => Math.max(0, m));
+						m.dates = getDates(m.from, m.to);
+						m.new_pcr = m.estimated_new_rtpcr_tests.map(m => Math.max(0, m));
+						m.new_rapid = m.esitmated_new_rapid_tests.map(m => Math.max(0, m));
+						m.new_tests = m.estimated_new_total_tests.map(m => Math.max(0, m));
+
+						m.new_pcr.unshift(...Array(m.dates.length - m.new_pcr.length).fill(0));
+						m.new_rapid.unshift(...Array(m.dates.length - m.new_rapid.length).fill(0));
+						m.new_tests.unshift(...Array(m.dates.length - m.new_tests.length).fill(0));
+
+						m.tests = m.new_tests.reduce((a, b, i) => [...a, a.length > 0 ? b + a[i-1] : b], []);
+						m.pcr = m.new_pcr.reduce((a, b, i) => [...a, a.length > 0 ? b + a[i-1] : b], []);
+						m.rapid = m.new_rapid.reduce((a, b, i) => [...a, a.length > 0 ? b + a[i-1] : b], []);
+
 						return {
 							uid: m.uid,
 							region: m.country,
 							dates: getDates(m.from, m.to),
-							cases: m.cases,
-							deaths: m.deaths,
-							new_cases: m.new_cases,
-							new_deaths: m.new_deaths,
+							new_pcr: m.new_pcr,
+							new_rapid: m.new_rapid,
+							new_tests: m.new_tests,
+							tests: m.tests,
+							pcr: m.pcr,
+							rapid: m.rapid,
 							sources: m.sources
 						};
 					});

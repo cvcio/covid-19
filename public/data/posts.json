@@ -7,10 +7,14 @@
 			},
 			"body": {
 				"el": [
-					"Ο πίνακας ταξινομείται βάσει του αριθμού κρουσμάτων και θανάτων ανά 100.000 κατοίκους. Στο διάγραμμα «Ανά εβδομάδα» αποτυπώνεται χρωματικά η έξαρση κρουσμάτων ή θανάτων ανά περιοχή της χώρας, βάσει του εβδομαδιαίου συνόλου κρουσμάτων και θανάτων ανά 100.000 πληθυσμού. Όσο πιο σκούρο το χρώμα, τόσα περισσότερα τα κρούσματα ή οι θάνατοι εκείνη την εβδομάδα, συγκριτικά με τις προηγούμενες, στην ίδια περιοχή."
+					"Ο πίνακας ταξινομείται βάσει του αριθμού κρουσμάτων ή θανάτων ανά 100.000 κατοίκους. Στο διάγραμμα «Ανά εβδομάδα», αποτυπώνεται χρωματικά η έξαρση κρουσμάτων ή θανάτων ανά περιοχή της χώρας, βάσει του εβδομαδιαίου αντίστοιχου συνόλου, κρουσμάτων ή θανάτων, ανά 100.000 πληθυσμού. Όσο πιο σκούρο το χρώμα, τόσα περισσότερα τα κρούσματα ή οι θάνατοι εκείνη την εβδομάδα, συγκριτικά με τις προηγούμενες, στην ίδια περιοχή.",
+					"Η γεωγραφική κατανομή των θανάτων έχει προέλθει από τις αναφορές των νεκρών από κορονοϊό στον Τύπο. Ωστόσο, από τα μέσα Νοεμβρίου δεν ανακοινώνεται από κανένα φορέα σε ποια νοσοκομεία ή περιοχές καταγράφεται κάθε θάνατος. Γι’ αυτό, οι ημερήσιοι θάνατοι προστίθενται στο «Χωρίς Γεωγραφικό Προσδιορισμό» έως ότου δοθούν στη δημοσιότητα περισσότερες πληροφορίες για τη γεωγραφική κατανομή των θανάτων.",
+					"Πατώντας το κουμπί «Κρούσματα» ή «Θάνατοι» προσαρμόζεται αναλόγως ο πίνακας. Πατώντας στο πεδίο «Σύνολο» αλλάζει η ταξινόμηση βάσει του συνόλου των κρουσμάτων ή των θανάτων. Αντίστοιχα, το ίδιο συμβαίνει πατώντας στο πεδίο «Ανά 100k»."
 				],
 				"en": [
-					""
+					"The table presents subnational COVID-19 cases and deaths, sorted by normalized figures per 100,000 residents. The “Weekly” chart represents the outburst of cases and deaths broken down by area, colored by the weekly total number of cases and deaths respectively, per 100,000 residents. The darker the color, the more cases or deaths are reported in each area within the week of reference, compared to previous.",
+					"The geographic distribution of deaths derives from Press reports. However, since mid-November, authorities have stopped giving any information about the location in which each death is recorded. Thus, daily deaths are added to the \"No Location Provided\" row, until more information on the geographical distribution of deaths is made public.",
+					"The table adjusts to “Cases” or “Deaths” by clicking on the relevant buttons and it is sorted by total numbers or by normalized figures, when the “Total” field or the “Per 100K” field is clicked."
 				]
 			},
 			"component": {
@@ -20,15 +24,17 @@
 		},
 		{
 			"title": {
-				"el": "Κρούσματα και θάνατοι ανά περιοχή της Ελλάδας",
-				"en": ""
+				"el": "Η πορεία της πανδημίας στην Ελλάδα",
+				"en": "The pandemic over time in Greece"
 			},
 			"body": {
 				"el": [
-					"Ο πίνακας ταξινομείται βάσει του αριθμού κρουσμάτων και θανάτων ανά 100.000 κατοίκους. Στο διάγραμμα «Ανά εβδομάδα» αποτυπώνεται χρωματικά η έξαρση κρουσμάτων ή θανάτων ανά περιοχή της χώρας, βάσει του εβδομαδιαίου συνόλου κρουσμάτων και θανάτων ανά 100.000 πληθυσμού. Όσο πιο σκούρο το χρώμα, τόσα περισσότερα τα κρούσματα ή οι θάνατοι εκείνη την εβδομάδα, συγκριτικά με τις προηγούμενες, στην ίδια περιοχή."
+					"Το γράφημα εμφανίζεται με προεπιλεγμένη την επιλογή «Ημερήσια» και αποτυπώνει αριθμό κρουσμάτων και θανάτων ανά ημέρα στην επικράτεια. Η γραμμή με το σκούρο χρώμα καταγράφει τον κυλιόμενο μέσο όρο των τελευταίων 7 ημερών, ο οποίος χρησιμοποιείται για να εξομαλύνει τις τιμές.",
+					"Πατώντας το κουμπί «Αθροιστικά» το γράφημα αποτυπώνει το σύνολο των κρουσμάτων ανά ημέρα από την αρχή της πανδημίας. Όσο πιο μεγάλη η κλίση της γραμμής του κυλιόμενου μέσου όρου 7 ημερών, τόσο μεγαλύτερος ο ρυθμός μετάδοσης του ιού. Η επιπέδωση της καμπύλης συνεπάγεται μείωση της αύξησης κρουσμάτων ή θανάτων στην επικράτεια."
 				],
 				"en": [
-					""
+					"The chart represents the number of cases and deaths reported by date in the country and it is set to the “Daily” view by default. The darker line stands for the 7-day moving average of each metric, which is used to smooth values.",
+					"When the “Cumulative” button is clicked, the chart represents cumulative numbers of cases by date. The bigger the slope of the 7-day moving average line, the bigger the rise of cases. When the curve is flattened, the rise of cases or deaths is decreasing in the country."
 				]
 			},
 			"component": {
@@ -38,15 +44,15 @@
 		},
 		{
 			"title": {
-				"el": "Κρούσματα και θάνατοι ανά περιοχή της Ελλάδας",
-				"en": ""
+				"el": "Διασωληνωμένοι ασθενείς",
+				"en": "Intubated patients"
 			},
 			"body": {
 				"el": [
-					"Ο πίνακας ταξινομείται βάσει του αριθμού κρουσμάτων και θανάτων ανά 100.000 κατοίκους. Στο διάγραμμα «Ανά εβδομάδα» αποτυπώνεται χρωματικά η έξαρση κρουσμάτων ή θανάτων ανά περιοχή της χώρας, βάσει του εβδομαδιαίου συνόλου κρουσμάτων και θανάτων ανά 100.000 πληθυσμού. Όσο πιο σκούρο το χρώμα, τόσα περισσότερα τα κρούσματα ή οι θάνατοι εκείνη την εβδομάδα, συγκριτικά με τις προηγούμενες, στην ίδια περιοχή."
+					"Το γράφημα αποτυπώνει πόσοι ασθενείς νοσηλεύονται διασωληνωμένοι, ανα ημέρα, στις ΜΕΘ σε όλη την Ελλάδα."
 				],
 				"en": [
-					""
+					"The chart shows how many intubated patients are recorded each day in the ICUs of Greece."
 				]
 			},
 			"component": {
@@ -56,15 +62,19 @@
 		},
 		{
 			"title": {
-				"el": "Κρούσματα και θάνατοι ανά περιοχή της Ελλάδας",
-				"en": ""
+				"el": "Εξέλιξη νέων κρουσμάτων και θανάτων ανά περιοχή στην Ελλάδα",
+				"en": "Evolution of new cases and new deaths by area in Greece"
 			},
 			"body": {
 				"el": [
-					"Ο πίνακας ταξινομείται βάσει του αριθμού κρουσμάτων και θανάτων ανά 100.000 κατοίκους. Στο διάγραμμα «Ανά εβδομάδα» αποτυπώνεται χρωματικά η έξαρση κρουσμάτων ή θανάτων ανά περιοχή της χώρας, βάσει του εβδομαδιαίου συνόλου κρουσμάτων και θανάτων ανά 100.000 πληθυσμού. Όσο πιο σκούρο το χρώμα, τόσα περισσότερα τα κρούσματα ή οι θάνατοι εκείνη την εβδομάδα, συγκριτικά με τις προηγούμενες, στην ίδια περιοχή."
+					"Τα γραφήματα αποτυπώνουν τα νέα κρούσματα ή τους νέους θανάτους ανά 100.000 πληθυσμού ημερησίως σε κάθε περιοχή και έχουν όλα την ίδια κλίμακα, ώστε να μπορούμε να συγκρίνουμε τις περιοχές μεταξύ τους. Η σειρά εμφάνισής τους εξαρτάται από τον αριθμό νέων κρουσμάτων ή θανάτων ανά 100.000 πληθυσμού. Δηλαδή, στην κορυφή εμφανίζονται οι περιοχές που έχουν μεγαλύτερο πρόβλημα.",
+					"Η γεωγραφική κατανομή των θανάτων έχει προέλθει από τις αναφορές των νεκρών από κορονοϊό στον Τύπο. Ωστόσο, από τα μέσα Νοεμβρίου δεν ανακοινώνεται από κανένα φορέα σε ποια νοσοκομεία ή περιοχές καταγράφεται κάθε θάνατος. Γι’ αυτό, οι ημερήσιοι θάνατοι προστίθενται στο «Χωρίς Γεωγραφικό Προσδιορισμό» έως ότου δοθούν στη δημοσιότητα περισσότερες πληροφορίες για τη γεωγραφική κατανομή των θανάτων.",
+					"Η γραμμή με το σκούρο χρώμα καταγράφει τον κυλιόμενο μέσο όρο των τελευταίων 7 ημερών, ο οποίος χρησιμοποιείται για να εξομαλύνει τις τιμές."
 				],
 				"en": [
-					""
+					"The subplots represent daily new cases or daily new cases per 100,000 residents in each area. One common scale on the y-axis is used to facilitate comparisons. Areas are ranked based on the number of new cases or new deaths reported per 100,000 residents, meaning that districts on top currently face severe outbreak.",
+					"The darker line stands for the 7-day moving average of each metric, which is used to smooth values.",
+					"The geographic distribution of deaths derives from announcements to the Press. However, since mid-November, authorities have stopped giving any information about the location in which each death is recorded. Thus, daily deaths are added to the \"No Location Provided\" row, until more information on the geographical distribution of deaths is made public."
 				]
 			},
 			"component": {
@@ -74,19 +84,21 @@
 		},
 		{
 			"title": {
-				"el": "Κρούσματα και θάνατοι ανά περιοχή της Ελλάδας",
-				"en": ""
+				"el": "Τεστ ανά ημέρα στην Ελλάδα",
+				"en": "Testing over time in Greece"
 			},
 			"body": {
 				"el": [
-					"Ο πίνακας ταξινομείται βάσει του αριθμού κρουσμάτων και θανάτων ανά 100.000 κατοίκους. Στο διάγραμμα «Ανά εβδομάδα» αποτυπώνεται χρωματικά η έξαρση κρουσμάτων ή θανάτων ανά περιοχή της χώρας, βάσει του εβδομαδιαίου συνόλου κρουσμάτων και θανάτων ανά 100.000 πληθυσμού. Όσο πιο σκούρο το χρώμα, τόσα περισσότερα τα κρούσματα ή οι θάνατοι εκείνη την εβδομάδα, συγκριτικά με τις προηγούμενες, στην ίδια περιοχή."
+					"Στο διάγραμμα αποτυπώνεται ο εκτιμώμενος ημερήσιος αριθμός δειγμάτων που ελέγχονται στη χώρα. Από προεπιλογή, παρουσιάζονται όλα τα εκτιμώμενα ημερήσια δεδομένα, περιλαμβανομένων εργαστηριακών RT-PCR και Rapid Ag ελέγχων. Επιλέγοντας «RT-PCR» ή «Rapid-Ag», στο γράφημα παρουσιάζεται μόνο η εξέλιξη των αντίστοιχων ελέγχων στον χρόνο.",
+					"Ο ΕΟΔΥ ανακοινώνει, στην ημερήσια έκθεσή του, τους συνολικούς αριθμούς δειγμάτων που έχουν εξεταστεί εργαστηριακά και με ελέγχους Rapid Ag έως την εκάστοτε ημέρα αναφοράς. Ο ημερήσιος αριθμός νέων τεστ που παρουσιάζεται στο γράφημα υπολογίζεται αφαιρώντας κάθε προηγούμενο ημερήσιο σύνολο από κάθε τρέχον. Σε περιόδους όποτε τα εν λόγω δεδομένα δεν ανακοινώνονταν από τις Αρχές σε ημερήσια βάση (ιδίως κατά το πρώτο κύμα της πανδημίας στη χώρα), τα ελλιπή στοιχεία έχουν συμπληρωθεί με τον ημερήσιο μέσο όρο ελεγχθέντων δειγμάτων για τις ημέρες που μεσολαβούν από τον τελευταίο γνωστό συνολικό αριθμό ελέγχων ως τον αμέσως προηγούμενο κάθε φορά."
 				],
 				"en": [
-					""
+					"The chart presents the estimated daily number of samples tested in Greece. By default, it is set to show all estimated daily data, including RT-PCR and Rapid Ag testing data. When “RT-PCR” or “Rapid-Ag” is selected, the chart is adjusted to focus on the respective testing data over time.",
+					"The National Public Health Organization announces the cumulative number of samples tested up to each date of reference in its daily report. The daily number of tests presented here is calculated by subtracting the previously known total test number from the current total test number announced each time. When said data have not been announced by the authorities on a daily basis (especially during the first wave of the pandemic in the country), missing values have been imputed with the daily mean of tested samples within the time period between the latest known total test number and the previous known total test number each time."
 				]
 			},
 			"component": {
-				"id": "greece-tests-by-7d-line",
+				"id": "greece-tests-by-7d-line-events",
 				"embed": true
 			}
 		}
@@ -99,10 +111,12 @@
 			},
 			"body": {
 				"el": [
-					"Ο πίνακας ταξινομείται βάσει του αριθμού κρουσμάτων και θανάτων ανά 100.000 κατοίκους. Στο διάγραμμα «Ανά εβδομάδα» αποτυπώνεται χρωματικά η έξαρση κρουσμάτων ή θανάτων ανά περιοχή της χώρας, βάσει του εβδομαδιαίου συνόλου κρουσμάτων και θανάτων ανά 100.000 πληθυσμού. Όσο πιο σκούρο το χρώμα, τόσα περισσότερα τα κρούσματα ή οι θάνατοι εκείνη την εβδομάδα, συγκριτικά με τις προηγούμενες, στην ίδια περιοχή."
+					"Ο πίνακας ταξινομείται βάσει του αριθμού κρουσμάτων ή θανάτων ανά 100.000 κατοίκους. Στο διάγραμμα «Ανά εβδομάδα», αποτυπώνεται χρωματικά η έξαρση κρουσμάτων ή θανάτων, βάσει του εβδομαδιαίου αντίστοιχου συνόλου, κρουσμάτων ή θανάτων, ανά 100.000 πληθυσμού. Όσο πιο σκούρο το χρώμα, τόσα περισσότερα τα κρούσματα ή οι θάνατοι εκείνη την εβδομάδα, συγκριτικά με τις προηγούμενες, στην ίδια χώρα.",
+					"Πατώντας το κουμπί «Κρούσματα» ή «Θάνατοι» προσαρμόζεται αναλόγως ο πίνακας. Πατώντας στο πεδίο «Σύνολο» αλλάζει η ταξινόμηση βάσει του συνόλου των κρουσμάτων ή των θανάτων. Αντίστοιχα, το ίδιο συμβαίνει πατώντας στο πεδίο «Ανά 100k»."
 				],
 				"en": [
-					""
+					"The table presents COVID-19 cases and deaths by country, sorted by normalized figures per 100,000 residents. The “Weekly” chart represents the outburst of cases and deaths broken down by country, colored by the weekly total number of cases and deaths respectively, per 100,000 residents. The darker the color, the more cases or deaths are reported in each country within the week of reference, compared to previous.",
+					"The table adjusts to “Cases” or “Deaths” by clicking on the relevant buttons and it is sorted by total numbers or by normalized figures, when the “Total” field or the “Per 100K” field is clicked."
 				]
 			},
 			"component": {
@@ -112,15 +126,17 @@
 		},
 		{
 			"title": {
-				"el": "Κρούσματα και θάνατοι ανά περιοχή της Ελλάδας",
-				"en": ""
+				"el": "Η πορεία της πανδημίας στην υφήλιο",
+				"en": "The pandemic over time across the globe"
 			},
 			"body": {
 				"el": [
-					"Ο πίνακας ταξινομείται βάσει του αριθμού κρουσμάτων και θανάτων ανά 100.000 κατοίκους. Στο διάγραμμα «Ανά εβδομάδα» αποτυπώνεται χρωματικά η έξαρση κρουσμάτων ή θανάτων ανά περιοχή της χώρας, βάσει του εβδομαδιαίου συνόλου κρουσμάτων και θανάτων ανά 100.000 πληθυσμού. Όσο πιο σκούρο το χρώμα, τόσα περισσότερα τα κρούσματα ή οι θάνατοι εκείνη την εβδομάδα, συγκριτικά με τις προηγούμενες, στην ίδια περιοχή."
+					"Το γράφημα εμφανίζεται με προεπιλεγμένη την επιλογή «Ημερήσια» και αποτυπώνει αριθμό κρουσμάτων και θανάτων ανά ημέρα στον κόσμο. Η γραμμή με το σκούρο χρώμα καταγράφει τον κυλιόμενο μέσο όρο των τελευταίων 7 ημερών, ο οποίος χρησιμοποιείται για να εξομαλύνει τις τιμές.",
+					"Πατώντας το κουμπί «Αθροιστικά» το γράφημα αποτυπώνει το σύνολο των κρουσμάτων ανά ημέρα, από την αρχή της πανδημίας. Όσο πιο μεγάλη η κλίση της γραμμής του κυλιόμενου μέσου όρου 7 ημερών, τόσο μεγαλύτερος ο ρυθμός μετάδοσης του ιού. Η επιπέδωση της καμπύλης συνεπάγεται μείωση της αύξησης κρουσμάτων ή θανάτων στον κόσμο."
 				],
 				"en": [
-					""
+					"The chart represents the number of cases and deaths reported by date worldwide and it is set to the “Daily” view by default. The darker line stands for the 7-day moving average of each metric, which is used to smooth values.",
+					"When the “Cumulative” button is clicked, the chart represents cumulative numbers of cases by date. The bigger the slope of the 7-day moving average line, the bigger the rise of cases. When the curve is flattened, the rise of cases or deaths is decreasing."
 				]
 			},
 			"component": {
@@ -130,19 +146,21 @@
 		},
 		{
 			"title": {
-				"el": "Κρούσματα και θάνατοι ανά περιοχή της Ελλάδας",
-				"en": ""
+				"el": "Εξέλιξη νέων κρουσμάτων και θανάτων ανά χώρα",
+				"en": "Evolution of new cases and deaths by country"
 			},
 			"body": {
 				"el": [
-					"Ο πίνακας ταξινομείται βάσει του αριθμού κρουσμάτων και θανάτων ανά 100.000 κατοίκους. Στο διάγραμμα «Ανά εβδομάδα» αποτυπώνεται χρωματικά η έξαρση κρουσμάτων ή θανάτων ανά περιοχή της χώρας, βάσει του εβδομαδιαίου συνόλου κρουσμάτων και θανάτων ανά 100.000 πληθυσμού. Όσο πιο σκούρο το χρώμα, τόσα περισσότερα τα κρούσματα ή οι θάνατοι εκείνη την εβδομάδα, συγκριτικά με τις προηγούμενες, στην ίδια περιοχή."
+					"Τα γραφήματα αποτυπώνουν τα νέα κρούσματα ή τους νέους θανάτους ανά 100.000 πληθυσμού ημερησίως σε κάθε χώρα και έχουν όλα την ίδια κλίμακα ώστε να μπορούμε να τις συγκρίνουμε μεταξύ τους. Η σειρά εμφάνισής τους εξαρτάται από τον αριθμό νέων κρουσμάτων ανά 100.000 πληθυσμού. Δηλαδή, στην κορυφή εμφανίζονται οι χώρες που έχουν μεγαλύτερο πρόβλημα.",
+					"Η γραμμή με το σκούρο χρώμα καταγράφει τον κυλιόμενο μέσο όρο των τελευταίων 7 ημερών, ο οποίος χρησιμοποιείται για να εξομαλύνει τις τιμές."
 				],
 				"en": [
-					""
+					"The subplots represent daily new cases or daily new deaths per 100,000 residents in each country. One common scale on the y-axis is used to facilitate comparisons. Countries are ranked based on the number of new cases or new deaths reported per 100,000 residents, meaning that countries on top currently face severe outbreak.",
+					"The darker line stands for the 7-day moving average of each metric, which is used to smooth values."
 				]
 			},
 			"component": {
-				"id": "global-cases-by-7d-line-events",
+				"id": "global-cases-by-7d-line",
 				"embed": true
 			}
 		}
