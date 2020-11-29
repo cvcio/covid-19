@@ -11,7 +11,7 @@
 					</v-col>
 				</v-row>
 				<v-row class="px-4" align="center" no-gutters>
-					<v-col cols="12" class="primary--opac pa-2 mb-1">
+					<v-col cols="12" class="primary--opac pa-2 mb-1" style="position:relative">
 						<h4 class="text-h5 font-weight-bold grey--text">
 							<span class="primary--text" v-if="mapPeriodIDX < 3">{{ new Intl.NumberFormat('el-GR').format(cases.toFixed(2)) }}</span>
 							<span class="primary--text" v-if="mapPeriodIDX === 3">{{ new Intl.NumberFormat('el-GR').format(totalCases.toFixed(2)) }}</span>
@@ -20,8 +20,9 @@
 						<p class="caption small-caption text-uppercase primary--text mb-0">
 							<span v-if="mapPeriodIDX < 3">{{ $tc('cases', 1) | normalizeNFD }} / </span>{{ $t('total cases') | normalizeNFD }}
 						</p>
+						<sparklines v-if="sparks.new_cases.length > 7" class="d-block totals-sparklines" :data="sparks.new_cases" id="totals-gl-cases-sparklines" style="height: 60px;"/>
 					</v-col>
-					<v-col cols="12" class="secondary--opac pa-2">
+					<v-col cols="12" class="secondary--opac pa-2" style="position:relative">
 						<h4 class="text-h5 font-weight-bold grey--text">
 							<span class="secondary--text" v-if="mapPeriodIDX < 3">{{ new Intl.NumberFormat('el-GR').format(deaths.toFixed(2)) }}</span>
 							<span class="secondary--text" v-if="mapPeriodIDX === 3">{{ new Intl.NumberFormat('el-GR').format(totalDeaths.toFixed(2)) }}</span>
@@ -30,6 +31,7 @@
 						<p class="caption small-caption text-uppercase secondary--text mb-0">
 							<span v-if="mapPeriodIDX < 3">{{ $tc('deaths', 1) | normalizeNFD }} / </span>{{ $t('total deaths') | normalizeNFD }}
 						</p>
+						<sparklines v-if="sparks.new_deaths.length > 7" class="d-block totals-sparklines" :data="sparks.new_deaths" id="totals-gg-deaths-sparklines" style="height: 60px;"/>
 					</v-col>
 				</v-row>
 				<v-row class="mt-1 mb-4 px-7 py-0" align="center">
@@ -84,7 +86,8 @@ export default {
 	props: ['tab'],
 	components: {
 		'switch-map-source': require('@/components/content/switch-map-source').default,
-		'autocomplete-map-period': require('@/components/content/autocomplete-map-period').default
+		'autocomplete-map-period': require('@/components/content/autocomplete-map-period').default,
+		sparklines: require('@/components/charts/sparklines').default
 	},
 	computed: {
 		...mapGetters(['locale']),
@@ -106,7 +109,11 @@ export default {
 			active: 0,
 			critical: 0,
 			recovered: 0,
-			tests: 0
+			tests: 0,
+			sparks: {
+				new_cases: [],
+				new_deaths: []
+			}
 		};
 	},
 	mounted () {
@@ -124,6 +131,27 @@ export default {
 					this.critical = sumBy(res, 'total_critical') || 0;
 					this.recovered = sumBy(res, 'total_recovered') || 0;
 					this.tests = sumBy(res, 'total_tests') || 0;
+				});
+			this.$store.dispatch('external/getGlobalAGG', 'all/new_cases,new_deaths' + (this.mapPeriodIDX > 0 ? '/' + this.mapPeriod : ''))
+				.then(res => {
+					const items = res.map(m => {
+						m.new_cases = m.new_cases.map(m => Math.max(0, m));
+						m.new_deaths = m.new_deaths.map(m => Math.max(0, m));
+						return {
+							new_cases: m.new_cases,
+							new_deaths: m.new_deaths
+						};
+					});
+
+					const obj = {
+						new_cases: items.map(m => m.new_cases),
+						new_deaths: items.map(m => m.new_deaths)
+					};
+
+					// eslint-disable-next-line
+					const sum = (r, a) => r.map((b, i) => (a[i] ? a[i] : 0) + (b ? b : 0));
+					this.sparks.new_cases = obj.new_cases.reduce(sum);
+					this.sparks.new_deaths = obj.new_deaths.reduce(sum);
 				});
 		}
 	}
@@ -145,5 +173,12 @@ export default {
 }
 .row.outlined {
 	border: 1px solid #f2f7f7;
+}
+.totals-sparklines {
+	position: absolute;
+	width: 180px;
+	height: 60px;
+	top: 0;
+	right: 0;
 }
 </style>

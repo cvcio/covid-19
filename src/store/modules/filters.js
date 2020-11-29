@@ -7,7 +7,7 @@ export default {
 		mapSource: 'covid',
 		mapKey: 'cases',
 		mapPeriodIDX: 0,
-		mapPeriod: moment().subtract(14, 'days').format('YYYY-MM-DD'),
+		mapPeriod: moment().subtract(7, 'days').format('YYYY-MM-DD'),
 		periodInterval: [
 			{
 				text: { en: 'Last day', el: 'Τελευταία ημέρα' },

@@ -91,7 +91,7 @@ export default {
 			item: null,
 			items: null,
 			calc: 'new',
-			title: { en: '', el: ''}
+			title: { en: '', el: '' }
 		};
 	},
 	mounted () {
@@ -126,7 +126,7 @@ export default {
 							deaths: m.deaths,
 							new_cases: m.new_cases,
 							new_deaths: m.new_deaths,
-							sources: m.sources
+							sources: m.sources.sort()
 						};
 					});
 					const obj = {

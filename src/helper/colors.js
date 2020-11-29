@@ -55,7 +55,7 @@ const testsCS = [
 	'#E6ECEC',
 	'#ECF1F1',
 	'#F2F5F5',
-	'#F8FAFA',
+	'#F8FAFA'
 ].reverse();
 
 const pcrCS = testsCS;

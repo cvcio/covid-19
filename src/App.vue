@@ -81,4 +81,8 @@ canvas {
 .tooltip {
 	z-index: 9999 !important;
 }
+
+.v-btn--active {
+	font-weight: bold;
+}
 </style>

@@ -15,12 +15,16 @@
 					</v-col>
 					<v-spacer/>
 					<v-autocomplete
+						dense
+						outlined
 						color="primary"
 						hide-details
+						class="caption fa-xs"
+						prepend-icon="fa-globe-europe"
 						:items="items"
 						item-text="region" item-value="uid"
 						v-model="search"
-						prepend-icon="fa-globe-europe" @change="doSimilar">
+						@change="doSimilar">
 
 					</v-autocomplete>
 					<v-col class="grow pa-0 text-end justify-end" align-self="center" v-if="!$route.meta.iframe">
@@ -111,7 +115,7 @@ export default {
 			itemsPerPage: 15,
 			search: 'U300',
 			filter: {},
-			title: { en: '', el: ''}
+			title: { en: '', el: '' }
 		};
 	},
 	mounted () {
@@ -133,7 +137,7 @@ export default {
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
 			this.$store.dispatch('external/getGlobalAGG', 'all/all/' + this.periodInterval[3].value)
 				.then(res => {
-					const items = res.map(m => {
+					let items = res.map(m => {
 						m.new_cases = m.new_cases.map(m => Math.max(0, m));
 						m.new_deaths = m.new_deaths.map(m => Math.max(0, m));
 						return {
@@ -142,9 +146,25 @@ export default {
 							dates: getDates(m.from, m.to),
 							cases: m.new_cases,
 							deaths: m.new_deaths,
-							sources: m.sources,
-							population: m.population
+							sources: m.sources.sort(),
+							population: m.population,
+							max_cases: Math.max(...m.new_cases),
+							max_deaths: Math.max(...m.new_deaths),
+							min_cases: Math.min(...m.new_cases),
+							min_deaths: Math.min(...m.new_deaths)
 						};
+					});
+
+					const max_cases = Math.max(...items.map(m => m.max_cases));
+					const max_deaths = Math.max(...items.map(m => m.max_deaths));
+					const min_cases = Math.max(...items.map(m => m.min_cases));
+					const min_deaths = Math.max(...items.map(m => m.min_deaths));
+					items = items.map(m => {
+						m.max_cases = max_cases;
+						m.max_deaths = max_deaths;
+						m.min_cases = min_cases;
+						m.min_deaths = min_deaths;
+						return m;
 					});
 
 					this.items = items.sort((a, b) => a.population - b.population);

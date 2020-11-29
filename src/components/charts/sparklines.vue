@@ -44,7 +44,7 @@ export default {
 
 			const width = div.clientWidth;
 			const height = 60;
-			const margin = { top: 6, left: 6, bottom: 0, right: 24 };
+			const margin = { top: 6, left: 6, bottom: 6, right: 36 };
 			const innerWidth = width - margin.left - margin.right;
 			const innerHeight = height - margin.top - margin.bottom;
 
@@ -112,6 +112,7 @@ export default {
 
 <style lang="less">
 .sparklines {
+	position: relative;
 	display: inline-block;
 	// width: 140px;
 	max-height: 60px;

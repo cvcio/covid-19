@@ -94,7 +94,7 @@ export default {
 			point: 'tests',
 			item: null,
 			calc: 'new',
-			title: { en: '', el: ''}
+			title: { en: '', el: '' }
 		};
 	},
 	mounted () {
@@ -129,9 +129,9 @@ export default {
 						m.new_rapid.unshift(...Array(m.dates.length - m.new_rapid.length).fill(0));
 						m.new_tests.unshift(...Array(m.dates.length - m.new_tests.length).fill(0));
 
-						m.tests = m.new_tests.reduce((a, b, i) => [...a, a.length > 0 ? b + a[i-1] : b], []);
-						m.pcr = m.new_pcr.reduce((a, b, i) => [...a, a.length > 0 ? b + a[i-1] : b], []);
-						m.rapid = m.new_rapid.reduce((a, b, i) => [...a, a.length > 0 ? b + a[i-1] : b], []);
+						m.tests = m.new_tests.reduce((a, b, i) => [...a, a.length > 0 ? b + a[i - 1] : b], []);
+						m.pcr = m.new_pcr.reduce((a, b, i) => [...a, a.length > 0 ? b + a[i - 1] : b], []);
+						m.rapid = m.new_rapid.reduce((a, b, i) => [...a, a.length > 0 ? b + a[i - 1] : b], []);
 
 						return {
 							uid: m.uid,
@@ -143,7 +143,7 @@ export default {
 							tests: m.tests,
 							pcr: m.pcr,
 							rapid: m.rapid,
-							sources: m.sources
+							sources: ['imedd'] // m.sources.sort()
 						};
 					});
 					this.item = this.item[0];

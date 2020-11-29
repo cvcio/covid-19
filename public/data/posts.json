@@ -163,6 +163,24 @@
 				"id": "global-cases-by-7d-line",
 				"embed": true
 			}
+		},
+		{
+			"title": {
+				"el": "Viral",
+				"en": "Viral"
+			},
+			"body": {
+				"el": [
+
+				],
+				"en": [
+
+				]
+			},
+			"component": {
+				"id": "global-new-d7d",
+				"embed": true
+			}
 		}
 	]
 }

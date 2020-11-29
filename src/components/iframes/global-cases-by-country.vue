@@ -153,7 +153,7 @@ export default {
 				}
 			],
 			items: [],
-			title: { en: '', el: ''}
+			title: { en: '', el: '' }
 		};
 	},
 	mounted () {
@@ -198,7 +198,7 @@ export default {
 							cases: m.new_cases,
 							deaths: m.new_deaths,
 							recovered: m.new_recovered,
-							sources: m.sources
+							sources: m.sources.sort()
 						};
 					});
 				});

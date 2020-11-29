@@ -20,8 +20,9 @@
 						<p class="caption small-caption text-uppercase primary--text mb-0">
 							<span v-if="mapPeriodIDX < 3">{{ $tc('cases', 1) | normalizeNFD }} / </span>{{ $t('total cases') | normalizeNFD }}
 						</p>
+						<sparklines v-if="sparks.new_cases.length > 7" class="d-block totals-sparklines" :data="sparks.new_cases" id="totals-g-cases-sparklines" style="height: 60px;"/>
 					</v-col>
-					<v-col cols="12" class="secondary--opac pa-2">
+					<v-col cols="12" class="secondary--opac pa-2" style="position:relative">
 						<h4 class="text-h5 font-weight-bold grey--text">
 							<span class="secondary--text" v-if="mapPeriodIDX < 3">{{ new Intl.NumberFormat('el-GR').format(deaths.toFixed(2)) }}</span>
 							<span class="secondary--text" v-if="mapPeriodIDX === 3">{{ new Intl.NumberFormat('el-GR').format(totalDeaths.toFixed(2)) }}</span>
@@ -30,6 +31,7 @@
 						<p class="caption small-caption text-uppercase secondary--text mb-0">
 							<span v-if="mapPeriodIDX < 3">{{ $tc('deaths', 1) | normalizeNFD }} / </span>{{ $t('total deaths') | normalizeNFD }}
 						</p>
+						<sparklines v-if="sparks.new_deaths.length > 7" class="d-block totals-sparklines" :data="sparks.new_deaths" id="totals-g-deaths-sparklines" style="height: 60px;"/>
 					</v-col>
 				</v-row>
 				<v-row class="mt-1 mb-4 px-7 py-0" align="center">
@@ -178,7 +180,8 @@ export default {
 	props: ['tab'],
 	components: {
 		'switch-map-source': require('@/components/content/switch-map-source').default,
-		'autocomplete-map-period': require('@/components/content/autocomplete-map-period').default
+		'autocomplete-map-period': require('@/components/content/autocomplete-map-period').default,
+		sparklines: require('@/components/charts/sparklines').default
 	},
 	computed: {
 		...mapGetters(['locale']),
@@ -202,7 +205,11 @@ export default {
 			recovered: 0,
 			tests: 0,
 			new_cases: [],
-			new_deaths: []
+			new_deaths: [],
+			sparks: {
+				new_cases: [],
+				new_deaths: []
+			}
 		};
 	},
 	mounted () {
@@ -225,6 +232,12 @@ export default {
 					this.recovered = sumBy(res, 'total_recovered') || 0;
 					this.tests = sumBy(res, 'total_tests') || 0;
 				});
+
+			this.$store.dispatch('external/getGlobalAGG', 'GRC/new_cases,new_deaths' + (this.mapPeriodIDX > 0 ? '/' + this.mapPeriod : ''))
+				.then(res => {
+					this.sparks.new_cases = res[0].new_cases.length > 1 ? res[0].new_cases : [];
+					this.sparks.new_deaths = res[0].new_deaths.length > 1 ? res[0].new_deaths : [];
+				});
 		}
 	}
 };
@@ -245,5 +258,13 @@ export default {
 }
 .row.outlined {
 	border: 1px solid #f2f7f7;
+}
+
+.totals-sparklines {
+	position: absolute;
+	width: 180px;
+	height: 60px;
+	top: 0;
+	right: 0;
 }
 </style>

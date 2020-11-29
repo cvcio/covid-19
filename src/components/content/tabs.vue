@@ -17,16 +17,26 @@
 							fa-sliders-h
 						</v-icon>
 					</v-btn>
-					<v-tab :ripple="false" class="white tab-item"
-						:class="$vuetify.breakpoint.smAndDown ? '' : 'mr-1 rounded-t elevation-2'"
+					<v-tab :ripple="false" class="tab-item" active-class="font-weight-bold" :value="0"
+						:class="
+							[
+								($vuetify.breakpoint.smAndDown ? '' : 'mr-1 rounded-t elevation-2'),
+								(active === 0 ? 'white' : 'grey lighten-4 grey--text'),
+							].join(' ')
+						"
 						@click="$store.state.filters.mapLevel = 'greece'">{{ $t('view.greece') | normalizeNFD }}</v-tab>
-					<v-tab :ripple="false" class="white tab-item"
-						:class="$vuetify.breakpoint.smAndDown ? '' : 'ml-1 rounded-t elevation-2'"
+					<v-tab :ripple="false" class="tab-item" active-class="font-weight-bold" :value="1"
+						:class="
+							[
+								($vuetify.breakpoint.smAndDown ? '' : 'ml-1 rounded-t elevation-2'),
+								(active === 1 ? 'white' : 'grey lighten-4 grey--text'),
+							].join(' ')
+						"
 						@click="$store.state.filters.mapLevel = 'global'">{{ $t('view.global') | normalizeNFD }}</v-tab>
 				</v-tabs>
 				<v-tabs-items v-model="tab">
-					<tab-item-greece :tab="tab"/>
-					<tab-item-global :tab="tab"/>
+					<tab-item-greece :tab="0"/>
+					<tab-item-global :tab="1"/>
 				</v-tabs-items>
 			</v-card>
 		</v-col>
@@ -45,9 +55,17 @@ export default {
 	computed: {
 		...mapGetters(['locale', 'sidebar', 'lastUpdatedAt'])
 	},
+	watch: {
+		tab (newValue, old) {
+			if (newValue !== old) {
+				this.active = newValue;
+			}
+		}
+	},
 	data () {
 		return {
-			tab: null
+			tab: 0,
+			active: 0
 		};
 	}
 };

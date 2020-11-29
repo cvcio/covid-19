@@ -126,7 +126,7 @@ export default {
 			page: 1,
 			numberOfPages: 0,
 			itemsPerPage: 15,
-			title: { en: '', el: ''}
+			title: { en: '', el: '' }
 		};
 	},
 	mounted () {
@@ -148,7 +148,7 @@ export default {
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
 			this.$store.dispatch('external/getGreeceAGG', 'all/all/' + this.periodInterval[3].value)
 				.then(res => {
-					const items = res.map(m => {
+					let items = res.map(m => {
 						m.new_cases = m.new_cases.map(m => Math.max(0, m));
 						m.new_deaths = m.new_deaths.map(m => Math.max(0, m));
 						const totalCases = sum(m.new_cases);
@@ -165,11 +165,28 @@ export default {
 							dates: getDates(m.from, m.to),
 							cases: m.new_cases,
 							deaths: m.new_deaths,
-							sources: m.sources
+							sources: m.sources.sort(),
+
+							max_cases: Math.max(...m.new_cases),
+							max_deaths: Math.max(...m.new_deaths),
+							min_cases: Math.min(...m.new_cases),
+							min_deaths: Math.min(...m.new_deaths)
 						};
 					});
 
-					this.items = items.filter(m => m.totalDeaths > 0).sort((a, b) => b.totalCases - a.totalCases);
+					const max_cases = Math.max(...items.map(m => m.max_cases));
+					const max_deaths = Math.max(...items.map(m => m.max_deaths));
+					const min_cases = Math.max(...items.map(m => m.min_cases));
+					const min_deaths = Math.max(...items.map(m => m.min_deaths));
+					items = items.map(m => {
+						m.max_cases = max_cases;
+						m.max_deaths = max_deaths;
+						m.min_cases = min_cases;
+						m.min_deaths = min_deaths;
+						return m;
+					});
+
+					this.items = items; // items.filter(m => m.totalDeaths > 0).sort((a, b) => b.totalCases - a.totalCases);
 					this.numberOfPages = Math.ceil(this.items.length / this.itemsPerPage);
 				});
 		},

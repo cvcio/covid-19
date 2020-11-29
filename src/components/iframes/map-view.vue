@@ -144,7 +144,7 @@ export default {
 	},
 	watch: {
 		mapLevel (value, old) {
-			if (value !== old) {
+			if (value !== old && this.map) {
 				// this.resetFilters();
 				this.load();
 				this.updatePosition(

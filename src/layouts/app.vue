@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<app-bar />
-		<v-navigation-drawer app floating :value="sidebar" color="" width="95%" temporary>
+		<v-navigation-drawer app floating :value="sidebar" color="" width="95%" temporary v-if="$vuetify.breakpoint.smAndDown">
 			<v-container fluid class="pa-0 mt-0">
 				<v-row no-gutters class="no-events">
 					<tabs class="no-events"/>

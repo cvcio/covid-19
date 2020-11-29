@@ -36,7 +36,7 @@ import * as colors from '@/helper/colors';
 
 export default {
 	name: 'chart-d7-line-bar',
-	props: ['id', 'dates', 'values', 'point', 'sources'],
+	props: ['id', 'dates', 'values', 'point', 'sources', 'min', 'max'],
 	computed: {
 		...mapGetters(['locale'])
 	},
@@ -97,7 +97,8 @@ export default {
 			const barW = Math.floor(width / data.length) - 0.5;
 
 			const x = scaleLinear().range([0, innerWidth]).domain([0, data.length]);
-			const y = scaleLinear().range([innerHeight, 0]).domain([0, max(this.values)]).nice(10);
+			// const y = scaleLinear().range([innerHeight, 0]).domain([0, max(this.values)]).nice(10);
+			const y = scaleLinear().range([innerHeight, 0]).domain([0, Math.max(max(this.values), 1)]).nice(10);
 
 			const l = line()
 				.x((d, i) => x(i))

@@ -67,7 +67,7 @@ export default {
 		return {
 			point: 'critical',
 			item: null,
-			title: { en: '', el: ''}
+			title: { en: '', el: '' }
 		};
 	},
 	mounted () {
@@ -100,7 +100,7 @@ export default {
 							region: m.country,
 							dates: getDates(m.from, m.to),
 							critical: m.critical,
-							sources: m.sources
+							sources: ['imedd'] // m.sources.sort()
 						};
 					});
 

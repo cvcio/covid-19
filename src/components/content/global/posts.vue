@@ -29,7 +29,8 @@ export default {
 	components: {
 		'global-cases-by-country': require('@/components/iframes/global-cases-by-country').default,
 		'global-cases-by-7d-line-no-events': require('@/components/iframes/global-cases-by-7d-line-no-events').default,
-		'global-cases-by-7d-line': require('@/components/iframes/global-cases-by-7d-line').default
+		'global-cases-by-7d-line': require('@/components/iframes/global-cases-by-7d-line').default,
+		'global-new-d7d': require('@/components/iframes/global-new-d7d').default
 	},
 	computed: {
 		...mapGetters(['locale']),

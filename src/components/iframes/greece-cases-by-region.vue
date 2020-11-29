@@ -152,7 +152,7 @@ export default {
 			],
 			items: [],
 			itemsPerPage: 15,
-			title: { en: '', el: ''}
+			title: { en: '', el: '' }
 		};
 	},
 	mounted () {
@@ -174,7 +174,6 @@ export default {
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
 			this.$store.dispatch('external/getGreeceAGG', 'all/new_cases,new_deaths/' + this.periodInterval[3].value)
 				.then(res => {
-					console.log(this.posts);
 					this.items = res.map(m => {
 						m.new_cases = m.new_cases.map(m => Math.max(0, m));
 						m.new_deaths = m.new_deaths.map(m => Math.max(0, m));
@@ -192,7 +191,7 @@ export default {
 							dates: getDates(m.from, m.to),
 							cases: m.new_cases,
 							deaths: m.new_deaths,
-							sources: m.sources
+							sources: m.sources.sort()
 						};
 					});
 				});

@@ -3,30 +3,21 @@
 		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'">
 			<v-container class="pa-0 ma-0" fluid>
 				<v-row class="pa-0 ma-0" justify="space-between">
-					<v-col  class="pa-0 shrink" align-self="center">
-						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory>
-							<v-btn x-small class="primary--text" value="cases">
-								{{( $vuetify.breakpoint.smAndDown ? $tc('cases', 1).substr(1, 1) : $tc('cases', 1)) | normalizeNFD }}
-							</v-btn>
-							<v-btn x-small class="primary--text" value="deaths">
-								{{( $vuetify.breakpoint.smAndDown ? $tc('deaths', 1).substr(1, 1) : $tc('deaths', 1)) | normalizeNFD }}
-							</v-btn>
-						</v-btn-toggle>
-					</v-col>
-					<v-col  class="pa-0 shrink" align-self="center">
-						<v-btn-toggle dense class="mr-2" rounded v-model="calc" mandatory>
-							<v-btn x-small class="primary--text" value="new">
-								{{( $vuetify.breakpoint.smAndDown ? $tc('D', 1).substr(1, 1) : $tc('Daily', 1)) | normalizeNFD }}
-							</v-btn>
-							<v-btn x-small class="primary--text" value="sum">
-								{{( $vuetify.breakpoint.smAndDown ? $tc('C', 1).substr(1, 1) : $tc('Cumulative', 1)) | normalizeNFD }}
-							</v-btn>
-						</v-btn-toggle>
-					</v-col>
+					<v-spacer/>
+					<v-autocomplete
+						dense
+						outlined
+						color="primary"
+						hide-details
+						class="caption fa-xs"
+						prepend-icon="fa-globe-europe"
+						:items="items"
+						item-text="region" item-value="uid"
+						v-model="search"
+						@change="doSimilar">
+
+					</v-autocomplete>
 					<v-col class="pa-0 grow text-end" align-self="center" v-if="!$route.meta.iframe">
-						<!-- <v-btn x-small fab color="grey" dark class="mx-2 elevation-0" @click="update">
-							<v-icon x-small>fa-redo</v-icon>
-						</v-btn> -->
 						<v-btn x-small fab color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
 							<v-icon x-small>fa-code</v-icon>
 						</v-btn>
@@ -41,10 +32,9 @@
 					cols="12"
 					class="px-4"
 				>
-				<d7-line-bar-events v-if="item"
-					:key="'gcb7l-' + item.uid + '-' + calc + '-' + point" :id="'gcb7l-uid-' + item.uid + '-' + calc + '-' + point"
-					:point="point" :values="item[calc === 'new' ? 'new_' + point : point]"
-					:dates="item.dates" :annotations="annotations" :sources="item.sources"/>
+				<d7d-lines v-if="similar && search"
+					:point="point" :uid="search"
+					:key="'gnd7d'" :id="'gnd7d'" :data="similar"/>
 				</v-col>
 			</v-row>
 		</v-container>
@@ -63,16 +53,16 @@
 <script>
 import { mapGetters } from 'vuex';
 import { getDates } from '@/utils';
+import { sum } from 'lodash';
 
 export default {
-	name: 'greece-cases-by-7d-line-events',
+	name: 'global-new-d7d',
 	components: {
-		'd7-line-bar-events': require('@/components/charts/d7-line-bar-events').default
+		'd7d-lines': require('@/components/charts/d7d-lines').default
 	},
 	computed: {
 		...mapGetters(['locale']),
 		...mapGetters('filters', ['periodInterval']),
-		...mapGetters('internal', ['annotations']),
 		...mapGetters('internal', ['posts']),
 		embed () {
 			return {
@@ -82,22 +72,21 @@ export default {
 				mapLevel: null,
 				period: null,
 				lang: this.locale.code,
-				id: 'greece-cases-by-7d-line-events'
+				id: 'global-new-d7d'
 			};
 		}
 	},
 	data () {
 		return {
-			point: 'cases',
+			point: 'new_deaths',
 			item: null,
-			calc: 'new',
+			items: [],
+			similar: null,
+			search: 'U300',
 			title: { en: '', el: '' }
 		};
 	},
 	mounted () {
-		if (this.annotations.length === 0) {
-			this.$store.dispatch('internal/getAnnotations');
-		}
 		if (this.posts.global.length === 0) {
 			this.$store.dispatch('internal/getPosts')
 				.then(() => {
@@ -114,26 +103,33 @@ export default {
 		},
 		load () {
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
-			this.$store.dispatch('external/getGlobalAGG', 'GRC/all/' + this.periodInterval[3].value)
+			this.$store.dispatch('external/getGlobalAGG', 'all/new_deaths,cases/' + this.periodInterval[3].value)
 				.then(res => {
-					this.item = res.map(m => {
-						m.new_cases = m.new_cases.map(m => Math.max(0, m));
+					const items = res.map(m => {
 						m.new_deaths = m.new_deaths.map(m => Math.max(0, m));
-						m.cases = m.cases.map(m => Math.max(0, m));
-						m.deaths = m.deaths.map(m => Math.max(0, m));
+						m.new_deaths = m.new_deaths.map(n => m.population > 0 ? (n / m.population) * 100000 : 0);
+						m.dates = getDates(m.from, m.to);
+						m.new_deaths.pop();
+						m.dates.pop();
 						return {
-							uid: m.uid,
-							region: m.country,
-							dates: getDates(m.from, m.to),
-							cases: m.cases,
-							deaths: m.deaths,
-							new_cases: m.new_cases,
+							uid: 'U' + m.uid,
+							region: this.$t(m.country),
+							population: m.population,
+							dates: m.dates,
 							new_deaths: m.new_deaths,
-							sources: m.sources.sort()
+							sources: m.sources.sort(),
+							lastIndex: (sum(m.new_deaths.slice(m.new_deaths.length - 3, m.new_deaths.length - 1)) / m.population) * 100000
 						};
 					});
-					this.item = this.item[0];
+					this.items = items.sort((a, b) => a.lastIndex - b.lastIndex);
+					this.doSimilar();
 				});
+		},
+		doSimilar (uid) {
+			const idx = this.items.findIndex(m => m.uid === this.search);
+			const next7 = this.items.slice(idx + 1, idx + 4);
+			const prev7 = this.items.slice(idx - 4, idx - 1);
+			this.similar = [...prev7, ...next7, this.items[idx]];
 		},
 		update () {
 			this.load();
