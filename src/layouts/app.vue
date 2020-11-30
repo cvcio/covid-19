@@ -29,6 +29,7 @@
 				<v-icon color="primary" small class="mb-1">fa-globe</v-icon>
 			</v-btn>
 		</v-bottom-navigation>
+		<embed-dialog/>
 	</div>
 </template>
 
@@ -40,7 +41,8 @@ export default {
 	components: {
 		'app-bar': require('@/components/app/app-bar').default,
 		'app-footer': require('@/components/app/app-footer').default,
-		tabs: require('@/components/content/tabs').default
+		tabs: require('@/components/content/tabs').default,
+		'embed-dialog': require('@/components/content/embeds/dialog').default
 	},
 	computed: {
 		...mapGetters(['sidebar'])

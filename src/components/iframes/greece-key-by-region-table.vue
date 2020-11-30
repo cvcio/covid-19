@@ -167,6 +167,7 @@ export default {
 	},
 	methods: {
 		setEmbed () {
+			console.log(this.embed)
 			this.$store.commit('setEmbedDialog', true);
 			this.$store.commit('setEmbed', this.embed);
 		},

@@ -10,7 +10,6 @@
 			</v-row>
 		</v-container>
 		<content-list :showAltNav="showAltNav" v-if="!$vuetify.breakpoint.smAndDown"/>
-		<embed-dialog/>
 	</v-container>
 </template>
 
@@ -23,8 +22,7 @@ export default {
 		'app-header': require('@/components/app/app-header').default,
 		tabs: require('@/components/content/tabs').default,
 		'content-list': require('@/components/content/content-list').default,
-		'map-view': require('@/components/iframes/map-view').default,
-		'embed-dialog': require('@/components/content/embeds/dialog').default
+		'map-view': require('@/components/iframes/map-view').default
 	},
 	computed: {
 		...mapGetters(['locale'])
