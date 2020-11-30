@@ -13,7 +13,7 @@
 					</template>
 				</v-col>
 				<v-col cols="12" md="8">
-					<component v-bind:is="post.component.id" />
+					<component :delay="250 * idx" v-bind:is="post.component.id" />
 				</v-col>
 			</v-row>
 			<v-divider v-if="idx < posts.global.length - 1" :key="'divider-'+idx"/>

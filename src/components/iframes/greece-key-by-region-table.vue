@@ -94,6 +94,11 @@ import { getDates } from '@/utils';
 
 export default {
 	name: 'greece-key-by-region-table',
+	props: {
+		delay: {
+			default: 100
+		}
+	},
 	components: {
 		heatbar: require('@/components/charts/heatbar').default
 	},
@@ -156,16 +161,21 @@ export default {
 		};
 	},
 	mounted () {
-		if (this.posts.global.length === 0) {
-			this.$store.dispatch('internal/getPosts')
-				.then(() => {
-					this.load();
-				});
-		} else {
-			this.load();
-		}
+		setTimeout(() => {
+			this.preload();
+		}, this.delay);
 	},
 	methods: {
+		preload () {
+			if (this.posts.greece.length === 0) {
+				this.$store.dispatch('internal/getPosts')
+					.then(() => {
+						this.load();
+					});
+			} else {
+				this.load();
+			}
+		},
 		setEmbed () {
 			console.log(this.embed);
 			this.$store.commit('setEmbedDialog', true);

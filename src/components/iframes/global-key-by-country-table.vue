@@ -96,6 +96,11 @@ import { getDates } from '@/utils';
 
 export default {
 	name: 'global-key-by-country-table',
+	props: {
+		delay: {
+			default: 100
+		}
+	},
 	components: {
 		heatbar: require('@/components/charts/heatbar').default
 	},
@@ -157,16 +162,21 @@ export default {
 		};
 	},
 	mounted () {
-		if (this.posts.global.length === 0) {
-			this.$store.dispatch('internal/getPosts')
-				.then(() => {
-					this.load();
-				});
-		} else {
-			this.load();
-		}
+		setTimeout(() => {
+			this.preload();
+		}, this.delay);
 	},
 	methods: {
+		preload () {
+			if (this.posts.global.length === 0) {
+				this.$store.dispatch('internal/getPosts')
+					.then(() => {
+						this.load();
+					});
+			} else {
+				this.load();
+			}
+		},
 		setEmbed () {
 			this.$store.commit('setEmbedDialog', true);
 			this.$store.commit('setEmbed', this.embed);

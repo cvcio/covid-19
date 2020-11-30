@@ -86,6 +86,11 @@ import { getDates } from '@/utils';
 
 export default {
 	name: 'global-key-subplot-countries',
+	props: {
+		delay: {
+			default: 100
+		}
+	},
 	components: {
 		'd7-line-bar': require('@/components/charts/d7-line-bar').default
 	},
@@ -119,16 +124,21 @@ export default {
 		};
 	},
 	mounted () {
-		if (this.posts.global.length === 0) {
-			this.$store.dispatch('internal/getPosts')
-				.then(() => {
-					this.load();
-				});
-		} else {
-			this.load();
-		}
+		setTimeout(() => {
+			this.preload();
+		}, this.delay);
 	},
 	methods: {
+		preload () {
+			if (this.posts.global.length === 0) {
+				this.$store.dispatch('internal/getPosts')
+					.then(() => {
+						this.load();
+					});
+			} else {
+				this.load();
+			}
+		},
 		setEmbed () {
 			this.$store.commit('setEmbedDialog', true);
 			this.$store.commit('setEmbed', this.embed);

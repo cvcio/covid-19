@@ -204,7 +204,6 @@ export default {
 		beforeDestroy () {
 			if (!this.map) return;
 			this.map.off('load', this.onLoad);
-			this.map.off('data', this.onData);
 			this.map.off('mouseenter', 'covid', this.onMouseEnter);
 			this.map.off('mouseleave', 'covid', this.onMouseLeave);
 			this.map = null;
@@ -262,10 +261,6 @@ export default {
 										region: m.region,
 										value: x
 									};
-									// return `
-									// 	<h4 class="caption grey--text">${this.$t(m.region)}: <span class="text-uppercase font-weight-bold">
-									// 	${new Intl.NumberFormat('el-GR').format(x.toFixed(2))}</span></h4>
-									// `;
 								});
 							}
 
@@ -361,9 +356,6 @@ export default {
 				id: 'covid',
 				type: 'fill',
 				source: 'covid',
-				// layout: {
-				// 	visibility: this.level === 'admin-0' ? 'visible' : 'none'
-				// },
 				paint: {
 					'fill-color': {
 						type: 'identity',
@@ -388,12 +380,8 @@ export default {
 				},
 				filter: ['in', 'uid', '']
 			}, this.bottomLayer);
-			// , this.bottomLayer
 			this.map.on('mousemove', 'covid', this.onMouseEnter);
 			this.map.on('mouseleave', 'covid', this.onMouseLeave);
-		},
-		onData () {
-			// if (!this.map) return;
 		},
 		onMouseEnter (e) {
 			if (!this.map) return;
@@ -421,14 +409,11 @@ export default {
 			}
 		},
 		onMouseLeave () {
-			// if (!this.map) return;
+			if (!this.map) return;
 
 			this.map.getCanvas().style.cursor = '';
 			this.tooltip = false;
 			this.point = null;
-		},
-		onClick () {
-			// if (!this.map) return;
 		},
 		updatePosition (coords = [23.7208298, 37.9908697], zoom = 5.5) {
 			if (!this.map) return;
@@ -436,15 +421,8 @@ export default {
 			this.map.flyTo({
 				center: coords,
 				zoom: zoom,
-				essential: true
-				// padding: { top: 0, bottom: 0, right: 0, left: !this.$vuetify.breakpoint.smAndDown ? Math.floor((window.innerWidth / 2) - 240) : 0 }
+				// speed: this.$vuetify.breakpoint.smAndDown ? 0 : 5
 			});
-		},
-		updateData () {
-			// if (!this.map) return;
-		},
-		toggleLayers () {
-			// if (!this.map) return;
 		}
 	}
 };

@@ -69,6 +69,11 @@ import { getDates } from '@/utils';
 
 export default {
 	name: 'greece-tests-daily-agg-bar',
+	props: {
+		delay: {
+			default: 100
+		}
+	},
 	components: {
 		'd7-line-bar-events': require('@/components/charts/d7-line-bar-events').default
 	},
@@ -98,19 +103,21 @@ export default {
 		};
 	},
 	mounted () {
-		if (this.annotations.length === 0) {
-			this.$store.dispatch('internal/getAnnotations');
-		}
-		if (this.posts.global.length === 0) {
-			this.$store.dispatch('internal/getPosts')
-				.then(() => {
-					this.load();
-				});
-		} else {
-			this.load();
-		}
+		setTimeout(() => {
+			this.preload();
+		}, this.delay);
 	},
 	methods: {
+		preload () {
+			if (this.posts.greece.length === 0) {
+				this.$store.dispatch('internal/getPosts')
+					.then(() => {
+						this.load();
+					});
+			} else {
+				this.load();
+			}
+		},
 		setEmbed () {
 			this.$store.commit('setEmbedDialog', true);
 			this.$store.commit('setEmbed', this.embed);

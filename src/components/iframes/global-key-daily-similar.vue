@@ -60,6 +60,11 @@ import { sum } from 'lodash';
 
 export default {
 	name: 'global-key-daily-similar',
+	props: {
+		delay: {
+			default: 100
+		}
+	},
 	components: {
 		'd7d-lines': require('@/components/charts/d7d-lines').default
 	},
@@ -89,16 +94,21 @@ export default {
 		};
 	},
 	mounted () {
-		if (this.posts.global.length === 0) {
-			this.$store.dispatch('internal/getPosts')
-				.then(() => {
-					this.load();
-				});
-		} else {
-			this.load();
-		}
+		setTimeout(() => {
+			this.preload();
+		}, this.delay);
 	},
 	methods: {
+		preload () {
+			if (this.posts.global.length === 0) {
+				this.$store.dispatch('internal/getPosts')
+					.then(() => {
+						this.load();
+					});
+			} else {
+				this.load();
+			}
+		},
 		setEmbed () {
 			this.$store.commit('setEmbedDialog', true);
 			this.$store.commit('setEmbed', this.embed);
