@@ -6,7 +6,13 @@
 				($route.meta.iframe ? '' : ''),
 			].join(' ')
 		">
-		<v-btn-toggle class="key-toggle elevation-2" rounded mandatory dense v-model="mapKey" :class="$route.meta.iframe ? 'mt-n12 frame' : ''">
+		<v-btn-toggle class="key-toggle elevation-2" rounded mandatory dense v-model="mapKey"
+			:class="
+				[
+					($vuetify.breakpoint.smAndDown ? 'mobile' : 'desktop'),
+					($route.meta.iframe ? 'mt-n12 frame' : ''),
+				].join(' ')
+			">
 			<v-btn text small class="font-weight-bold" value="cases">
 				{{ $tc("cases", 1) | normalizeNFD }}
 			</v-btn>
@@ -467,6 +473,12 @@ export default {
 		&.frame {
 			left: 24px;
 			transform: translate(0, 0);
+		}
+
+		&.mobile {
+			top: 172px;
+			left: 50%;
+			transform: translate(-50%, 0);
 		}
 	}
 
