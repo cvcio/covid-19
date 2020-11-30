@@ -4,8 +4,7 @@
 			<v-card-title class="headline white pt-6 mb-0">
 				{{ $t('Embed Code')}}
 			</v-card-title>
-			<v-card-text class="mt-4 body-1">
-				{{ $t('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.') }}
+			<v-card-text class="mt-4 body-1" v-html="$t('embed.body')">
 			</v-card-text>
 			<v-card-subtitle class="white mb-0 py-0">
 				{{ $t('Customize View')}}

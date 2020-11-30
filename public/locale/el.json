@@ -19,5 +19,6 @@
 	"note.widget.hospitals": "note.widget.hospitals",
 	"button.in.greece": "Αναλύσεις για την Ελλάδα",
 	"button.in.world": "Αναλύσεις για τον Κόσμο",
-	"label.period": "χρονική περίοδος"
+	"label.period": "χρονική περίοδος",
+	"embed.body": "Με τον παρακάνω κώδικα μπορείτε να ενσωματώσετε τον χάρτη ή το γράφημα που επιθυμείτε στην ιστοσελίδα σας. Εάν παρατηρήσετε προβλήματα στην ενσωμάτωση, επικοινωνήστε μαζί μας στο <a href=\"mailto:lab@imedd.org\" target=\"_blank\">lab@imedd.org</a> ή χρησιμοποιήστε τη <a href=\"https://www.imedd.org/el/contact/\" target=\"_blank\">φόρμα επικοινωνίας</a> με το iMEdD."
 }

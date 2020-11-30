@@ -19,5 +19,6 @@
 	"note.widget.hospitals": "Activate this filter to see ...",
 	"button.in.greece": "INSIGHTS ON GREECE",
 	"button.in.world": "INSIGHTS ON THE WORLD",
-	"label.period": "time period"
+	"label.period": "time period",
+	"embed.body": "With the code bellow you may integrate the map or the chart you are interested in, on your website. If you notice problems with integration, contact us at <a href=\"mailto:lab@imedd.org\" target=\"_blank\">lab@imedd.org</a> or use the <a href=\"https://www.imedd.org/el/contact/\" target=\"_blank\">contact form</a> at iMEdD."
 }

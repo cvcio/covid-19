@@ -161,7 +161,7 @@ export default {
 					self.py = e.clientY;
 					self.d = d;
 					select(this)
-						.attr('fill', colors[self.point + 'CS'][10]);
+						.attr('fill', colors[self.point + 'CS'][9]);
 				})
 				.on('mouseout', function () {
 					self.tooltip = false;
@@ -171,7 +171,7 @@ export default {
 
 			this.chart.append('path').datum(sma)
 				.attr('fill', 'none')
-				.attr('stroke', colors[this.point + 'CS'][10])
+				.attr('stroke', colors[this.point + 'CS'][9])
 				.attr('stroke-width', 2)
 				.attr('d', l);
 
@@ -192,9 +192,8 @@ export default {
 						dy: 80 - y(data[idx].value),
 						dx: 200 - x(idx),
 						subject: { radius: 8 },
-						color: m.importance > 10 ? 'black' : 'lightgrey',
+						color: m.importance > 10 ? 'black' : 'grey',
 						connector: {
-							end: 'dot',
 							type: 'line',
 							lineType: 'horizontal',
 							endScale: 1
@@ -214,6 +213,13 @@ export default {
 					});
 				this.chart.append('g').call(makeAnnotations);
 				this.chart.selectAll('g.annotation-connector, g.annotation-note').classed('hidden', true);
+				this.chart.selectAll('.connector')
+				.attr('stroke', colors.testsCS[7])
+				.style('stroke-dasharray', ('3, 3'));
+
+				this.chart.selectAll('.connector-end')
+					.attr('stroke', colors.testsCS[7])
+					.attr('fill', colors.testsCS[7]);
 			}
 		}
 	}

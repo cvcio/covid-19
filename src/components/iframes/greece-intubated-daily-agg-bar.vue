@@ -19,7 +19,7 @@
 					class="px-4"
 				>
 				<d7-line-bar-events v-if="item"
-					:key="'gcb7l-' + item.uid + '-' + point" :id="'gcb7l-uid-' + item.uid + '-' + point"
+					:key="'gidagb-' + item.uid + '-' + point" :id="'gidagb-uid-' + item.uid + '-' + point"
 					:point="point" :values="item[point]"
 					:dates="item.dates" :annotations="annotations" :sources="item.sources"/>
 				</v-col>
