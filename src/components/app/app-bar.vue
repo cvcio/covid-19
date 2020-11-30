@@ -3,7 +3,7 @@
 		<v-app-bar-nav-icon @click="$store.commit('setSidebar', !sidebar)" v-if="$vuetify.breakpoint.smAndDown">
 			<v-icon small color="primary">fa-sliders-h</v-icon>
 		</v-app-bar-nav-icon>
-		<router-link to="/" style="width:100%;">
+		<router-link to="/" style="width: 178px;">
 			<logo-imedd-lab/>
 		</router-link>
 		<v-spacer/>

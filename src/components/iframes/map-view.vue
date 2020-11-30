@@ -497,7 +497,7 @@ export default {
 		position: absolute;
 		top: 0;
 		left: 0;
-		transform: translate(-50%, -120%);
+		transform: translate(-50%, -105%);
 
 		.arrow_box:after {
 			top: 100%;
