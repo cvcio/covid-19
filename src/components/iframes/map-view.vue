@@ -3,7 +3,7 @@
 		:class="
 			[
 				($vuetify.breakpoint.smAndDown ? 'mobile' : 'desktop'),
-				($route.meta.iframe ? '' : ''),
+				($route.meta.iframe ? 'frame' : ''),
 			].join(' ')
 		">
 		<v-btn-toggle class="key-toggle elevation-2" rounded mandatory dense v-model="mapKey"
@@ -24,7 +24,7 @@
 			</v-btn> -->
 		</v-btn-toggle>
 
-		<v-btn v-if="$route.meta.iframe" small class="font-weight-bold link-to-map mt-7 text-inherit white" rounded target="_blank" href="https://lab.imedd.org/" >
+		<v-btn v-if="$route.meta.iframe" small class="font-weight-bold link-to-map mt-5 text-inherit white" rounded target="_blank" href="https://lab.imedd.org/" >
 			<v-icon x-small class="mr-2" color="primary">fa-link</v-icon><span class="font-weight-bold">IMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
 		</v-btn>
 
@@ -314,10 +314,12 @@ export default {
 		},
 		draw () {
 			mapboxgl.accessToken = 'pk.eyJ1IjoiYW5kZWZpbmVkIiwiYSI6ImNpcWY2OHN5bDAwOHZpMWt4ODV2a2EzdnUifQ.q-XTbW4kXMSRhT5alQ2J4g';
+			let zoom = this.mapLevel === 'greece' ? 5.5 : 2.5;
+			zoom = this.$vuetify.breakpoint.mdAndDown ? 5 : 1;
 			this.map = new mapboxgl.Map({
 				container: 'map',
 				style: 'mapbox://styles/mapbox/light-v10',
-				zoom: this.mapLevel === 'greece' ? 5.5 : 2.5,
+				zoom: zoom,
 				center: this.mapLevel === 'greece' ? [23.7208298, 37.9908697] : [0, 30],
 				maxZoom: 15,
 				minZoom: 1,
@@ -438,12 +440,11 @@ export default {
 @import "~mapbox-gl/dist/mapbox-gl.css";
 
 #map {
-	top: 0;
+	top: 64px;
 	left: 0;
 	bottom: 0;
 	right: 0;
 	position: absolute;
-
 	border: none !important;
 	canvas {
 		border: none !important;
@@ -457,28 +458,50 @@ export default {
 		top: 0;
 	}
 
+	&.mobile {
+		top: 160px;
+		.link-to-map {
+			// top: 172px;
+			right: 50%;
+			transform: translate(50%, 0);
+		}
+	}
+
+	&.frame {
+		top: 0;
+	}
+
+
 	.embed-map {
 		position: absolute;
 		z-index: 1;
 		right: 24px;
-		top: 76px;
+		top: 12px;
+
+		&.mobile {
+			top: 172px;
+		}
 	}
 
 	.key-toggle {
 		z-index: 1;
-		top: 76px;
+		top: 16px;
 		left: 50%;
 		transform: translate(-50%, 0);
 		position: absolute;
 		&.frame {
 			left: 24px;
+			top: 68px;
 			transform: translate(0, 0);
 		}
-
 		&.mobile {
-			top: 172px;
+			// top: 172px;
 			left: 50%;
 			transform: translate(-50%, 0);
+
+			&.frame {
+				top: 120px;
+			};
 		}
 	}
 
