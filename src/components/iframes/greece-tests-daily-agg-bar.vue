@@ -68,7 +68,7 @@ import { mapGetters } from 'vuex';
 import { getDates } from '@/utils';
 
 export default {
-	name: 'greece-tests-by-7d-line-events',
+	name: 'greece-tests-daily-agg-bar',
 	components: {
 		'd7-line-bar-events': require('@/components/charts/d7-line-bar-events').default
 	},
@@ -85,7 +85,7 @@ export default {
 				mapLevel: null,
 				period: null,
 				lang: this.locale.code,
-				id: 'greece-tests-by-7d-line-events'
+				id: 'greece-tests-daily-agg-bar'
 			};
 		}
 	},

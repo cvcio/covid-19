@@ -55,7 +55,7 @@ import { getDates } from '@/utils';
 import { sum } from 'lodash';
 
 export default {
-	name: 'global-new-d7d',
+	name: 'global-key-daily-similar',
 	components: {
 		'd7d-lines': require('@/components/charts/d7d-lines').default
 	},
@@ -71,7 +71,7 @@ export default {
 				mapLevel: null,
 				period: null,
 				lang: this.locale.code,
-				id: 'global-new-d7d'
+				id: 'global-key-daily-similar'
 			};
 		}
 	},

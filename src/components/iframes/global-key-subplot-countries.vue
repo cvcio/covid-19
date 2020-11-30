@@ -14,6 +14,19 @@
 						</v-btn-toggle>
 					</v-col>
 					<v-spacer/>
+					<v-autocomplete
+						dense
+						outlined
+						color="primary"
+						hide-details
+						class="caption fa-xs"
+						prepend-icon="fa-globe-europe"
+						:items="items"
+						item-text="region" item-value="uid"
+						v-model="search"
+						@change="doSimilar">
+
+					</v-autocomplete>
 					<v-col class="grow pa-0 text-end justify-end" align-self="center" v-if="!$route.meta.iframe">
 						<!-- <v-btn x-small fab color="grey" dark class="mx-2 elevation-0" @click="update">
 							<v-icon x-small>fa-redo</v-icon>
@@ -28,7 +41,7 @@
 		<v-divider v-if="!$route.meta.iframe"/>
 		<v-container class="px-4" fluid>
 			<v-data-iterator
-				:items="items"
+				:items="similar"
 				:items-per-page.sync="itemsPerPage"
 				:page="page"
 				hide-default-footer
@@ -38,45 +51,19 @@
 					<v-row class="px-0">
 						<v-col
 							v-for="item in props.items"
-							:key="'col-gcb7l-' + item.uid"
+							:key="'col-ggcb7l-' + item.uid"
 							cols="12" xs="12" md="4"
-							class="px-4"
+							class="px-4" :class="search === item.uid ? 'yellow lighten-5' : ''"
 						>
 							<v-card-subtitle class="body-2 font-weight-bold px-0">
 								{{ $t(item.region) }}
 							</v-card-subtitle>
 							<d7-line-bar
-								:key="'gcb7l-' + item.uid + '-' + point" :id="'gcb7l-uid-' + item.uid + '-' + point"
+								:key="'ggcb7l-' + item.uid + '-' + point" :id="'ggcb7l-uid-' + item.uid + '-' + point"
 								:point="point" :values="item[point]"
 								:dates="item.dates"
 								:sources="item.sources"/>
 						</v-col>
-					</v-row>
-				</template>
-				<template v-slot:footer>
-					<v-row
-						class="mt-2"
-						align="center"
-						justify="center"
-					>
-
-						<v-spacer></v-spacer>
-						<v-btn
-							icon
-							class="mx-2"
-							@click="formerPage"
-							:disabled="page === 1"
-						>
-							<v-icon>mdi-chevron-left</v-icon>
-						</v-btn>
-						<v-btn
-							icon
-							class="mx-2"
-							@click="nextPage"
-							:disabled="page === numberOfPages"
-						>
-							<v-icon>mdi-chevron-right</v-icon>
-						</v-btn>
 					</v-row>
 				</template>
 			</v-data-iterator>
@@ -95,11 +82,10 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { sum } from 'lodash';
 import { getDates } from '@/utils';
 
 export default {
-	name: 'greece-cases-by-7d-line',
+	name: 'global-key-subplot-countries',
 	components: {
 		'd7-line-bar': require('@/components/charts/d7-line-bar').default
 	},
@@ -115,17 +101,20 @@ export default {
 				mapLevel: null,
 				period: null,
 				lang: this.locale.code,
-				id: 'greece-cases-by-7d-line'
+				id: 'global-key-subplot-countries'
 			};
 		}
 	},
 	data () {
 		return {
+			totals: 0,
 			point: 'cases',
 			items: [],
+			similar: [],
 			page: 1,
-			numberOfPages: 0,
 			itemsPerPage: 15,
+			search: 'U300',
+			filter: {},
 			title: { en: '', el: '' }
 		};
 	},
@@ -146,27 +135,19 @@ export default {
 		},
 		load () {
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
-			this.$store.dispatch('external/getGreeceAGG', 'all/all/' + this.periodInterval[3].value)
+			this.$store.dispatch('external/getGlobalAGG', 'all/all/' + this.periodInterval[3].value)
 				.then(res => {
 					let items = res.map(m => {
 						m.new_cases = m.new_cases.map(m => Math.max(0, m));
 						m.new_deaths = m.new_deaths.map(m => Math.max(0, m));
-						const totalCases = sum(m.new_cases);
-						const totalDeaths = sum(m.new_deaths);
-						const p100pCases = m.population > 0 ? ((sum(m.new_cases) / m.population) * 100000) : 0;
-						const p100pDeaths = m.population > 0 ? ((sum(m.new_deaths) / m.population) * 100000) : 0;
 						return {
-							uid: m.uid,
-							region: m.region,
-							totalCases,
-							totalDeaths,
-							p100pCases,
-							p100pDeaths,
+							uid: 'U' + m.uid,
+							region: this.$t(m.country),
 							dates: getDates(m.from, m.to),
 							cases: m.new_cases,
 							deaths: m.new_deaths,
 							sources: m.sources.sort(),
-
+							population: m.population,
 							max_cases: Math.max(...m.new_cases),
 							max_deaths: Math.max(...m.new_deaths),
 							min_cases: Math.min(...m.new_cases),
@@ -186,15 +167,16 @@ export default {
 						return m;
 					});
 
-					this.items = items; // items.filter(m => m.totalDeaths > 0).sort((a, b) => b.totalCases - a.totalCases);
-					this.numberOfPages = Math.ceil(this.items.length / this.itemsPerPage);
+					this.items = items.sort((a, b) => a.population - b.population);
+					this.totals = this.items.length;
+					this.doSimilar();
 				});
 		},
-		nextPage () {
-			if (this.page + 1 <= this.numberOfPages) this.page += 1;
-		},
-		formerPage () {
-			if (this.page - 1 >= 1) this.page -= 1;
+		doSimilar (uid) {
+			const idx = this.items.findIndex(m => m.uid === this.search);
+			const next7 = this.items.slice(idx + 1, idx + 8);
+			const prev7 = this.items.slice(idx - 8, idx - 1);
+			this.similar = [...prev7, this.items[idx], ...next7];
 		},
 		update () {
 			this.load();

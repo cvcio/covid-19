@@ -27,10 +27,10 @@ import { mapGetters } from 'vuex';
 export default {
 	name: 'posts-global',
 	components: {
-		'global-cases-by-country': require('@/components/iframes/global-cases-by-country').default,
-		'global-cases-by-7d-line-no-events': require('@/components/iframes/global-cases-by-7d-line-no-events').default,
-		'global-cases-by-7d-line': require('@/components/iframes/global-cases-by-7d-line').default,
-		'global-new-d7d': require('@/components/iframes/global-new-d7d').default
+		'global-key-by-country-table': require('@/components/iframes/global-key-by-country-table').default,
+		'global-key-daily-agg-bar': require('@/components/iframes/global-key-daily-agg-bar').default,
+		'global-key-subplot-countries': require('@/components/iframes/global-key-subplot-countries').default,
+		'global-key-daily-similar': require('@/components/iframes/global-key-daily-similar').default
 	},
 	computed: {
 		...mapGetters(['locale']),

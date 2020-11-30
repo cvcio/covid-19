@@ -27,11 +27,11 @@ import { mapGetters } from 'vuex';
 export default {
 	name: 'posts-greece',
 	components: {
-		'greece-cases-by-region': require('@/components/iframes/greece-cases-by-region').default,
-		'greece-cases-by-7d-line': require('@/components/iframes/greece-cases-by-7d-line').default,
-		'greece-cases-by-7d-line-events': require('@/components/iframes/greece-cases-by-7d-line-events').default,
-		'greece-cases-by-7d-line-events-intubated': require('@/components/iframes/greece-cases-by-7d-line-events-intubated').default,
-		'greece-tests-by-7d-line-events': require('@/components/iframes/greece-tests-by-7d-line-events').default
+		'greece-key-by-region-table': require('@/components/iframes/greece-key-by-region-table').default,
+		'greece-key-daily-agg-bar': require('@/components/iframes/greece-key-daily-agg-bar').default,
+		'greece-intubated-daily-agg-bar': require('@/components/iframes/greece-intubated-daily-agg-bar').default,
+		'greece-key-subplot-regions': require('@/components/iframes/greece-key-subplot-regions').default,
+		'greece-tests-daily-agg-bar': require('@/components/iframes/greece-tests-daily-agg-bar').default
 	},
 	computed: {
 		...mapGetters(['locale']),

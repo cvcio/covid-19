@@ -65,7 +65,7 @@ import { mapGetters } from 'vuex';
 import { getDates } from '@/utils';
 
 export default {
-	name: 'global-cases-by-7d-line-no-events',
+	name: 'global-key-daily-agg-bar',
 	components: {
 		'd7-line-bar-events': require('@/components/charts/d7-line-bar-events').default
 	},
@@ -81,7 +81,7 @@ export default {
 				mapLevel: null,
 				period: null,
 				lang: this.locale.code,
-				id: 'global-cases-by-7d-line-no-events'
+				id: 'global-key-daily-agg-bar'
 			};
 		}
 	},

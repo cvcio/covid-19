@@ -95,7 +95,7 @@ import { sum } from 'lodash';
 import { getDates } from '@/utils';
 
 export default {
-	name: 'global-cases-by-country',
+	name: 'global-key-by-country-table',
 	components: {
 		heatbar: require('@/components/charts/heatbar').default
 	},
@@ -111,7 +111,7 @@ export default {
 				mapLevel: null,
 				period: null,
 				lang: this.locale.code,
-				id: 'global-cases-by-country'
+				id: 'global-key-by-country-table'
 			};
 		}
 	},

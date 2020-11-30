@@ -57,62 +57,73 @@ const routes = [
 		meta: { layout: layoutIframe },
 		component: () => import(/* webpackChunkName: "frame" */ '@/views/frame.vue'),
 		children: [
+			// Greece
 			{
-				path: 'greece-cases-by-7d-line-events-intubated',
-				name: 'greece-cases-by-7d-line-events-intubated',
+				path: 'greece-key-by-region-table',
+				name: 'greece-key-by-region-table',
 				props: {},
 				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-cases-by-7d-line-events-intubated.vue')
+				component: () => import(/* webpackChunkName: "d-frame" */ '@/components/iframes/greece-key-by-region-table.vue')
 			},
 			{
-				path: 'greece-cases-by-7d-line-events',
-				name: 'greece-cases-by-7d-line-events',
+				path: 'greece-key-daily-agg-bar',
+				name: 'greece-key-daily-agg-bar',
 				props: {},
 				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-cases-by-7d-line-events.vue')
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-key-daily-agg-bar.vue')
 			},
 			{
-				path: 'greece-cases-by-7d-line',
-				name: 'greece-cases-by-7d-line',
+				path: 'greece-intubated-daily-agg-bar',
+				name: 'greece-intubated-daily-agg-bar',
 				props: {},
 				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-cases-by-7d-line.vue')
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-intubated-daily-agg-bar.vue')
+			},
+
+			{
+				path: 'greece-key-subplot-regions',
+				name: 'greece-key-subplot-regions',
+				props: {},
+				meta: { iframe: true },
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-key-subplot-regions.vue')
 			},
 			{
-				path: 'greece-cases-by-region',
-				name: 'greece-cases-by-region',
+				path: 'greece-tests-daily-agg-bar',
+				name: 'greece-tests-daily-agg-bar',
 				props: {},
 				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "d-frame" */ '@/components/iframes/greece-cases-by-region.vue')
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-tests-daily-agg-bar.vue')
+			},
+			// Global
+			{
+				path: 'global-key-by-country-table',
+				name: 'global-key-by-country-table',
+				props: {},
+				meta: { iframe: true },
+				component: () => import(/* webpackChunkName: "d-frame" */ '@/components/iframes/global-key-by-country-table.vue')
 			},
 			{
-				path: 'greece-tests-by-7d-line-events',
-				name: 'greece-tests-by-7d-line-events',
+				path: 'global-key-daily-agg-bar',
+				name: 'global-key-daily-agg-bar',
 				props: {},
 				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-tests-by-7d-line-events.vue')
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/global-key-daily-agg-bar.vue')
 			},
 			{
-				path: 'global-cases-by-country',
-				name: 'global-cases-by-country',
+				path: 'global-key-subplot-countries',
+				name: 'global-key-subplot-countries',
 				props: {},
 				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "d-frame" */ '@/components/iframes/global-cases-by-country.vue')
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/global-key-subplot-countries.vue')
 			},
 			{
-				path: 'global-cases-by-7d-line',
-				name: 'global-cases-by-7d-line',
+				path: 'global-key-daily-similar',
+				name: 'global-key-daily-similar',
 				props: {},
 				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/global-cases-by-7d-line.vue')
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/global-key-daily-similar.vue')
 			},
-			{
-				path: 'global-cases-by-7d-line-no-events',
-				name: 'global-cases-by-7d-line-no-events',
-				props: {},
-				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/global-cases-by-7d-line-no-events.vue')
-			},
+
 			{
 				path: 'map-view',
 				name: 'map-view',

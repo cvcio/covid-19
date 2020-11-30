@@ -18,7 +18,7 @@
 				]
 			},
 			"component": {
-				"id": "greece-cases-by-region",
+				"id": "greece-key-by-region-table",
 				"embed": true
 			}
 		},
@@ -38,7 +38,7 @@
 				]
 			},
 			"component": {
-				"id": "greece-cases-by-7d-line-events",
+				"id": "greece-key-daily-agg-bar",
 				"embed": true
 			}
 		},
@@ -56,7 +56,7 @@
 				]
 			},
 			"component": {
-				"id": "greece-cases-by-7d-line-events-intubated",
+				"id": "greece-intubated-daily-agg-bar",
 				"embed": true
 			}
 		},
@@ -78,7 +78,7 @@
 				]
 			},
 			"component": {
-				"id": "greece-cases-by-7d-line",
+				"id": "greece-key-subplot-regions",
 				"embed": true
 			}
 		},
@@ -98,7 +98,7 @@
 				]
 			},
 			"component": {
-				"id": "greece-tests-by-7d-line-events",
+				"id": "greece-tests-daily-agg-bar",
 				"embed": true
 			}
 		}
@@ -120,7 +120,7 @@
 				]
 			},
 			"component": {
-				"id": "global-cases-by-country",
+				"id": "global-key-by-country-table",
 				"embed": true
 			}
 		},
@@ -140,7 +140,7 @@
 				]
 			},
 			"component": {
-				"id": "global-cases-by-7d-line-no-events",
+				"id": "global-key-daily-agg-bar",
 				"embed": true
 			}
 		},
@@ -160,7 +160,7 @@
 				]
 			},
 			"component": {
-				"id": "global-cases-by-7d-line",
+				"id": "global-key-subplot-countries",
 				"embed": true
 			}
 		},
@@ -178,7 +178,7 @@
 				]
 			},
 			"component": {
-				"id": "global-new-d7d",
+				"id": "global-key-daily-similar",
 				"embed": true
 			}
 		}

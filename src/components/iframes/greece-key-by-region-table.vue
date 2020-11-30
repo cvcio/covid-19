@@ -93,7 +93,7 @@ import { sum } from 'lodash';
 import { getDates } from '@/utils';
 
 export default {
-	name: 'greece-cases-by-region',
+	name: 'greece-key-by-region-table',
 	components: {
 		heatbar: require('@/components/charts/heatbar').default
 	},
@@ -109,7 +109,7 @@ export default {
 				mapLevel: null,
 				period: null,
 				lang: this.locale.code,
-				id: 'greece-cases-by-region'
+				id: 'greece-key-by-region-table'
 			};
 		}
 	},
