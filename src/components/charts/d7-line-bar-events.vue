@@ -214,8 +214,8 @@ export default {
 				this.chart.append('g').call(makeAnnotations);
 				this.chart.selectAll('g.annotation-connector, g.annotation-note').classed('hidden', true);
 				this.chart.selectAll('.connector')
-				.attr('stroke', colors.testsCS[7])
-				.style('stroke-dasharray', ('3, 3'));
+					.attr('stroke', colors.testsCS[7])
+					.style('stroke-dasharray', ('3, 3'));
 
 				this.chart.selectAll('.connector-end')
 					.attr('stroke', colors.testsCS[7])

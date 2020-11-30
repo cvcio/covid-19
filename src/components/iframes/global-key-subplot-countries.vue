@@ -179,7 +179,9 @@ export default {
 			this.similar = [...prev7, this.items[idx], ...next7];
 		},
 		update () {
-			this.load();
+			if (this.search === 'U300') return;
+			this.search = 'U300';
+			this.doSimilar();
 		}
 	}
 };

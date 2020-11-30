@@ -134,7 +134,9 @@ export default {
 			this.similar = [...prev7, ...next7, this.items[idx]];
 		},
 		update () {
-			this.load();
+			if (this.search === 'U300') return;
+			this.search = 'U300';
+			this.doSimilar();
 		}
 	}
 };

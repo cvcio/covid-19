@@ -325,7 +325,7 @@ export default {
 				interactive: true,
 				pitchWithRotate: false,
 				dragRotate: false,
-				touchZoomRotate: false,
+				touchZoomRotate: false
 			});
 
 			this.map.on('load', this.onLoad);
@@ -436,7 +436,7 @@ export default {
 			this.map.flyTo({
 				center: coords,
 				zoom: zoom,
-				essential: true,
+				essential: true
 				// padding: { top: 0, bottom: 0, right: 0, left: !this.$vuetify.breakpoint.smAndDown ? Math.floor((window.innerWidth / 2) - 240) : 0 }
 			});
 		},
