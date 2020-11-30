@@ -163,24 +163,6 @@
 				"id": "global-key-subplot-countries",
 				"embed": true
 			}
-		},
-		{
-			"title": {
-				"el": "Viral",
-				"en": "Viral"
-			},
-			"body": {
-				"el": [
-
-				],
-				"en": [
-
-				]
-			},
-			"component": {
-				"id": "global-key-daily-similar",
-				"embed": true
-			}
 		}
 	]
 }

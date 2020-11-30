@@ -4,7 +4,7 @@
 			<v-container class="pa-0 ma-0" fluid>
 				<v-row class="pa-0 ma-0" justify="space-between">
 					<v-col class="pa-0 shrink" align-self="center">
-						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory>
+						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory @change="doSimilar">
 							<v-btn x-small class="primary--text" value="cases">
 								{{($tc('cases', 1)) | normalizeNFD }}
 							</v-btn>
@@ -13,6 +13,16 @@
 							</v-btn>
 						</v-btn-toggle>
 					</v-col>
+					<!-- <v-col class="pa-0 shrink" align-self="center">
+						<v-btn-toggle dense class="mr-2" rounded v-model="calc" mandatory>
+							<v-btn x-small class="primary--text" value="_new">
+								{{($tc('Daily', 1)) | normalizeNFD }}
+							</v-btn>
+							<v-btn x-small class="primary--text" value="_p100p">
+								{{($tc('Per 1M', 1)) | normalizeNFD }}
+							</v-btn>
+						</v-btn-toggle>
+					</v-col> -->
 					<v-col class="pa-0" align-self="center" cols="5">
 						<v-autocomplete
 							dense
@@ -22,6 +32,7 @@
 							class="caption fa-xs"
 							prepend-icon="fa-globe-europe"
 							:items="items"
+							:label="$t('Country')"
 							item-text="region" item-value="uid"
 							v-model="search"
 							@change="doSimilar">
@@ -65,10 +76,13 @@
 								{{ $t(item.region) }}
 							</v-card-subtitle>
 							<d7-line-bar
-								:key="'ggcb7l-' + item.uid + '-' + point" :id="'ggcb7l-uid-' + item.uid + '-' + point"
-								:point="point" :values="item[point]"
+								:key="'ggcb7l-' + item.uid + '-' + point + '-' + calc" :id="'ggcb7l-uid-' + item.uid + '-' + point + '-' + calc"
+								:point="point" :values="item[point + calc]"
 								:dates="item.dates"
-								:sources="item.sources"/>
+								:sources="item.sources"
+								:max="max"
+								:pp100="calc === '_p100p' ? $t('Per 1M') : ''"
+								/>
 						</v-col>
 					</v-row>
 				</template>
@@ -88,6 +102,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { sum } from 'lodash';
 import { getDates } from '@/utils';
 
 export default {
@@ -125,8 +140,10 @@ export default {
 			similar: [],
 			page: 1,
 			itemsPerPage: 15,
-			search: 'U300',
+			search: '', //  'U300',
 			filter: {},
+			max: 0,
+			calc: '_new',
 			title: { en: '', el: '' }
 		};
 	},
@@ -152,55 +169,62 @@ export default {
 		},
 		load () {
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
-			this.$store.dispatch('external/getGlobalAGG', 'all/all/' + this.periodInterval[3].value)
+			this.$store.dispatch('external/getGlobalAGG', 'all/all/' + this.periodInterval[3].value + '/' + this.$moment().subtract(1, 'days').format('YYYY-MM-DD'))
 				.then(res => {
 					let items = res.map(m => {
-						m.new_cases = m.new_cases.map(m => Math.max(0, m));
-						m.new_deaths = m.new_deaths.map(m => Math.max(0, m));
+						m.new_cases = m.new_cases.map(n => Math.max(0, n));
+						m.new_deaths = m.new_deaths.map(n => Math.max(0, n));
+						m.new_cases_p100p = m.new_cases.map(n => m.population > 0 ? (n / m.population) * 1000000 : 0);
+						m.new_deaths_p100p = m.new_deaths.map(n => m.population > 0 ? (n / m.population) * 1000000 : 0);
+						const max_cases_now = m.new_cases_p100p[m.new_cases_p100p.length - 1]; //sum(m.new_cases.slice(m.new_cases.length - 2, m.new_cases.length - 1));
+						const max_deaths_now = m.new_deaths_p100p[m.new_deaths_p100p.length - 1]; // sum(m.new_deaths.slice(m.new_deaths.length - 2, m.new_deaths.length - 1));
 						return {
 							uid: 'U' + m.uid,
 							region: this.$t(m.country),
 							dates: getDates(m.from, m.to),
 							cases: m.new_cases,
 							deaths: m.new_deaths,
+							cases_new: m.new_cases,
+							deaths_new: m.new_deaths,
+							cases_p100p: m.new_cases_p100p,
+							deaths_p100p: m.new_deaths_p100p,
 							sources: m.sources.sort(),
 							population: m.population,
+							max_cases_now: max_cases_now,
+							max_deaths_now: max_deaths_now,
 							max_cases: Math.max(...m.new_cases),
 							max_deaths: Math.max(...m.new_deaths),
-							min_cases: Math.min(...m.new_cases),
-							min_deaths: Math.min(...m.new_deaths)
+							max_cases_index: (max_cases_now),
+							max_deaths_index: (max_deaths_now),
 						};
 					});
-
-					const max_cases = Math.max(...items.map(m => m.max_cases));
-					const max_deaths = Math.max(...items.map(m => m.max_deaths));
-					const min_cases = Math.max(...items.map(m => m.min_cases));
-					const min_deaths = Math.max(...items.map(m => m.min_deaths));
-					items = items.map(m => {
-						m.max_cases = max_cases;
-						m.max_deaths = max_deaths;
-						m.min_cases = min_cases;
-						m.min_deaths = min_deaths;
-						return m;
-					});
-
-					this.items = items.sort((a, b) => a.population - b.population);
+					// change similar
+					this.max = null;
+					this.items = items;
 					this.totals = this.items.length;
-					this.doSimilar();
+					this.doSimilar('');
 
 					this.loading = false;
 				});
 		},
 		doSimilar (uid) {
-			const idx = this.items.findIndex(m => m.uid === this.search);
-			const next7 = this.items.slice(idx + 1, idx + 8);
-			const prev7 = this.items.slice(idx - 8, idx - 1);
-			this.similar = [...prev7, this.items[idx], ...next7];
+			this.items = this.items.sort((b,a) => a['max_' + this.point + '_index'] - b['max_' + this.point + '_index']);
+			if (uid !== '') {
+				const idx = this.items.findIndex(m => m.uid === this.search);
+				if (idx < 0)  return;
+				const next7 = this.items.slice(idx + 1, idx + 8);
+				const prev7 = this.items.slice(idx - 8, idx - 1);
+
+				let similar = [...prev7, this.items[idx], ...next7];
+				this.max = null; // Math.max(...similar.map(m => m['max_' + this.point + '_index']));
+				this.similar = similar;
+			} else {
+				this.similar = this.items.slice(0, 15);
+			}
 		},
 		update () {
-			if (this.search === 'U300') return;
-			this.search = 'U300';
-			this.doSimilar();
+			this.search = '';
+			this.doSimilar('');
 		}
 	}
 };

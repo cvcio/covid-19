@@ -38,7 +38,7 @@ import annotation from 'd3-svg-annotation';
 
 export default {
 	name: 'chart-d7d-lines',
-	props: ['id', 'data', 'uid', 'point'],
+	props: ['id', 'data', 'uid', 'point', 'min', 'max'],
 	computed: {
 		...mapGetters(['locale'])
 	},
@@ -49,8 +49,8 @@ export default {
 			py: 100,
 			tooltip: false,
 			d: null,
-			max: 0,
-			min: 0
+			// max: 0,
+			// min: 0
 		};
 	},
 	watch: {
@@ -100,9 +100,9 @@ export default {
 
 			this.chart.selectAll('*').remove();
 
-			this.max = max(data.map(m => m.sma).flat());
+			// this.max = max(data.map(m => m.sma).flat());
 			const x = scaleLinear().range([0, innerWidth]).domain([0, data[0].dates.length]);
-			const y = scaleLinear().range([innerHeight - margin.top, 0]).domain([0, this.max]).nice(10);
+			const y = scaleLinear().range([innerHeight - margin.top, 0]).domain([0, this.max ? this.max : max(data.map(m => m.sma).flat())]).nice(10);
 
 			const l = line()
 				.x((d, i) => {

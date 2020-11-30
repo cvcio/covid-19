@@ -3,8 +3,8 @@
 		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'">
 			<v-container class="pa-0 ma-0" fluid>
 				<v-row class="pa-0 ma-0" justify="space-between">
-					<v-col class="pa-0" align-self="center">
-						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory>
+					<v-col class="pa-0 shrink" align-self="center">
+						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory @change="doSort">
 							<v-btn x-small class="primary--text" value="cases">
 								{{($tc('cases', 1)) | normalizeNFD }}
 							</v-btn>
@@ -13,7 +13,16 @@
 							</v-btn>
 						</v-btn-toggle>
 					</v-col>
-					<v-spacer/>
+					<!-- <v-col class="pa-0 shrink" align-self="center">
+						<v-btn-toggle dense class="mr-2" rounded v-model="calc" mandatory>
+							<v-btn x-small class="primary--text" value="_new">
+								{{($tc('Daily', 1)) | normalizeNFD }}
+							</v-btn>
+							<v-btn x-small class="primary--text" value="_p100p">
+								{{($tc('Per 1M', 1)) | normalizeNFD }}
+							</v-btn>
+						</v-btn-toggle>
+					</v-col> -->
 					<v-col class="grow pa-0 text-end ml-2" align-self="center" v-if="!$route.meta.iframe">
 						<!-- <v-btn x-small :fab="!$vuetify.breakpoint.smAndDown" color="grey" dark class="mx-2 elevation-0" @click="update">
 							<v-icon x-small>fa-redo</v-icon>
@@ -48,14 +57,16 @@
 							cols="12" xs="12" md="4"
 							class="px-4"
 						>
-							<v-card-subtitle class="body-2 font-weight-bold px-0">
+							<v-card-subtitle class="caption font-weight-bold px-0">
 								{{ $t(item.region) }}
 							</v-card-subtitle>
 							<d7-line-bar
-								:key="'gcb7l-' + item.uid + '-' + point" :id="'gcb7l-uid-' + item.uid + '-' + point"
-								:point="point" :values="item[point]"
+								:key="'gcb7l-' + item.uid + '-' + point + '-' + calc" :id="'gcb7l-uid-' + item.uid + '-' + point + '-' + calc"
+								:point="point" :values="item[point + calc]"
 								:dates="item.dates"
-								:sources="item.sources"/>
+								:sources="item.sources" :max="max"
+								:pp100="calc === '_p100p' ? $t('Per 100K') : ''"
+								/>
 						</v-col>
 					</v-row>
 				</template>
@@ -101,7 +112,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { sum } from 'lodash';
+import { sum, remove } from 'lodash';
 import { getDates } from '@/utils';
 
 export default {
@@ -138,6 +149,8 @@ export default {
 			page: 1,
 			numberOfPages: 0,
 			itemsPerPage: 15,
+			max: 0,
+			calc: '_new',
 			title: { en: '', el: '' }
 		};
 	},
@@ -166,45 +179,37 @@ export default {
 			this.$store.dispatch('external/getGreeceAGG', 'all/all/' + this.periodInterval[3].value)
 				.then(res => {
 					let items = res.map(m => {
-						m.new_cases = m.new_cases.map(m => Math.max(0, m));
-						m.new_deaths = m.new_deaths.map(m => Math.max(0, m));
-						const totalCases = sum(m.new_cases);
-						const totalDeaths = sum(m.new_deaths);
-						const p100pCases = m.population > 0 ? ((sum(m.new_cases) / m.population) * 100000) : 0;
-						const p100pDeaths = m.population > 0 ? ((sum(m.new_deaths) / m.population) * 100000) : 0;
+						m.new_cases = m.new_cases.map(n => Math.max(0, n));
+						m.new_deaths = m.new_deaths.map(n => Math.max(0, n));
+						m.new_cases_p100p = m.new_cases.map(n => m.population > 0 ? (n / m.population) * 100000 : 0);
+						m.new_deaths_p100p = m.new_deaths.map(n => m.population > 0 ? (n / m.population) * 100000 : 0);
+						const max_cases_now = m.new_cases[m.new_cases.length - 1]; //sum(m.new_cases.slice(m.new_cases.length - 2, m.new_cases.length - 1));
+						const max_deaths_now = m.new_deaths[m.new_deaths.length - 1]; // sum(m.new_deaths.slice(m.new_deaths.length - 2, m.new_deaths.length - 1));
+						console.log(m.region, m.population, max_cases_now);
 						return {
 							uid: m.uid,
 							region: m.region,
-							totalCases,
-							totalDeaths,
-							p100pCases,
-							p100pDeaths,
 							dates: getDates(m.from, m.to),
 							cases: m.new_cases,
 							deaths: m.new_deaths,
+							cases_new: m.new_cases,
+							deaths_new: m.new_deaths,
+							cases_p100p: m.new_cases_p100p,
+							deaths_p100p: m.new_deaths_p100p,
 							sources: m.sources.sort(),
-
+							max_cases_now: max_cases_now,
+							max_deaths_now: max_deaths_now,
 							max_cases: Math.max(...m.new_cases),
 							max_deaths: Math.max(...m.new_deaths),
-							min_cases: Math.min(...m.new_cases),
-							min_deaths: Math.min(...m.new_deaths)
+							max_cases_index: (max_cases_now / m.population) * 100000,
+							max_deaths_index: (max_deaths_now / m.population) * 100000,
 						};
 					});
 
-					const max_cases = Math.max(...items.map(m => m.max_cases));
-					const max_deaths = Math.max(...items.map(m => m.max_deaths));
-					const min_cases = Math.max(...items.map(m => m.min_cases));
-					const min_deaths = Math.max(...items.map(m => m.min_deaths));
-					items = items.map(m => {
-						m.max_cases = max_cases;
-						m.max_deaths = max_deaths;
-						m.min_cases = min_cases;
-						m.min_deaths = min_deaths;
-						return m;
-					});
-
-					this.items = items; // items.filter(m => m.totalDeaths > 0).sort((a, b) => b.totalCases - a.totalCases);
+					this.items = remove(items, m => ['EL000', 'EL001', 'EL002'].includes(m.uid));
+					this.items = items.sort((a, b) => b['max_' + this.point + '_index'] - a['max_' + this.point + '_index']);
 					this.numberOfPages = Math.ceil(this.items.length / this.itemsPerPage);
+					this.items = items;
 					this.loading = false;
 				});
 		},

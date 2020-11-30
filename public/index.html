@@ -35,7 +35,7 @@
 	<link rel="icon" type="image/png" sizes="32x32" href="<%= VUE_APP_BASE_URL %>img/icons/favicon-32x32.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="<%= VUE_APP_BASE_URL %>img/icons/favicon-16x16.png">
 
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700|Roboto+Slab:300,400,700&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700|Roboto+Slab:300,400,700&display=swap">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
   </head>
@@ -45,9 +45,9 @@
     </noscript>
 	<div id="app"></div>
 	<!-- built files will be auto injected -->
-	<!--<% if (NODE_ENV != 'development') { %> -->
-	<!-- Go to www.addthis.com/dashboard to customize your tools -->
-	<!--<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5e6e40408bf2d5f7"></script> -->
-	<!--<% } %> -->
+	<% if (NODE_ENV != 'development') { %>
+		<!-- Go to www.addthis.com/dashboard to customize your tools -->
+		<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5e6e40408bf2d5f7"></script>
+	<% } %>
   </body>
 </html>

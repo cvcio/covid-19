@@ -29,11 +29,14 @@
 		</v-app-bar>
 		<v-divider v-if="!$route.meta.iframe"/>
 		<v-container class="px-0" fluid :class="$route.meta.iframe ? 'px-4' : ''">
-			<v-row class="px-3">
+			<v-row class="px-0" v-if="loading">
+				<v-col align="center">
+					<v-progress-circular indeterminate color="grey"></v-progress-circular>
+				</v-col>
+			</v-row>
+			<v-row class="px-3" v-else>
 				<v-col class="px-0" align="center">
-					<v-progress-circular indeterminate v-if="loading" color="grey"></v-progress-circular>
 					<v-data-table
-						v-else
 						dense
 						:headers="headers(key)"
 						:items="items"
@@ -51,7 +54,7 @@
 									{{ new Intl.NumberFormat('el-GR').format(props.item['total_' + key].toFixed(2)) }}
 								</td>
 								<td class="caption">
-									{{ typeof props.item['p100p_' + key] !== 'string' ? new Intl.NumberFormat('el-GR').format(props.item['p100p_' + key].toFixed(2)) : '-'}}
+									{{ typeof props.item['p100p_' + key] !== 'string' ? new Intl.NumberFormat('el-GR').format(props.item['p100p_' + key].toFixed(0)) : '-'}}
 								</td>
 								<td class="caption" v-if="!$vuetify.breakpoint.smAndDown">
 									<heatbar
@@ -152,7 +155,7 @@ export default {
 		},
 		load () {
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
-			this.$store.dispatch('external/getGlobalAGG', 'all/new_cases,new_deaths,new_recovered/' + this.periodInterval[3].value)
+			this.$store.dispatch('external/getGlobalAGG', 'all/new_cases,new_deaths,new_recovered/' + this.periodInterval[3].value + '/' + this.$moment().subtract(1, 'days').format('YYYY-MM-DD'))
 				.then(res => {
 					this.items = res.map(m => {
 						m.new_cases = m.new_cases.map(m => Math.max(0, m));

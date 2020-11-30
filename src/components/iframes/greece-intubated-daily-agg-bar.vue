@@ -13,14 +13,17 @@
 		</v-app-bar>
 		<v-divider v-if="!$route.meta.iframe"/>
 		<v-container class="px-4" fluid>
-			<v-row class="px-0">
+			<v-row class="px-0" v-if="loading">
+				<v-col align="center">
+					<v-progress-circular indeterminate color="grey"></v-progress-circular>
+				</v-col>
+			</v-row>
+			<v-row class="px-0" v-else>
 				<v-col
 					cols="12"
 					class="px-4"
-					align="center"
 				>
-					<v-progress-circular indeterminate v-if="loading" color="grey"></v-progress-circular>
-					<d7-line-bar-events v-else
+					<d7-line-bar-events
 						:key="'gidagb-' + item.uid + '-' + point" :id="'gidagb-uid-' + item.uid + '-' + point"
 						:point="point" :values="item[point]"
 						:dates="item.dates" :annotations="annotations" :sources="item.sources"/>

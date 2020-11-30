@@ -36,14 +36,17 @@
 		</v-app-bar>
 		<v-divider v-if="!$route.meta.iframe"/>
 		<v-container class="px-4" fluid>
-			<v-row class="px-0">
+			<v-row class="px-0" v-if="loading">
+				<v-col align="center">
+					<v-progress-circular indeterminate color="grey"></v-progress-circular>
+				</v-col>
+			</v-row>
+			<v-row class="px-0" v-else>
 				<v-col
 					cols="12"
 					class="px-4"
-					align="center"
 				>
-					<v-progress-circular indeterminate v-if="loading" color="grey"></v-progress-circular>
-					<d7-line-bar-events v-else
+					<d7-line-bar-events
 						:key="'gacb7ln-' + '-' + calc + '-' + point" :id="'gacb7ln-uid-' + '-' + calc + '-' + point"
 						:point="point" :values="item[calc === 'new' ? 'new_' + point : point]"
 						:dates="item.dates" :sources="item.sources"/>
@@ -124,7 +127,7 @@ export default {
 		},
 		load () {
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
-			this.$store.dispatch('external/getGlobalAGG', 'all/new_cases,new_deaths,cases,deaths/' + this.periodInterval[3].value)
+			this.$store.dispatch('external/getGlobalAGG', 'all/new_cases,new_deaths,cases,deaths/' + this.periodInterval[3].value + '/' + this.$moment().subtract(1, 'days').format('YYYY-MM-DD'))
 				.then(res => {
 					this.items = res.map(m => {
 						m.new_cases = m.new_cases.map(m => Math.max(0, m));

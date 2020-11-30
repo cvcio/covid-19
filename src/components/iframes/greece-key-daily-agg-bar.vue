@@ -36,13 +36,16 @@
 		</v-app-bar>
 		<v-divider v-if="!$route.meta.iframe"/>
 		<v-container class="px-4" fluid>
-			<v-row class="px-0">
+			<v-row class="px-0" v-if="loading">
+				<v-col align="center">
+					<v-progress-circular indeterminate color="grey"></v-progress-circular>
+				</v-col>
+			</v-row>
+			<v-row class="px-0" v-else>
 				<v-col
 					cols="12"
 					class="px-4"
-					align="center"
 				>
-					<v-progress-circular indeterminate v-if="loading" color="grey"></v-progress-circular>
 					<d7-line-bar-events v-if="item"
 						:key="'gcb7l-' + item.uid + '-' + calc + '-' + point" :id="'gcb7l-uid-' + item.uid + '-' + calc + '-' + point"
 						:point="point" :values="item[calc === 'new' ? 'new_' + point : point]"

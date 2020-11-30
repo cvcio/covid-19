@@ -39,14 +39,17 @@
 		</v-app-bar>
 		<v-divider v-if="!$route.meta.iframe"/>
 		<v-container class="px-4" fluid>
-			<v-row class="px-0">
+			<v-row class="px-0" v-if="loading">
+				<v-col align="center">
+					<v-progress-circular indeterminate color="grey"></v-progress-circular>
+				</v-col>
+			</v-row>
+			<v-row class="px-0" v-else>
 				<v-col
 					cols="12"
 					class="px-4"
-					align="center"
 				>
-					<v-progress-circular indeterminate v-if="loading" color="grey"></v-progress-circular>
-					<d7-line-bar-events v-else
+					<d7-line-bar-events
 						:key="'gcb7l-' + item.uid + '-' + calc + '-' + point" :id="'gcb7l-uid-' + item.uid + '-' + calc + '-' + point"
 						:point="point" :values="item[calc === 'new' ? 'new_' + point : point]"
 						:dates="item.dates" :annotations="annotations" :sources="item.sources"/>
@@ -127,7 +130,9 @@ export default {
 		},
 		load () {
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
-			this.$store.dispatch('external/getGlobalAGG', 'GRC/cumulative_rtpcr_tests_raw,estimated_new_rtpcr_tests,cumulative_rapid_tests_raw,esitmated_new_rapid_tests,estimated_new_total_tests/' + this.periodInterval[3].value)
+			this.$store.dispatch('external/getGlobalAGG',
+				'GRC/cumulative_rtpcr_tests_raw,estimated_new_rtpcr_tests,cumulative_rapid_tests_raw,esitmated_new_rapid_tests,estimated_new_total_tests/' +
+				this.periodInterval[3].value)
 				.then(res => {
 					this.item = res.map(m => {
 						m.dates = getDates(m.from, m.to);
@@ -144,7 +149,7 @@ export default {
 						m.rapid = m.new_rapid.reduce((a, b, i) => [...a, a.length > 0 ? b + a[i - 1] : b], []);
 
 						return {
-							uid: m.uid,
+							uid: 'U' + m.uid,
 							region: m.country,
 							dates: getDates(m.from, m.to),
 							new_pcr: m.new_pcr,
@@ -157,6 +162,7 @@ export default {
 						};
 					});
 					this.item = this.item[0];
+					console.log(this.item)
 					this.loading = false;
 				});
 		},

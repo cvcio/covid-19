@@ -27,11 +27,14 @@
 		</v-app-bar>
 		<v-divider v-if="!$route.meta.iframe"/>
 		<v-container class="px-0" fluid :class="$route.meta.iframe ? 'px-4' : ''">
-			<v-row class="px-3">
-				<v-col class="px-0" align="center">
-					<v-progress-circular indeterminate v-if="loading" color="grey"></v-progress-circular>
+			<v-row class="px-0" v-if="loading">
+				<v-col align="center">
+					<v-progress-circular indeterminate color="grey"></v-progress-circular>
+				</v-col>
+			</v-row>
+			<v-row class="px-3" v-else>
+				<v-col class="px-0">
 					<v-data-table
-						v-else
 						dense
 						:headers="headers(key)"
 						:sort-by="['p100p_' + key]"
@@ -49,7 +52,7 @@
 									{{ new Intl.NumberFormat('el-GR').format(props.item['total_' + key].toFixed(2)) }}
 								</td>
 								<td class="caption">
-									{{ typeof props.item['p100p_' + key] !== 'string' ? new Intl.NumberFormat('el-GR').format(props.item['p100p_' + key].toFixed(2)) : '-'}}
+									{{ typeof props.item['p100p_' + key] !== 'string' ? new Intl.NumberFormat('el-GR').format(props.item['p100p_' + key].toFixed(0)) : '-'}}
 								</td>
 								<td class="caption" v-if="!$vuetify.breakpoint.smAndDown">
 									<heatbar

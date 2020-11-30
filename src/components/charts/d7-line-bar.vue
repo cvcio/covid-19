@@ -12,8 +12,9 @@
 					</v-card-title>
 					<v-divider/>
 					<v-card-subtitle class="pa-2">
-						<h4 class="subtitle-2 primary--text text-capitalize primary--text">
-							{{ $tc(point, 1) }}: {{ new Intl.NumberFormat('el-GR').format(d.value.toFixed(0)) }}
+						<h4 class="subtitle-2 primary--text  primary--text">
+							<span class="text-capitalize">{{ $tc(point, 1) }}</span>
+							<span class="text-lowercase">{{pp100}}</span>: {{ new Intl.NumberFormat('el-GR').format(d.value.toFixed(0)) }}
 						</h4>
 					</v-card-subtitle>
 					<v-divider/>
@@ -36,7 +37,7 @@ import * as colors from '@/helper/colors';
 
 export default {
 	name: 'chart-d7-line-bar',
-	props: ['id', 'dates', 'values', 'point', 'sources', 'min', 'max'],
+	props: ['id', 'dates', 'values', 'point', 'sources', 'min', 'max', 'pp100'],
 	computed: {
 		...mapGetters(['locale'])
 	},
@@ -84,7 +85,7 @@ export default {
 
 			const width = div.clientWidth;
 			const height = 96;
-			const margin = { top: 0, left: 0, bottom: 10, right: 0 };
+			const margin = { top: 0, left: 0, bottom: 0, right: 0 };
 			const innerWidth = width - margin.left - margin.right;
 			const innerHeight = height - margin.top - margin.bottom;
 
@@ -98,7 +99,7 @@ export default {
 
 			const x = scaleLinear().range([0, innerWidth]).domain([0, data.length]);
 			// const y = scaleLinear().range([innerHeight, 0]).domain([0, max(this.values)]).nice(10);
-			const y = scaleLinear().range([innerHeight, 0]).domain([0, Math.max(max(this.values), 1)]).nice(10);
+			const y = scaleLinear().range([innerHeight, 0]).domain([0, this.max ? Math.ceil(this.max) : Math.max(max(this.values), 1)]).nice(10);
 
 			const l = line()
 				.x((d, i) => x(i))

@@ -6,7 +6,7 @@
 				($route.meta.iframe ? 'frame' : ''),
 			].join(' ')
 		">
-		<v-btn-toggle class="key-toggle elevation-2" rounded mandatory dense v-model="mapKey"
+		<v-btn-toggle class="key-toggle elevation-2" rounded mandatory dense v-model="mapKey" v-if="!$route.meta.iframe"
 			:class="
 				[
 					($vuetify.breakpoint.smAndDown ? 'mobile' : 'desktop'),
@@ -16,16 +16,17 @@
 			<v-btn text small class="font-weight-bold" value="cases">
 				{{ $tc("cases", 1) | normalizeNFD }}
 			</v-btn>
-			<v-btn text small class="font-weight-bold" value="deaths" :disabled="mapLevel === 'greece' && mapPeriodIDX < 3">
+			<v-btn text small class="font-weight-bold" value="deaths">
 				{{ $tc("deaths", 1) | normalizeNFD }}
 			</v-btn>
-			<!-- <v-btn text small class="font-weight-bold" value="active" v-if="mapLevel === 'global'">
-				{{ $tc("active", 1) | normalizeNFD }}
-			</v-btn> -->
 		</v-btn-toggle>
 
 		<v-btn v-if="$route.meta.iframe" small class="font-weight-bold link-to-map mt-5 text-inherit white" rounded target="_blank" href="https://lab.imedd.org/" >
-			<v-icon x-small class="mr-2" color="primary">fa-link</v-icon><span class="font-weight-bold">IMΕdD LAB</span>: Ελλαδά, θάνατοι, από την αρχή της πανδημίας
+			<v-icon x-small class="mr-2" color="primary">fa-link</v-icon>
+			<span class="font-weight-bold">IMΕdD LAB</span>:
+			<span class="text-capitalize">{{$t(mapLevel)}}</span>,
+			<span class="text-capitalize">{{$tc(mapKey, 1)}}</span>,
+			<span class="text-capitalize">{{mapPeriodIDX > 0 ? $moment(mapPeriod).format('ll') + ' - ' + $moment().format('ll'): $moment().format('ll')}}</span>
 		</v-btn>
 
 		<v-btn v-if="!$route.meta.iframe" small class="font-weight-bold embed-map text-inherit primary" fab @click="setEmbed">
@@ -141,6 +142,7 @@ export default {
 				title: '',
 				subtitle: '',
 				text: '',
+				mapKey: this.mapKey,
 				mapLevel: this.mapLevel,
 				period: this.mapPeriodIDX,
 				lang: this.locale.code,
@@ -150,7 +152,7 @@ export default {
 	},
 	watch: {
 		mapLevel (value, old) {
-			if (value !== old && this.map) {
+			if (value !== old && this.map && !this.$route.meta.iframe) {
 				// this.resetFilters();
 				this.load();
 				this.updatePosition(
@@ -160,12 +162,12 @@ export default {
 			}
 		},
 		mapKey (value, old) {
-			if (value !== old) {
+			if (value !== old && this.map && !this.$route.meta.iframe) {
 				this.load();
 			}
 		},
 		mapPeriod (value, old) {
-			if (value !== old) {
+			if (value !== old && this.map && !this.$route.meta.iframe) {
 				this.load();
 			}
 		}
@@ -190,6 +192,9 @@ export default {
 		}
 		if (this.$route.query.period && this.$route.query.period !== '') {
 			this.$store.commit('filters/setMapPeriodFromIDX', parseInt(this.$route.query.period));
+		}
+		if (this.$route.query.mapKey && this.$route.query.mapKey !== '') {
+			this.$store.commit('filters/setMapKey', this.$route.query.mapKey);
 		}
 		if (this.geo) {
 			console.debug('geo loaded from storage');
@@ -315,7 +320,8 @@ export default {
 		draw () {
 			mapboxgl.accessToken = 'pk.eyJ1IjoiYW5kZWZpbmVkIiwiYSI6ImNpcWY2OHN5bDAwOHZpMWt4ODV2a2EzdnUifQ.q-XTbW4kXMSRhT5alQ2J4g';
 			let zoom = this.mapLevel === 'greece' ? 5.5 : 2.5;
-			zoom = this.$vuetify.breakpoint.mdAndDown ? 5 : 1;
+			console.log(this.$vuetify.breakpoint.smAndDown );
+			// zoom = this.$vuetify.breakpoint.smAndDown ? 5 : 10;
 			this.map = new mapboxgl.Map({
 				container: 'map',
 				style: 'mapbox://styles/mapbox/light-v10',
@@ -326,9 +332,6 @@ export default {
 				antialias: true,
 				attributionControl: true,
 				interactive: true,
-				pitchWithRotate: false,
-				dragRotate: false,
-				touchZoomRotate: false
 			});
 
 			this.map.on('load', this.onLoad);

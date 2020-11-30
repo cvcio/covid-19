@@ -27,6 +27,23 @@
 							></v-radio>
 						</v-radio-group>
 					</v-col>
+					<v-col v-if="embed.mapKey !== null">
+						<h5>{{ $t('View') }}</h5>
+						<v-radio-group
+							v-model="embed.mapKey"
+							mandatory
+							class="text-capitalize"
+						>
+							<v-radio
+								:label="$tc('cases', 1)"
+								value="cases"
+							></v-radio>
+							<v-radio
+								:label="$tc('deaths', 1)"
+								value="deaths"
+							></v-radio>
+						</v-radio-group>
+					</v-col>
 					<v-col v-if="embed.period !== null">
 						<h5>{{ $t('Time Period') }}</h5>
 						<v-radio-group
@@ -120,6 +137,9 @@ export default {
 			}
 			if (this.embed.period) {
 				str += '&period=' + this.embed.period;
+			}
+			if (this.embed.mapKey) {
+				str += '&mapKey=' + this.embed.mapKey;
 			}
 			return str;
 		}

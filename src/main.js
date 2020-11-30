@@ -12,6 +12,8 @@ import i18n from '@/plugins/i18n';
 import vuetify from '@/plugins/vuetify';
 import filters from '@/filters';
 
+import VueObserveVisibility from 'vue-observe-visibility';
+
 import App from '@/App.vue';
 
 // Global Packages
@@ -37,7 +39,7 @@ Vue.use(VueGtag, {
 	config: { id: process.env.VUE_APP_GOOGLE_TAG || '' },
 	enabled: false
 }, router);
-
+Vue.use(VueObserveVisibility);
 // Init Base API Handler
 api.init(Vue.prototype.$BASE_API);
 sync(store, router);

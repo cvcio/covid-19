@@ -13,7 +13,14 @@
 					</template>
 				</v-col>
 				<v-col cols="12" md="8">
-					<component :delay="250 * idx" v-bind:is="post.component.id" />
+					<post :component="post.component.id" :once="true" :threshold="50" v-slot="{inView}">
+						<component
+							v-if="inView"
+							:delay="50"
+							v-bind:is="post.component.id"
+						/>
+					</post>
+					<!-- <component :delay="250 * idx" v-bind:is="post.component.id" /> -->
 				</v-col>
 			</v-row>
 			<v-divider v-if="idx < posts.global.length - 1" :key="'divider-'+idx"/>
@@ -27,6 +34,7 @@ import { mapGetters } from 'vuex';
 export default {
 	name: 'posts-global',
 	components: {
+		'post': require('@/components/content/post').default,
 		'global-key-by-country-table': require('@/components/iframes/global-key-by-country-table').default,
 		'global-key-daily-agg-bar': require('@/components/iframes/global-key-daily-agg-bar').default,
 		'global-key-subplot-countries': require('@/components/iframes/global-key-subplot-countries').default,

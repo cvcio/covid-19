@@ -30,14 +30,17 @@
 		</v-app-bar>
 		<v-divider v-if="!$route.meta.iframe"/>
 		<v-container class="px-4" fluid>
-			<v-row class="px-0">
+			<v-row class="px-0" v-if="loading">
+				<v-col align="center">
+					<v-progress-circular indeterminate color="grey"></v-progress-circular>
+				</v-col>
+			</v-row>
+			<v-row class="px-0" v-else>
 				<v-col
 					cols="12"
 					class="px-4"
-					align="center"
 				>
-					<v-progress-circular indeterminate v-if="loading" color="grey"></v-progress-circular>
-					<d7d-lines v-else
+					<d7d-lines
 						:point="point" :uid="search"
 						:key="'gnd7d-'+search" :id="'gnd7d-'+search" :data="similar"/>
 				</v-col>
@@ -118,7 +121,7 @@ export default {
 		},
 		load () {
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
-			this.$store.dispatch('external/getGlobalAGG', 'all/new_deaths,cases/' + this.periodInterval[3].value)
+			this.$store.dispatch('external/getGlobalAGG', 'all/new_deaths,cases/' + this.periodInterval[3].value + '/' + this.$moment().subtract(1, 'days').format('YYYY-MM-DD'))
 				.then(res => {
 					const items = res.map(m => {
 						m.new_deaths = m.new_deaths.map(m => Math.max(0, m));
