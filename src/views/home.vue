@@ -45,7 +45,7 @@ export default {
 #map-container {
 	position: relative;
 	width: 100%;
-	height: 95vh;
+	height: 90vh;
 	z-index: 0;
 	&.mobile {
 		height: calc(100vh - 56px);

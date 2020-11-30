@@ -149,7 +149,7 @@ export default {
 				this.load();
 				this.updatePosition(
 					this.mapLevel === 'greece' ? [23.7208298, 37.9908697] : [0, 30],
-					this.mapLevel === 'greece' ? 4.5 : 2
+					this.mapLevel === 'greece' ? 5.5 : 2.5
 				);
 			}
 		},
@@ -316,7 +316,7 @@ export default {
 			this.map = new mapboxgl.Map({
 				container: 'map',
 				style: 'mapbox://styles/mapbox/light-v10',
-				zoom: this.mapLevel === 'greece' ? 4.5 : 2,
+				zoom: this.mapLevel === 'greece' ? 5.5 : 2.5,
 				center: this.mapLevel === 'greece' ? [23.7208298, 37.9908697] : [0, 30],
 				maxZoom: 15,
 				minZoom: 1,
@@ -325,7 +325,7 @@ export default {
 				interactive: true,
 				pitchWithRotate: false,
 				dragRotate: false,
-				touchZoomRotate: false
+				touchZoomRotate: false,
 			});
 
 			this.map.on('load', this.onLoad);
@@ -430,14 +430,14 @@ export default {
 		onClick () {
 			// if (!this.map) return;
 		},
-		updatePosition (coords = [0, 30], zoom = 2) {
+		updatePosition (coords = [23.7208298, 37.9908697], zoom = 5.5) {
 			if (!this.map) return;
 
 			this.map.flyTo({
 				center: coords,
 				zoom: zoom,
 				essential: true,
-				padding: { top: 0, bottom: 0, right: 0, left: Math.floor((window.innerWidth / 2) - 240) }
+				// padding: { top: 0, bottom: 0, right: 0, left: !this.$vuetify.breakpoint.smAndDown ? Math.floor((window.innerWidth / 2) - 240) : 0 }
 			});
 		},
 		updateData () {
