@@ -24,7 +24,7 @@
 								(active === 0 ? 'white' : 'grey lighten-4 grey--text'),
 							].join(' ')
 						"
-						@click="$store.state.filters.mapLevel = 'greece'">{{ $t('view.greece') | normalizeNFD }}</v-tab>
+						@click="$store.commit('filters/setMapLevel', 'greece')">{{ $t('view.greece') | normalizeNFD }}</v-tab>
 					<v-tab :ripple="false" class="tab-item" active-class="font-weight-bold" :value="1"
 						:class="
 							[
@@ -32,7 +32,7 @@
 								(active === 1 ? 'white' : 'grey lighten-4 grey--text'),
 							].join(' ')
 						"
-						@click="$store.state.filters.mapLevel = 'global'">{{ $t('view.global') | normalizeNFD }}</v-tab>
+						@click="$store.commit('filters/setMapLevel', 'global')">{{ $t('view.global') | normalizeNFD }}</v-tab>
 				</v-tabs>
 				<v-tabs-items v-model="tab">
 					<tab-item-greece :tab="0"/>
