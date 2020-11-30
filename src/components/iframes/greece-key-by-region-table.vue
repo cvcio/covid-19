@@ -14,7 +14,7 @@
 						</v-btn-toggle>
 					</v-col>
 					<v-spacer/>
-					<v-col class="pa-0 text-end justify-end" align-self="center" v-if="!$route.meta.iframe">
+					<v-col class="pa-0 text-end justify-end ml-1" align-self="center" v-if="!$route.meta.iframe">
 						<!-- <v-btn x-small fab color="grey" dark class="mx-2 elevation-0" @click="update">
 							<v-icon x-small>fa-redo</v-icon>
 						</v-btn> -->

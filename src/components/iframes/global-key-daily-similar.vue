@@ -16,7 +16,7 @@
 						@change="doSimilar">
 
 					</v-autocomplete>
-					<v-col class="pa-0 grow text-end" align-self="center" v-if="!$route.meta.iframe">
+					<v-col class="pa-0 grow text-end ml-1" align-self="center" v-if="!$route.meta.iframe">
 						<v-btn x-small fab color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
 							<v-icon x-small>fa-code</v-icon>
 						</v-btn>
