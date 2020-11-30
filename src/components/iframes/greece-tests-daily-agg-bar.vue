@@ -3,7 +3,7 @@
 		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'">
 			<v-container class="pa-0 ma-0" fluid>
 				<v-row class="pa-0 ma-0" justify="space-between">
-					<v-col  class="pa-0 shrink" align-self="center">
+					<v-col class="pa-0" align-self="center">
 						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory>
 							<v-btn x-small class="primary--text" value="tests">
 								{{( $t('All')) | normalizeNFD }}
@@ -16,21 +16,21 @@
 							</v-btn>
 						</v-btn-toggle>
 					</v-col>
-					<v-col  class="pa-0 shrink" align-self="center">
+					<v-col  class="pa-0" align-self="center">
 						<v-btn-toggle dense class="mr-2" rounded v-model="calc" mandatory>
 							<v-btn x-small class="primary--text" value="new">
-								{{( $vuetify.breakpoint.smAndDown ? $tc('D', 1).substr(1, 1) : $tc('Daily', 1)) | normalizeNFD }}
+								{{($tc('Daily', 1)) | normalizeNFD }}
 							</v-btn>
 							<v-btn x-small class="primary--text" value="sum">
-								{{( $vuetify.breakpoint.smAndDown ? $tc('C', 1).substr(1, 1) : $tc('Cumulative', 1)) | normalizeNFD }}
+								{{($tc('Cumulative', 1)) | normalizeNFD }}
 							</v-btn>
 						</v-btn-toggle>
 					</v-col>
-					<v-col class="pa-0 grow text-end ml-1" align-self="center" v-if="!$route.meta.iframe">
-						<!-- <v-btn x-small fab color="grey" dark class="mx-2 elevation-0" @click="update">
+					<v-col class="pa-0 text-end ml-2" align-self="center" v-if="!$route.meta.iframe">
+						<!-- <v-btn x-small :fab="!$vuetify.breakpoint.smAndDown" color="grey" dark class="mx-2 elevation-0" @click="update">
 							<v-icon x-small>fa-redo</v-icon>
 						</v-btn> -->
-						<v-btn x-small fab color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
+						<v-btn x-small :fab="!$vuetify.breakpoint.smAndDown" :icon="$vuetify.breakpoint.smAndDown" color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
 							<v-icon x-small>fa-code</v-icon>
 						</v-btn>
 					</v-col>

@@ -6,19 +6,19 @@
 					<v-col class="pa-0" align-self="center">
 						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory>
 							<v-btn x-small class="primary--text" value="cases">
-								{{( $vuetify.breakpoint.smAndDown ? $tc('cases', 1).substr(1, 1) : $tc('cases', 1)) | normalizeNFD }}
+								{{($tc('cases', 1)) | normalizeNFD }}
 							</v-btn>
 							<v-btn x-small class="primary--text" value="deaths">
-								{{( $vuetify.breakpoint.smAndDown ? $tc('deaths', 1).substr(1, 1) : $tc('deaths', 1)) | normalizeNFD }}
+								{{($tc('deaths', 1)) | normalizeNFD }}
 							</v-btn>
 						</v-btn-toggle>
 					</v-col>
 					<v-spacer/>
-					<v-col class="grow pa-0 text-end ml-1" align-self="center" v-if="!$route.meta.iframe">
-						<!-- <v-btn x-small fab color="grey" dark class="mx-2 elevation-0" @click="update">
+					<v-col class="grow pa-0 text-end ml-2" align-self="center" v-if="!$route.meta.iframe">
+						<!-- <v-btn x-small :fab="!$vuetify.breakpoint.smAndDown" color="grey" dark class="mx-2 elevation-0" @click="update">
 							<v-icon x-small>fa-redo</v-icon>
 						</v-btn> -->
-						<v-btn x-small fab color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
+						<v-btn x-small :fab="!$vuetify.breakpoint.smAndDown" :icon="$vuetify.breakpoint.smAndDown" color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
 							<v-icon x-small>fa-code</v-icon>
 						</v-btn>
 					</v-col>
