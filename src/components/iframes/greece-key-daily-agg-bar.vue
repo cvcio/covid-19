@@ -3,7 +3,7 @@
 		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'">
 			<v-container class="pa-0 ma-0" fluid>
 				<v-row class="pa-0 ma-0" justify="space-between">
-					<v-col  class="pa-0 shrink" align-self="center">
+					<v-col class="pa-0 shrink" align-self="center">
 						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory>
 							<v-btn x-small class="primary--text" value="cases">
 								{{($tc('cases', 1)) | normalizeNFD }}

@@ -3,20 +3,24 @@
 		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'">
 			<v-container class="pa-0 ma-0" fluid>
 				<v-row class="pa-0 ma-0" justify="space-between">
-					<v-autocomplete
-						dense
-						outlined
-						color="primary"
-						hide-details
-						class="caption fa-xs"
-						prepend-icon="fa-globe-europe"
-						:items="items"
-						item-text="region" item-value="uid"
-						v-model="search"
-						@change="doSimilar">
-
-					</v-autocomplete>
+					<v-col class="pa-0" align-self="center" cols="5">
+						<v-autocomplete
+							dense
+							outlined
+							color="primary"
+							hide-details
+							class="caption fa-xs"
+							prepend-icon="fa-globe-europe"
+							:items="items"
+							item-text="region" item-value="uid"
+							v-model="search"
+							@change="doSimilar">
+						</v-autocomplete>
+					</v-col>
 					<v-col class="pa-0 grow text-end ml-2" align-self="center" v-if="!$route.meta.iframe">
+						<v-btn x-small :fab="!$vuetify.breakpoint.smAndDown" :icon="$vuetify.breakpoint.smAndDown" color="grey" dark class="mr-1 elevation-0" @click="update">
+							<v-icon x-small>fa-redo</v-icon>
+						</v-btn>
 						<v-btn x-small :fab="!$vuetify.breakpoint.smAndDown" :icon="$vuetify.breakpoint.smAndDown" color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
 							<v-icon x-small>fa-code</v-icon>
 						</v-btn>
