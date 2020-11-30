@@ -16,16 +16,16 @@
 		<app-footer />
 		<v-bottom-navigation app v-model="m" v-if="$vuetify.breakpoint.smAndDown">
 			<v-btn value="recent" class="primary--text" to="/">
-				<span>Map</span>
+				<span>{{ $t('Map') }}</span>
 				<v-icon color="primary" small class="mb-1">fa-map</v-icon>
 			</v-btn>
 
 			<v-btn value="favorites" class="primary--text" to="/greece/">
-				<span>Greece</span>
+				<span>{{ $t('Greece') }}</span>
 				<v-icon color="primary" small class="mb-1">fa-search</v-icon>
 			</v-btn>
 			<v-btn value="nearby" class="primary--text" to="/global/">
-				<span>World</span>
+				<span>{{ $t('World') }}</span>
 				<v-icon color="primary" small class="mb-1">fa-globe</v-icon>
 			</v-btn>
 		</v-bottom-navigation>
