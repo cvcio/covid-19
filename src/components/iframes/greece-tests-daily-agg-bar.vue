@@ -43,11 +43,13 @@
 				<v-col
 					cols="12"
 					class="px-4"
+					align="center"
 				>
-				<d7-line-bar-events v-if="item"
-					:key="'gcb7l-' + item.uid + '-' + calc + '-' + point" :id="'gcb7l-uid-' + item.uid + '-' + calc + '-' + point"
-					:point="point" :values="item[calc === 'new' ? 'new_' + point : point]"
-					:dates="item.dates" :annotations="annotations" :sources="item.sources"/>
+					<v-progress-circular indeterminate v-if="loading" color="grey"></v-progress-circular>
+					<d7-line-bar-events v-else
+						:key="'gcb7l-' + item.uid + '-' + calc + '-' + point" :id="'gcb7l-uid-' + item.uid + '-' + calc + '-' + point"
+						:point="point" :values="item[calc === 'new' ? 'new_' + point : point]"
+						:dates="item.dates" :annotations="annotations" :sources="item.sources"/>
 				</v-col>
 			</v-row>
 		</v-container>
@@ -96,6 +98,7 @@ export default {
 	},
 	data () {
 		return {
+			loading: true,
 			point: 'tests',
 			item: null,
 			calc: 'new',
@@ -154,6 +157,7 @@ export default {
 						};
 					});
 					this.item = this.item[0];
+					this.loading = false;
 				});
 		},
 		update () {

@@ -17,11 +17,13 @@
 				<v-col
 					cols="12"
 					class="px-4"
+					align="center"
 				>
-				<d7-line-bar-events v-if="item"
-					:key="'gidagb-' + item.uid + '-' + point" :id="'gidagb-uid-' + item.uid + '-' + point"
-					:point="point" :values="item[point]"
-					:dates="item.dates" :annotations="annotations" :sources="item.sources"/>
+					<v-progress-circular indeterminate v-if="loading" color="grey"></v-progress-circular>
+					<d7-line-bar-events v-else
+						:key="'gidagb-' + item.uid + '-' + point" :id="'gidagb-uid-' + item.uid + '-' + point"
+						:point="point" :values="item[point]"
+						:dates="item.dates" :annotations="annotations" :sources="item.sources"/>
 				</v-col>
 			</v-row>
 		</v-container>
@@ -70,6 +72,7 @@ export default {
 	},
 	data () {
 		return {
+			loading: true,
 			point: 'critical',
 			item: null,
 			title: { en: '', el: '' }
@@ -115,6 +118,7 @@ export default {
 					});
 
 					this.item = this.item[0];
+					this.loading = false;
 				});
 		},
 		update () {

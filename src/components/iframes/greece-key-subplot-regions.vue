@@ -27,7 +27,13 @@
 		</v-app-bar>
 		<v-divider v-if="!$route.meta.iframe"/>
 		<v-container class="px-4" fluid>
+			<v-row v-if="loading" class="px-0">
+				<v-col align="center">
+					<v-progress-circular indeterminate color="grey"></v-progress-circular>
+				</v-col>
+			</v-row>
 			<v-data-iterator
+				v-else
 				:items="items"
 				:items-per-page.sync="itemsPerPage"
 				:page="page"
@@ -126,6 +132,7 @@ export default {
 	},
 	data () {
 		return {
+			loading: true,
 			point: 'cases',
 			items: [],
 			page: 1,
@@ -198,6 +205,7 @@ export default {
 
 					this.items = items; // items.filter(m => m.totalDeaths > 0).sort((a, b) => b.totalCases - a.totalCases);
 					this.numberOfPages = Math.ceil(this.items.length / this.itemsPerPage);
+					this.loading = false;
 				});
 		},
 		nextPage () {

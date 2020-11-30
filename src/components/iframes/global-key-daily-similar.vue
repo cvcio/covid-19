@@ -34,10 +34,12 @@
 				<v-col
 					cols="12"
 					class="px-4"
+					align="center"
 				>
-				<d7d-lines v-if="similar.length > 0"
-					:point="point" :uid="search"
-					:key="'gnd7d-'+search" :id="'gnd7d-'+search" :data="similar"/>
+					<v-progress-circular indeterminate v-if="loading" color="grey"></v-progress-circular>
+					<d7d-lines v-else
+						:point="point" :uid="search"
+						:key="'gnd7d-'+search" :id="'gnd7d-'+search" :data="similar"/>
 				</v-col>
 			</v-row>
 		</v-container>
@@ -86,6 +88,7 @@ export default {
 	},
 	data () {
 		return {
+			loading: true,
 			point: 'new_deaths',
 			items: [],
 			similar: [],
@@ -135,6 +138,8 @@ export default {
 					});
 					this.items = items.sort((a, b) => a.lastIndex - b.lastIndex);
 					this.doSimilar();
+
+					this.loading = false;
 				});
 		},
 		doSimilar (uid) {

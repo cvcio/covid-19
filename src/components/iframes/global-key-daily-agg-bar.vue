@@ -40,11 +40,13 @@
 				<v-col
 					cols="12"
 					class="px-4"
+					align="center"
 				>
-				<d7-line-bar-events v-if="item"
-					:key="'gacb7ln-' + '-' + calc + '-' + point" :id="'gacb7ln-uid-' + '-' + calc + '-' + point"
-					:point="point" :values="item[calc === 'new' ? 'new_' + point : point]"
-					:dates="item.dates" :sources="item.sources"/>
+					<v-progress-circular indeterminate v-if="loading" color="grey"></v-progress-circular>
+					<d7-line-bar-events v-else
+						:key="'gacb7ln-' + '-' + calc + '-' + point" :id="'gacb7ln-uid-' + '-' + calc + '-' + point"
+						:point="point" :values="item[calc === 'new' ? 'new_' + point : point]"
+						:dates="item.dates" :sources="item.sources"/>
 				</v-col>
 			</v-row>
 		</v-container>
@@ -92,6 +94,7 @@ export default {
 	},
 	data () {
 		return {
+			loading: true,
 			point: 'cases',
 			item: null,
 			items: null,
@@ -157,6 +160,7 @@ export default {
 					obj.new_deaths = obj.new_deaths.reduce(sum);
 
 					this.item = obj;
+					this.loading = false;
 				});
 		},
 		update () {

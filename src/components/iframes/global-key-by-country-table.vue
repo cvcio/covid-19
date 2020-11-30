@@ -31,7 +31,9 @@
 		<v-container class="px-0" fluid :class="$route.meta.iframe ? 'px-4' : ''">
 			<v-row class="px-3">
 				<v-col class="px-0" align="center">
+					<v-progress-circular indeterminate v-if="loading" color="grey"></v-progress-circular>
 					<v-data-table
+						v-else
 						dense
 						:headers="headers"
 						:items="items"
@@ -122,6 +124,7 @@ export default {
 	},
 	data () {
 		return {
+			loading: true,
 			key: 'cases',
 			headers: [
 				{
@@ -211,6 +214,8 @@ export default {
 							sources: m.sources.sort()
 						};
 					});
+
+					this.loading = false;
 				});
 		},
 		update () {

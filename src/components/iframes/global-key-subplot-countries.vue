@@ -40,7 +40,13 @@
 		</v-app-bar>
 		<v-divider v-if="!$route.meta.iframe"/>
 		<v-container class="px-4" fluid>
+			<v-row class="px-0" v-if="loading">
+				<v-col align="center">
+					<v-progress-circular indeterminate color="grey"></v-progress-circular>
+				</v-col>
+			</v-row>
 			<v-data-iterator
+				v-else
 				:items="similar"
 				:items-per-page.sync="itemsPerPage"
 				:page="page"
@@ -112,6 +118,7 @@ export default {
 	},
 	data () {
 		return {
+			loading: true,
 			totals: 0,
 			point: 'cases',
 			items: [],
@@ -180,6 +187,8 @@ export default {
 					this.items = items.sort((a, b) => a.population - b.population);
 					this.totals = this.items.length;
 					this.doSimilar();
+
+					this.loading = false;
 				});
 		},
 		doSimilar (uid) {
