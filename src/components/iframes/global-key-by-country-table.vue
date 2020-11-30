@@ -35,10 +35,10 @@
 					<v-data-table
 						v-else
 						dense
-						:headers="headers"
+						:headers="headers(key)"
 						:items="items"
 						:sort-by="['p100p_' + key]"
-   						:sort-desc="[true, true]"
+   						:sort-desc="[true]"
 						:items-per-page="20"
 						class="elevation-0"
 					>
@@ -126,40 +126,6 @@ export default {
 		return {
 			loading: true,
 			key: 'cases',
-			headers: [
-				{
-					text: this.$t('Country'),
-					align: 'start',
-					sortable: true,
-					value: 'region',
-					class: 'text-capitalize',
-					width: '30%'
-				},
-				{
-					text: this.$t('Total'),
-					align: 'start',
-					sortable: true,
-					// value: 'total_' + this.key,
-					class: 'text-capitalize',
-					width: '15%'
-				},
-				{
-					text: this.$t('Per 100K'),
-					align: 'start',
-					sortable: true,
-					// value: 'p100p_' + this.key,
-					class: 'text-capitalize',
-					width: '15%'
-				},
-				{
-					text: this.$t('Weekly'),
-					align: 'start',
-					sortable: false,
-					value: 'region',
-					width: '40%',
-					class: 'text-capitalize'
-				}
-			],
 			items: [],
 			title: { en: '', el: '' }
 		};
@@ -220,6 +186,43 @@ export default {
 		},
 		update () {
 			this.load();
+		},
+
+		headers (key) {
+			return [
+				{
+					text: this.$t('Country'),
+					align: 'start',
+					sortable: true,
+					value: 'region',
+					class: 'text-capitalize',
+					width: '30%'
+				},
+				{
+					text: this.$t('Total'),
+					align: 'start',
+					sortable: true,
+					value: 'total_' + key,
+					class: 'text-capitalize',
+					width: '15%'
+				},
+				{
+					text: this.$t('Per 100K'),
+					align: 'start',
+					sortable: true,
+					value: 'p100p_' + key,
+					class: 'text-capitalize',
+					width: '15%'
+				},
+				{
+					text: this.$t('Weekly'),
+					align: 'start',
+					sortable: false,
+					value: 'region',
+					width: '40%',
+					class: 'text-capitalize'
+				}
+			];
 		}
 	}
 };

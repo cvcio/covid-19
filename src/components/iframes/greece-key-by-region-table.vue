@@ -33,10 +33,10 @@
 					<v-data-table
 						v-else
 						dense
-						:headers="headers"
-						:items="items"
+						:headers="headers(key)"
 						:sort-by="['p100p_' + key]"
-   						:sort-desc="[true, true]"
+						:sort-desc="[true]"
+						:items="items"
 						:items-per-page="itemsPerPage"
 						class="elevation-0"
 					>
@@ -124,40 +124,6 @@ export default {
 		return {
 			loading: true,
 			key: 'cases',
-			headers: [
-				{
-					text: this.$t('Area'),
-					align: 'start',
-					sortable: true,
-					value: 'region',
-					class: 'text-capitalize',
-					width: '30%'
-				},
-				{
-					text: this.$t('Total'),
-					align: 'start',
-					sortable: true,
-					// value: 'totalCases',
-					class: 'text-capitalize',
-					width: '15%'
-				},
-				{
-					text: this.$t('Per 100K'),
-					align: 'start',
-					sortable: true,
-					// value: 'p100pCases',
-					class: 'text-capitalize',
-					width: '15%'
-				},
-				{
-					text: this.$t('Weekly'),
-					align: 'start',
-					sortable: false,
-					value: 'region',
-					width: '40%',
-					class: 'text-capitalize'
-				}
-			],
 			items: [],
 			itemsPerPage: 15,
 			title: { en: '', el: '' }
@@ -184,6 +150,7 @@ export default {
 			this.$store.commit('setEmbedDialog', true);
 			this.$store.commit('setEmbed', this.embed);
 		},
+		getHeaders () {},
 		load () {
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
 			this.$store.dispatch('external/getGreeceAGG', 'all/new_cases,new_deaths/' + this.periodInterval[3].value)
@@ -215,6 +182,43 @@ export default {
 
 		update () {
 			this.load();
+		},
+
+		headers (key) {
+			return [
+				{
+					text: this.$t('Area'),
+					align: 'start',
+					sortable: true,
+					value: 'region',
+					class: 'text-capitalize',
+					width: '30%'
+				},
+				{
+					text: this.$t('Total'),
+					align: 'start',
+					sortable: true,
+					value: 'total_' + key,
+					class: 'text-capitalize',
+					width: '15%'
+				},
+				{
+					text: this.$t('Per 100K'),
+					align: 'start',
+					sortable: true,
+					value: 'p100p_' + key,
+					class: 'text-capitalize',
+					width: '15%'
+				},
+				{
+					text: this.$t('Weekly'),
+					align: 'start',
+					sortable: false,
+					value: 'region',
+					width: '40%',
+					class: 'text-capitalize'
+				}
+			];
 		}
 	}
 };
