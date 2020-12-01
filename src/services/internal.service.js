@@ -19,7 +19,7 @@ const internalSVC = {
 	},
 	async getPosts () {
 		try {
-			const response = await api.get(process.env.VUE_APP_BASE_URL + 'data/posts.json');
+			const response = await api.get(process.env.VUE_APP_BASE_URL + '/data/posts.json');
 			return response.data;
 		} catch (error) {
 			throw new APIError(error.response ? error.response.status : 'Error', error.message);

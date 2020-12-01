@@ -157,7 +157,7 @@ export default {
 		},
 		getIframe () {
 			return (`<iframe
-	src="${this.$BASE_URL}iframe/${this.embed.id}?${this.queryString}"
+	src="${this.$DISPLAY_URL}iframe/${this.embed.id}?${this.queryString}"
 	width="100%" height="640"
 	style="border:0px #ffffff none;"
 	name="covid"
