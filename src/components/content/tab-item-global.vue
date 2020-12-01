@@ -20,7 +20,9 @@
 						<p class="caption small-caption text-uppercase primary--text mb-0">
 							<span v-if="mapPeriodIDX < 3">{{ $tc('cases', 1) | normalizeNFD }} / </span>{{ $t('total cases') | normalizeNFD }}
 						</p>
-						<sparklines v-if="sparks.new_cases.length > 7" class="d-block totals-sparklines" :data="sparks.new_cases" id="totals-gl-cases-sparklines" style="height: 60px;"/>
+						<sparklines
+							:key="'gl-sparks-new_cases-'+mapPeriodIDX"
+							v-if="sparks.new_cases.length > 7" class="d-block totals-sparklines" :data="sparks.new_cases" id="totals-gl-cases-sparklines" style="height: 60px;"/>
 					</v-col>
 					<v-col cols="12" class="secondary--opac pa-2" style="position:relative">
 						<h4 class="text-h5 font-weight-bold grey--text">
@@ -31,7 +33,9 @@
 						<p class="caption small-caption text-uppercase secondary--text mb-0">
 							<span v-if="mapPeriodIDX < 3">{{ $tc('deaths', 1) | normalizeNFD }} / </span>{{ $t('total deaths') | normalizeNFD }}
 						</p>
-						<sparklines v-if="sparks.new_deaths.length > 7" class="d-block totals-sparklines" :data="sparks.new_deaths" id="totals-gg-deaths-sparklines" style="height: 60px;"/>
+						<sparklines
+							:key="'gl-sparks-new_deaths-'+mapPeriodIDX"
+							v-if="sparks.new_deaths.length > 7" class="d-block totals-sparklines" :data="sparks.new_deaths" id="totals-gg-deaths-sparklines" style="height: 60px;"/>
 					</v-col>
 				</v-row>
 				<v-row class="mt-1 mb-4 px-7 py-0" align="center">

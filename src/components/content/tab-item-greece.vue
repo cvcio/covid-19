@@ -21,6 +21,7 @@
 							<span v-if="mapPeriodIDX < 3">{{ $tc('cases', 1) | normalizeNFD }} / </span>{{ $t('total cases') | normalizeNFD }}
 						</p>
 						<sparklines
+							:key="'gr-sparks-new_cases-'+mapPeriodIDX"
 							v-if="sparks.new_cases.length > 7"
 							class="d-block totals-sparklines"
 							:data="sparks.new_cases"
@@ -36,6 +37,7 @@
 							<span v-if="mapPeriodIDX < 3">{{ $tc('deaths', 1) | normalizeNFD }} / </span>{{ $t('total deaths') | normalizeNFD }}
 						</p>
 						<sparklines
+							:key="'gr-sparks-new_deaths-'+mapPeriodIDX"
 							v-if="sparks.new_deaths.length > 7"
 							class="d-block totals-sparklines"
 							:data="sparks.new_deaths"

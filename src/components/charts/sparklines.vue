@@ -1,5 +1,5 @@
 <template>
-	<div :id="id" class="sparklines"></div>
+	<div :id="id" class="sparklines" v-resize="draw"/>
 </template>
 
 <script>
@@ -16,9 +16,7 @@ export default {
 	},
 	watch: {
 		data (value, old) {
-			if (value !== old) {
-				this.draw();
-			}
+			this.draw();
 		}
 	},
 	mounted () {
@@ -113,12 +111,11 @@ export default {
 <style lang="less">
 .sparklines {
 	position: relative;
-	display: inline-block;
-	// width: 140px;
+	display: block;
+	min-width: 180px;
 	max-height: 60px;
 	width: 100%;
 	svg {
-		// width: 140px;
 		// height: 60px;
 		text {
 			text-anchor: start;
