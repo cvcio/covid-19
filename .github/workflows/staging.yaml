@@ -33,4 +33,4 @@ jobs:
           build-args: NODE_ENV=staging,VUE_APP_GOOGLE_TAG=${{ secrets.VUE_APP_GOOGLE_TAG }},VUE_APP_MAPBOX=${{ secrets.VUE_APP_MAPBOX }}
           tags: |
               ${{ secrets.CVCIO_CONTAINER_REGISTRY }}/covid-19:${{ steps.vars.outputs.tag }}
-              ${{ secrets.CVCIO_CONTAINER_REGISTRY }}/covid-19:latest
+              ${{ secrets.CVCIO_CONTAINER_REGISTRY }}/covid-19:staging
