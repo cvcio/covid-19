@@ -136,6 +136,7 @@ export default {
 					this.recovered = sumBy(res, 'total_recovered') || 0;
 					this.tests = sumBy(res, 'total_tests') || 0;
 				});
+
 			this.$store.dispatch('external/getGlobalAGG', 'all/new_cases,new_deaths' + (this.mapPeriodIDX > 0 ? '/' + this.mapPeriod : ''))
 				.then(res => {
 					const items = res.map(m => {

@@ -8,9 +8,9 @@
 							<v-btn x-small class="primary--text" value="cases">
 								{{($tc('cases', 1)) | normalizeNFD }}
 							</v-btn>
-							<v-btn x-small class="primary--text" value="deaths">
+							<!-- <v-btn x-small class="primary--text" value="deaths">
 								{{($tc('deaths', 1)) | normalizeNFD }}
-							</v-btn>
+							</v-btn> -->
 						</v-btn-toggle>
 					</v-col>
 					<v-spacer/>
