@@ -46,7 +46,7 @@
 								dark
 								class=""
 								v-bind="attrs"
-								v-on="on">
+								v-on="on" href="https://github.com/iMEdD-Lab/open-data" target="_blank">
 								<v-icon x-small>fa-info-circle</v-icon>
 							</v-btn>
 						</template>
@@ -89,6 +89,6 @@ export default {
 	pointer-events: all;
 }
 .app-header {
-	z-index: 10;
+	z-index: 0;
 }
 </style>

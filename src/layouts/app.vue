@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<app-bar />
-		<v-navigation-drawer app floating :value="sidebar" color="" width="95%" temporary>
+		<v-navigation-drawer app floating :value="sidebar" color="" width="95%" temporary v-if="$vuetify.breakpoint.smAndDown">
 			<v-container fluid class="pa-0 mt-0">
 				<v-row no-gutters class="no-events">
 					<tabs class="no-events"/>
@@ -14,33 +14,41 @@
 			</v-scroll-y-transition>
 		</v-main>
 		<app-footer />
-		<v-bottom-navigation app v-model="m" v-if="$vuetify.breakpoint.smAndDown">
+		<v-bottom-navigation v-model="m" v-if="$vuetify.breakpoint.smAndDown" app class="bottom-navigation">
 			<v-btn value="recent" class="primary--text" to="/">
-				<span>Map</span>
+				<span>{{ $t('Map') }}</span>
 				<v-icon color="primary" small class="mb-1">fa-map</v-icon>
 			</v-btn>
 
 			<v-btn value="favorites" class="primary--text" to="/greece/">
-				<span>Greece</span>
+				<span>{{ $t('Greece') }}</span>
 				<v-icon color="primary" small class="mb-1">fa-search</v-icon>
 			</v-btn>
 			<v-btn value="nearby" class="primary--text" to="/global/">
-				<span>World</span>
+				<span>{{ $t('World') }}</span>
 				<v-icon color="primary" small class="mb-1">fa-globe</v-icon>
 			</v-btn>
 		</v-bottom-navigation>
+		<addthis
+			publicId="ra-5e6e40408bf2d5f7"
+			:async="true"
+		/>
+		<embed-dialog/>
 	</div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import AddThis from 'vue-simple-addthis-share';
 
 export default {
 	name: 'layout-app',
 	components: {
 		'app-bar': require('@/components/app/app-bar').default,
 		'app-footer': require('@/components/app/app-footer').default,
-		tabs: require('@/components/content/tabs').default
+		tabs: require('@/components/content/tabs').default,
+		'embed-dialog': require('@/components/content/embeds/dialog').default,
+		addthis: require('vue-simple-addthis-share').default
 	},
 	computed: {
 		...mapGetters(['sidebar'])
@@ -54,3 +62,9 @@ export default {
 	methods: {}
 };
 </script>
+
+<style lang="less" scoped>
+.bottom-navigation {
+	margin-bottom: 32px !important;
+}
+</style>

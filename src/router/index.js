@@ -55,7 +55,83 @@ const routes = [
 		name: 'frame',
 		props: { isNav: true, lang: '' },
 		meta: { layout: layoutIframe },
-		component: () => import(/* webpackChunkName: "frame" */ '@/views/frame.vue')
+		component: () => import(/* webpackChunkName: "frame" */ '@/views/frame.vue'),
+		children: [
+			// Greece
+			{
+				path: 'greece-key-by-region-table',
+				name: 'greece-key-by-region-table',
+				props: {},
+				meta: { iframe: true },
+				component: () => import(/* webpackChunkName: "d-frame" */ '@/components/iframes/greece-key-by-region-table.vue')
+			},
+			{
+				path: 'greece-key-daily-agg-bar',
+				name: 'greece-key-daily-agg-bar',
+				props: {},
+				meta: { iframe: true },
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-key-daily-agg-bar.vue')
+			},
+			{
+				path: 'greece-intubated-daily-agg-bar',
+				name: 'greece-intubated-daily-agg-bar',
+				props: {},
+				meta: { iframe: true },
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-intubated-daily-agg-bar.vue')
+			},
+
+			{
+				path: 'greece-key-subplot-regions',
+				name: 'greece-key-subplot-regions',
+				props: {},
+				meta: { iframe: true },
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-key-subplot-regions.vue')
+			},
+			{
+				path: 'greece-tests-daily-agg-bar',
+				name: 'greece-tests-daily-agg-bar',
+				props: {},
+				meta: { iframe: true },
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-tests-daily-agg-bar.vue')
+			},
+			// Global
+			{
+				path: 'global-key-by-country-table',
+				name: 'global-key-by-country-table',
+				props: {},
+				meta: { iframe: true },
+				component: () => import(/* webpackChunkName: "d-frame" */ '@/components/iframes/global-key-by-country-table.vue')
+			},
+			{
+				path: 'global-key-daily-agg-bar',
+				name: 'global-key-daily-agg-bar',
+				props: {},
+				meta: { iframe: true },
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/global-key-daily-agg-bar.vue')
+			},
+			{
+				path: 'global-key-subplot-countries',
+				name: 'global-key-subplot-countries',
+				props: {},
+				meta: { iframe: true },
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/global-key-subplot-countries.vue')
+			},
+			{
+				path: 'global-key-daily-similar',
+				name: 'global-key-daily-similar',
+				props: {},
+				meta: { iframe: true },
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/global-key-daily-similar.vue')
+			},
+
+			{
+				path: 'map-view',
+				name: 'map-view',
+				props: { lang: '' },
+				meta: { iframe: true },
+				component: () => import(/* webpackChunkName: "map-view" */ '@/components/iframes/map-view.vue')
+			}
+		]
 	},
 	{
 		path: '*',
@@ -66,12 +142,18 @@ const routes = [
 const router = new VueRouter({
 	mode: 'history',
 	base: process.env.BASE_URL,
+	scrollBehavior (to, from, savedPosition) {
+		if (savedPosition) {
+			return savedPosition;
+		} else {
+			return { x: 0, y: 0 };
+		}
+	},
 	routes
 });
 
 router.beforeEach((to, from, next) => {
 	const locale = getLocale(to.query.lang || defaultLocale);
-	console.debug('Locale:', locale.name);
 	store.dispatch('setLocale', locale);
 	if (locale) {
 		i18n.locale = locale.code;

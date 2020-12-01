@@ -12,9 +12,8 @@
 					</v-card-title>
 					<v-divider/>
 					<v-card-subtitle class="pa-2">
-						<h4 class="subtitle-2 primary--text  primary--text">
-							<span class="text-capitalize">{{ $tc(point, 1) }}</span>
-							<span class="text-lowercase">{{pp100}}</span>: {{ new Intl.NumberFormat('el-GR').format(d.value.toFixed(0)) }}
+						<h4 class="subtitle-2 primary--text text-capitalize primary--text">
+							{{ $tc(point, 1) }}: {{ new Intl.NumberFormat('el-GR').format(d.value.toFixed(0)) }}
 						</h4>
 					</v-card-subtitle>
 					<v-divider/>
@@ -34,10 +33,11 @@ import { mapGetters } from 'vuex';
 import { line, select, scaleLinear, axisBottom, axisRight, max } from 'd3';
 import { ma } from 'moving-averages';
 import * as colors from '@/helper/colors';
+import annotation from 'd3-svg-annotation';
 
 export default {
-	name: 'chart-d7-line-bar',
-	props: ['id', 'dates', 'values', 'point', 'sources', 'min', 'max', 'pp100'],
+	name: 'chart-d7-line-bar-events',
+	props: ['id', 'dates', 'values', 'point', 'annotations', 'sources'],
 	computed: {
 		...mapGetters(['locale'])
 	},
@@ -70,6 +70,7 @@ export default {
 			if (this.chart) {
 				this.chart.selectAll('*').remove();
 			}
+
 			const data = this.dates.map((m, i) => {
 				return {
 					date: m,
@@ -84,8 +85,8 @@ export default {
 			this.chart = null;
 
 			const width = div.clientWidth;
-			const height = 96;
-			const margin = { top: 0, left: 0, bottom: 0, right: 0 };
+			const height = 280;
+			const margin = { top: 0, left: 0, bottom: 10, right: 0 };
 			const innerWidth = width - margin.left - margin.right;
 			const innerHeight = height - margin.top - margin.bottom;
 
@@ -98,8 +99,7 @@ export default {
 			const barW = Math.floor(width / data.length) - 0.5;
 
 			const x = scaleLinear().range([0, innerWidth]).domain([0, data.length]);
-			// const y = scaleLinear().range([innerHeight, 0]).domain([0, max(this.values)]).nice(10);
-			const y = scaleLinear().range([innerHeight, 0]).domain([0, this.max ? Math.ceil(this.max) : Math.max(max(this.values), 1)]).nice(10);
+			const y = scaleLinear().range([innerHeight, 0]).domain([0, max(this.values)]).nice(10);
 
 			const l = line()
 				.x((d, i) => x(i))
@@ -118,7 +118,7 @@ export default {
 				.attr('transform', `translate(0, ${height - margin.bottom})`)
 				.call(
 					axisBottom(x)
-						.ticks(1)
+						.ticks(6)
 						.tickFormat(d => this.$moment(this.dates[d]).format('MM/Y'))
 				)
 				.call(g => g.select('.domain').remove());
@@ -161,7 +161,7 @@ export default {
 					self.py = e.clientY;
 					self.d = d;
 					select(this)
-						.attr('fill', colors[self.point + 'CS'][10]);
+						.attr('fill', colors[self.point + 'CS'][9]);
 				})
 				.on('mouseout', function () {
 					self.tooltip = false;
@@ -171,9 +171,56 @@ export default {
 
 			this.chart.append('path').datum(sma)
 				.attr('fill', 'none')
-				.attr('stroke', colors[this.point + 'CS'][10])
+				.attr('stroke', colors[this.point + 'CS'][9])
 				.attr('stroke-width', 2)
 				.attr('d', l);
+
+			if (this.annotations) {
+				const annotations = this.annotations.map(m => {
+					const idx = this.dates.findIndex(moment => moment.format('DD/MM/YYYY') === m.date);
+					return {
+						note: {
+							title: this.$moment(m.date, 'DD/MM/YYYY').format('LL'),
+							label: m['name_' + this.locale.code],
+							padding: 6,
+							wrap: 180,
+							align: 'middle'
+						},
+						type: annotation.annotationCalloutCircle,
+						x: x(idx),
+						y: y(data[idx].value),
+						dy: 80 - y(data[idx].value),
+						dx: 200 - x(idx),
+						subject: { radius: 8 },
+						color: m.importance > 10 ? 'black' : 'grey',
+						connector: {
+							type: 'line',
+							lineType: 'horizontal',
+							endScale: 1
+						}
+					};
+				});
+
+				const makeAnnotations = annotation.annotation()
+					.annotations(annotations)
+					.on('subjectover', function (a) {
+						a.type.a.selectAll('g.annotation-connector, g.annotation-note')
+							.classed('hidden', false);
+					})
+					.on('subjectout', function (a) {
+						a.type.a.selectAll('g.annotation-connector, g.annotation-note')
+							.classed('hidden', true);
+					});
+				this.chart.append('g').call(makeAnnotations);
+				this.chart.selectAll('g.annotation-connector, g.annotation-note').classed('hidden', true);
+				this.chart.selectAll('.connector')
+					.attr('stroke', colors.testsCS[7])
+					.style('stroke-dasharray', ('3, 3'));
+
+				this.chart.selectAll('.connector-end')
+					.attr('stroke', colors.testsCS[7])
+					.attr('fill', colors.testsCS[7]);
+			}
 		}
 	}
 };
@@ -183,7 +230,7 @@ export default {
 .d7-line-bar {
 	display: inline-block;
 	// width: 140px;
-	max-height: 96px;
+	max-height: 280px;
 	width: 100%;
 	svg {
 		.axis {
@@ -220,6 +267,28 @@ export default {
 			text-anchor: start;
 			font: normal 9px 'Roboto';
 		}
+	}
+	.annotation path {
+		stroke: 'red';
+		fill: 'red';
+	}
+	.annotation path.connector-arrow,
+	.title text, .annotation text,
+	.annotation.callout.circle .annotation-subject path {
+		fill: rgba(140, 140, 140, 1);
+	}
+
+	.annotation-note-title  {
+		font-weight: bold;
+		fill: rgba(100, 100, 100, 1);
+	}
+
+	.annotation.xythreshold {
+		cursor: move;
+	}
+
+	.hidden {
+		display: none;
 	}
 }
 

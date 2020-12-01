@@ -1,9 +1,9 @@
 <template>
-	<v-app-bar app class="elevation-0" color="rgba(255, 255, 255, 0.7)">
+	<v-app-bar app class="elevation-0" color="rgba(255, 255, 255, 1)">
 		<v-app-bar-nav-icon @click="$store.commit('setSidebar', !sidebar)" v-if="$vuetify.breakpoint.smAndDown">
 			<v-icon small color="primary">fa-sliders-h</v-icon>
 		</v-app-bar-nav-icon>
-		<router-link to="/" style="width:100%;">
+		<router-link to="/" style="width: 178px;">
 			<logo-imedd-lab/>
 		</router-link>
 		<v-spacer/>

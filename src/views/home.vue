@@ -4,8 +4,8 @@
 			<v-row no-gutters class="no-events">
 				<div id="map-container" class="d-block blue-grey lighten-4" :class="$vuetify.breakpoint.smAndDown ? 'mobile' : 'desktop'">
 					<map-view class="events"/>
-					<app-header class="no-events"/>
-					<tabs class="no-events" v-if="!$vuetify.breakpoint.smAndDown"/>
+					<app-header class="bellow-map no-events"/>
+					<tabs class="bellow-map  no-events" v-if="!$vuetify.breakpoint.smAndDown"/>
 				</div>
 			</v-row>
 		</v-container>
@@ -22,7 +22,7 @@ export default {
 		'app-header': require('@/components/app/app-header').default,
 		tabs: require('@/components/content/tabs').default,
 		'content-list': require('@/components/content/content-list').default,
-		'map-view': require('@/components/charts/map-view').default
+		'map-view': require('@/components/iframes/map-view').default
 	},
 	computed: {
 		...mapGetters(['locale'])
@@ -35,17 +35,17 @@ export default {
 	},
 	methods: {
 		onScroll (e) {
-			this.showAltNav = e.target.scrollingElement.scrollTop > window.innerHeight * 0.9;
+			this.showAltNav = e.target.scrollingElement.scrollTop > window.innerHeight * 0.85;
 		}
 	}
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 #map-container {
 	position: relative;
 	width: 100%;
-	height: 95vh;
+	height: 90vh;
 	z-index: 0;
 	&.mobile {
 		height: calc(100vh - 56px);
@@ -53,7 +53,18 @@ export default {
 	.top-offset {
 		margin-top: 76px;
 	}
+
+	.map .tooltip {
+		z-index: 1002;
+		position: fixed;
+	}
+
+	.bellow-map  {
+		z-index: 1;
+		position: relative;
+	};
 }
+
 .container.max-width {
 	max-width: 1264px;
 }

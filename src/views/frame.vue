@@ -1,5 +1,5 @@
 <template>
-	<div>iframe</div>
+	<router-view v-bind:key="$route.params.id" />
 </template>
 
 <script>

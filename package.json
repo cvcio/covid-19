@@ -8,22 +8,28 @@
   "scripts": {
     "serve": "vue-cli-service serve --mode development",
     "build": "vue-cli-service build --mode production",
+    "production": "vue-cli-service build --mode production",
+    "staging": "vue-cli-service build --mode staging",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "axios": "^0.21.0",
     "chroma-js": "^2.1.0",
     "d3": "^6.2.0",
+    "d3-svg-annotation": "^2.5.1",
     "lodash": "^4.17.20",
     "mapbox-gl": "^1.12.0",
     "moment": "^2.29.1",
     "moving-averages": "^4.0.5",
     "register-service-worker": "^1.7.1",
     "simple-statistics": "^7.3.0",
+    "simple-syntax-highlighter": "^1.4.4",
     "vue": "^2.6.12",
     "vue-gtag": "^1.9.1",
     "vue-i18n": "^8.22.0",
+    "vue-observe-visibility": "^0.4.6",
     "vue-router": "^3.4.7",
+    "vue-simple-addthis-share": "^0.1.5",
     "vuetify": "^2.3.17",
     "vuex": "^3.5.1",
     "vuex-router-sync": "^5.0.0"

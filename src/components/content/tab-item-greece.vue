@@ -3,52 +3,64 @@
 		<v-card flat>
 			<v-container fluid class="px-0">
 				<v-row class="px-4" align="center">
-					<v-col cols="7">
+					<v-col cols="6">
 						<switch-map-source :label="'COVID—19'" :val="'covid'" disabled/>
 					</v-col>
-					<v-col cols="5">
-						<autocomplete-map-period :label="'period'"/>
+					<v-col cols="6">
+						<autocomplete-map-period :label="$t('label.period')"/>
 					</v-col>
 				</v-row>
 				<v-row class="px-4" align="center" no-gutters>
-					<v-col cols="12" class="primary--opac pa-2 mb-1">
+					<v-col cols="12" class="primary--opac pa-2 mb-1" style="position:relative">
 						<h4 class="text-h5 font-weight-bold grey--text">
 							<span class="primary--text" v-if="mapPeriodIDX < 3">{{ new Intl.NumberFormat('el-GR').format(cases.toFixed(2)) }}</span>
 							<span class="primary--text" v-if="mapPeriodIDX === 3">{{ new Intl.NumberFormat('el-GR').format(totalCases.toFixed(2)) }}</span>
 							<span class="" v-if="mapPeriodIDX < 3"> / {{ new Intl.NumberFormat('el-GR').format(totalCases.toFixed(2)) }}</span>
 						</h4>
 						<p class="caption small-caption text-uppercase primary--text mb-0">
-							{{ $tc('cases', 1) | normalizeNFD }} / {{ $t('total cases') | normalizeNFD }}
+							<span v-if="mapPeriodIDX < 3">{{ $tc('cases', 1) | normalizeNFD }} / </span>{{ $t('total cases') | normalizeNFD }}
 						</p>
+						<sparklines
+							:key="'gr-sparks-new_cases-'+mapPeriodIDX"
+							v-if="sparks.new_cases.length > 7"
+							class="d-block totals-sparklines"
+							:data="sparks.new_cases"
+							id="totals-g-cases-sparklines" style="height: 60px;"/>
 					</v-col>
-					<v-col cols="12" class="secondary--opac pa-2">
+					<v-col cols="12" class="secondary--opac pa-2" style="position:relative">
 						<h4 class="text-h5 font-weight-bold grey--text">
 							<span class="secondary--text" v-if="mapPeriodIDX < 3">{{ new Intl.NumberFormat('el-GR').format(deaths.toFixed(2)) }}</span>
 							<span class="secondary--text" v-if="mapPeriodIDX === 3">{{ new Intl.NumberFormat('el-GR').format(totalDeaths.toFixed(2)) }}</span>
 							<span class="" v-if="mapPeriodIDX < 3"> / {{ new Intl.NumberFormat('el-GR').format(totalDeaths.toFixed(2)) }}</span>
 						</h4>
 						<p class="caption small-caption text-uppercase secondary--text mb-0">
-							{{ $tc('deaths', 1) | normalizeNFD }} / {{ $t('total deaths') | normalizeNFD }}
+							<span v-if="mapPeriodIDX < 3">{{ $tc('deaths', 1) | normalizeNFD }} / </span>{{ $t('total deaths') | normalizeNFD }}
 						</p>
+						<sparklines
+							:key="'gr-sparks-new_deaths-'+mapPeriodIDX"
+							v-if="sparks.new_deaths.length > 7"
+							class="d-block totals-sparklines"
+							:data="sparks.new_deaths"
+							id="totals-g-deaths-sparklines" style="height: 60px;"/>
 					</v-col>
 				</v-row>
 				<v-row class="mt-1 mb-4 px-7 py-0" align="center">
 					<v-col cols="12" class="py-0 px-3">
 						<v-row class="outlined">
-							<v-col class="pa-2 primary--text">
+							<v-col class="pa-2 primary--text" v-if="mapPeriodIDX === 0">
 								<h4 class="subtitle-2 font-weight-bold">
 									{{ new Intl.NumberFormat('el-GR').format(active.toFixed(2)) }}
 								</h4>
 								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
-									{{ $t('active') | normalizeNFD }} {{ $tc('cases', 1) | normalizeNFD }}
+									{{ $t('Active Cases') | normalizeNFD }}
 								</p>
 							</v-col>
-							<v-col class="pa-2 orange--text">
+							<v-col class="pa-2 orange--text" v-if="mapPeriodIDX === 0">
 								<h4 class="subtitle-2 font-weight-bold">
 									{{ new Intl.NumberFormat('el-GR').format(critical.toFixed(2)) || '-' }}
 								</h4>
 								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
-									{{ $t('intubated') | normalizeNFD }}
+									{{ $t('Intubated') | normalizeNFD }}
 								</p>
 							</v-col>
 							<v-col class="pa-2 success--text">
@@ -56,7 +68,7 @@
 									{{ new Intl.NumberFormat('el-GR').format(recovered.toFixed(2)) }}
 								</h4>
 								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
-									{{ $t('recovered') | normalizeNFD }}
+									{{ $t('Recovered') | normalizeNFD }}
 								</p>
 							</v-col>
 							<v-col class="pa-2 grey--text">
@@ -64,106 +76,12 @@
 									{{ new Intl.NumberFormat('el-GR').format(tests.toFixed(2)) || '-' }}
 								</h4>
 								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
-									{{ $t('tested') | normalizeNFD }}
+									{{ $t('Tests') | normalizeNFD }}
 								</p>
 							</v-col>
 						</v-row>
 					</v-col>
 				</v-row>
-				<!--
-				<v-divider class="ml-4" />
-				<v-row class="px-4"  align="center">
-					<v-col cols="7">
-						<v-switch dense hide-details class="pt-0">
-							<template v-slot:label>
-								<span class="subtitle-2 font-weight-bold">SCHOOLS</span>
-							</template>
-						</v-switch>
-					</v-col>
-					<v-col cols="5">
-						<v-autocomplete hide-details prepend-icon="" class="pt-0" label="filter" color="primary">
-							<template v-slot:prepend>
-								<v-icon small class="mt-1" color="primary">
-									fa-clock
-								</v-icon>
-							</template>
-						</v-autocomplete>
-					</v-col>
-					<v-col cols="12" class="py-0">
-						<p class="caption font-italic mt-0 grey--text">Activate this filter to see suspended schools on the map</p>
-					</v-col>
-					<v-col cols="12" class="py-0">
-						<v-row class="blue-grey lighten-4 mx-0 mb-1" align="center">
-							<v-col class="text-start py-1 caption">CLOSED</v-col>
-							<v-col class="text-end py-1 title">27</v-col>
-						</v-row>
-						<v-row class="blue-grey lighten-4 mx-0 mb-1" align="center">
-							<v-col class="text-start py-1 caption">CLOSED</v-col>
-							<v-col class="text-end py-1 title">27</v-col>
-						</v-row>
-						<v-row class="blue-grey lighten-4 mx-0 mb-4" align="center">
-							<v-col class="text-start py-1 caption">CLOSED</v-col>
-							<v-col class="text-end py-1 title">27</v-col>
-						</v-row>
-					</v-col>
-				</v-row>
-				<v-divider class="ml-4" />
-				<v-row class="px-4"  align="center">
-					<v-col cols="7">
-						<v-switch dense hide-details class="pt-0">
-							<template v-slot:label>
-								<span class="subtitle-2 font-weight-bold">POLICY RESPONSES</span>
-							</template>
-						</v-switch>
-					</v-col>
-					<v-col cols="5">
-						<v-select hide-details prepend-icon="" class="pt-0" label="filter" color="primary">
-							<template v-slot:prepend>
-								<v-icon small class="mt-1" color="primary">
-									fa-clock
-								</v-icon>
-							</template>
-						</v-select>
-					</v-col>
-					<v-col cols="12" class="py-0">
-						<p class="caption font-italic mt-0 grey--text">Activate this filter to see suspended schools on the map</p>
-					</v-col>
-				</v-row>
-				-->
-				<!-- <v-divider class="ml-4" />
-				<v-row class="px-4" align="center">
-					<v-col cols="7">
-						<switch-map-source :label="$tc('hospitals', 1) | normalizeNFD" :val="'hospitals'"/>
-					</v-col>
-					<v-col cols="5">
-						<v-autocomplete hide-details prepend-icon="" class="pt-0" label="filter" color="primary">
-							<template v-slot:prepend>
-								<v-icon small class="mt-1" color="primary">
-									fa-clock
-								</v-icon>
-							</template>
-						</v-autocomplete>
-					</v-col>
-					<v-col cols="12" class="py-0">
-						<p class="caption font-italic mt-0 grey--text">{{ $t('note.widget.hospitals') }}</p>
-					</v-col>
-					<v-col cols="12" class="py-0">
-						<v-row class="blue-grey lighten-4 mx-0 mb-1" align="center">
-							<v-col class="text-end py-1 grow caption">OCCUPIED</v-col>
-							<v-col class="text-end py-1 shrink title">
-								27
-							</v-col>
-						</v-row>
-					</v-col>
-					<v-col cols="12" class="py-0">
-						<v-row class="mb-1" align="center">
-							<v-col class="text-start py-1 font-weight-bold caption">0</v-col>
-							<v-col class="text-end py-1 font-weight-bold caption">
-								120
-							</v-col>
-						</v-row>
-					</v-col>
-				</v-row> -->
 			</v-container>
 		</v-card>
 	</v-tab-item>
@@ -171,14 +89,15 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { sumBy } from 'lodash';
+import { sumBy, sum} from 'lodash';
 
 export default {
 	name: 'tab-item-greece',
 	props: ['tab'],
 	components: {
 		'switch-map-source': require('@/components/content/switch-map-source').default,
-		'autocomplete-map-period': require('@/components/content/autocomplete-map-period').default
+		'autocomplete-map-period': require('@/components/content/autocomplete-map-period').default,
+		sparklines: require('@/components/charts/sparklines').default
 	},
 	computed: {
 		...mapGetters(['locale']),
@@ -200,7 +119,13 @@ export default {
 			active: 0,
 			critical: 0,
 			recovered: 0,
-			tests: 0
+			tests: 0,
+			new_cases: [],
+			new_deaths: [],
+			sparks: {
+				new_cases: [],
+				new_deaths: []
+			}
 		};
 	},
 	mounted () {
@@ -221,7 +146,19 @@ export default {
 					this.active = sumBy(res, 'total_active') || 0;
 					this.critical = sumBy(res, 'total_critical') || 0;
 					this.recovered = sumBy(res, 'total_recovered') || 0;
-					this.tests = sumBy(res, 'total_tests') || 0;
+				});
+
+			this.$store.dispatch('external/getGlobalAGG',
+				'GRC/new_tests/' + this.mapPeriod)
+				.then(res => {
+					const lastDay = res[0].new_tests[res[0].new_tests.length - 1] === 0 ? res[0].new_tests[res[0].new_tests.length - 2] : res[0].new_tests[res[0].new_tests.length - 1];
+					this.tests = this.mapPeriodIDX > 0 ? sum(res[0].new_tests) : lastDay; // sumBy(res[0], 'estimated_new_total_tests') || 0;
+				});
+
+			this.$store.dispatch('external/getGlobalAGG', 'GRC/new_cases,new_deaths' + (this.mapPeriodIDX > 0 ? '/' + this.mapPeriod : ''))
+				.then(res => {
+					this.sparks.new_cases = res[0].new_cases.length > 1 ? res[0].new_cases : [];
+					this.sparks.new_deaths = res[0].new_deaths.length > 1 ? res[0].new_deaths : [];
 				});
 		}
 	}
@@ -243,5 +180,13 @@ export default {
 }
 .row.outlined {
 	border: 1px solid #f2f7f7;
+}
+
+.totals-sparklines {
+	position: absolute;
+	width: 180px;
+	height: 60px;
+	top: 0;
+	right: 0;
 }
 </style>

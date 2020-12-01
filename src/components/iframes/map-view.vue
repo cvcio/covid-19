@@ -1,23 +1,44 @@
 <template>
-	<div id="map" class="d-block primary lighten-5" :class="$vuetify.breakpoint.smAndDown ? 'mobile' : 'desktop'">
-		<v-btn-toggle class="key-toggle elevation-2" rounded dense v-model="mapKey">
+	<div id="map" class="d-block"
+		:class="
+			[
+				($vuetify.breakpoint.smAndDown ? 'mobile' : 'desktop'),
+				($route.meta.iframe ? 'frame' : ''),
+			].join(' ')
+		">
+		<v-btn-toggle class="key-toggle elevation-2" rounded mandatory dense v-model="mapKey" v-if="!$route.meta.iframe"
+			:class="
+				[
+					($vuetify.breakpoint.smAndDown ? 'mobile' : 'desktop'),
+					($route.meta.iframe ? 'mt-n12 frame' : ''),
+				].join(' ')
+			">
 			<v-btn text small class="font-weight-bold" value="cases">
 				{{ $tc("cases", 1) | normalizeNFD }}
 			</v-btn>
 			<v-btn text small class="font-weight-bold" value="deaths">
 				{{ $tc("deaths", 1) | normalizeNFD }}
 			</v-btn>
-			<!-- <v-btn text small class="font-weight-bold" value="active" v-if="mapLevel === 'global'">
-				{{ $tc("active", 1) | normalizeNFD }}
-			</v-btn> -->
 		</v-btn-toggle>
+
+		<v-btn v-if="$route.meta.iframe" small class="font-weight-bold link-to-map mt-5 text-inherit white" rounded target="_blank" href="https://lab.imedd.org/" >
+			<v-icon x-small class="mr-2" color="primary">fa-link</v-icon>
+			<span class="font-weight-bold">IMΕdD LAB</span>:
+			<span class="text-capitalize">{{$t(mapLevel)}}</span>,
+			<span class="text-capitalize">{{$tc(mapKey, 1)}}</span>,
+			<span class="text-capitalize">{{mapPeriodIDX > 0 ? $moment(mapPeriod).format('ll') + ' - ' + $moment().format('ll'): $moment().format('ll')}}</span>
+		</v-btn>
+
+		<v-btn v-if="!$route.meta.iframe" small class="font-weight-bold embed-map text-inherit primary" fab @click="setEmbed">
+			<v-icon x-small>fa-code</v-icon>
+		</v-btn>
 
 		<v-scroll-y-reverse-transition>
 			<div class="tooltip elevation-4" :style="'top:'+y+'px;left:'+x+'px;'" ref="tooltipGlobal" v-if="point !== null" v-show="tooltip && point !== null">
 				<v-card class="elevation-0 white pa-0 arrow_box" min-width="180px">
 					<v-card-title class="pa-2 subtitle-2">
 						<span class="">
-							{{ point["name_" + locale.code]}}
+							{{ point["name_" + locale.code] }}
 						</span>
 					</v-card-title>
 					<v-divider/>
@@ -32,26 +53,41 @@
 						</h4>
 						<h4 class="subtitle-2 primary--text text-capitalize secondary--text">
 							{{ $tc("deaths", 1) }}:
-							<span class="font-weight-bold">
+							<span class="font-weight-bold" v-if="mapPeriodIDX < 3 && mapLevel === 'greece'">
+								- ({{ $t('No Data') }})
+							</span>
+							<span class="font-weight-bold" v-else>
 								{{ new Intl.NumberFormat('el-GR').format(point.data.vD.toFixed(2)) }}
 							</span>
 						</h4>
 					</v-card-subtitle>
 					<v-divider/>
-					<v-card-subtitle class="pa-2">
-						<h4 class="subtitle-2 primary--text text-capitalize">
-							{{ $t("7-day moving average") }}
-						</h4>
-						<sparklines class="d-block" :data="point.data['new_' + mapKey]" style="height: 60px;"/>
-					</v-card-subtitle>
-					<v-divider/>
+					<template v-if="mapPeriodIDX > 0">
+						<v-card-subtitle class="pa-2">
+							<h4 class="subtitle-2 primary--text text-capitalize">
+								{{ $t("7-Day Moving Average") }}
+							</h4>
+							<sparklines class="d-block" :data="point.data['new_' + mapKey]" id="sparklines" style="height: 60px;"/>
+						</v-card-subtitle>
+						<v-divider/>
+					</template>
 
 					<template v-if="point.data.note">
-						<v-card-subtitle class="pa-2" v-html="point.data.note"></v-card-subtitle>
+						<v-card-subtitle class="pa-2">
+							<template v-for="(m, i) in point.data.note">
+								<h4 :key="'unk-' + i">
+									<h4 class="caption grey--text">
+										{{ $t(m.region) }}:
+									<span class="text-uppercase font-weight-bold">
+										{{ new Intl.NumberFormat('el-GR').format(m.value.toFixed(2)) }}
+									</span></h4>
+								</h4>
+							</template>
+						</v-card-subtitle>
 						<v-divider/>
 					</template>
 					<v-card-subtitle class="pa-2">
-						<h4 class="caption grey--text">{{ $tc("Source", point.data.sources.length) }}: <span class="text-uppercase font-weight-bold">{{ point.data.sources.join(', ') }}</span></h4>
+						<h4 class="caption grey--text">{{ $t("Source") }}: <span class="font-weight-bold">{{ point.data.sources.map(m => m.toUpperCase().replace('IMEDD', 'iMEdD LAB')).join(', ') }}</span></h4>
 					</v-card-subtitle>
 				</v-card>
 			</div>
@@ -60,7 +96,7 @@
 		<div class="legend" :class="$vuetify.breakpoint.smAndDown ? 'center': ''">
 			<v-row no-gutters>
 				<v-col class="caption font-weight-bold" :class="$vuetify.breakpoint.smAndDown ? 'text-center' : ''">
-					Per 100K of population
+					{{ $t("Per 100K of population")}}
 				</v-col>
 			</v-row>
 			<v-row no-gutters>
@@ -98,28 +134,43 @@ export default {
 				return this.$store.state.filters.mapKey;
 			},
 			set (value) {
+				if (value === 'deaths') {
+					this.$store.commit('filters/setMapPeriodFromIDX', 3);
+				}
 				this.$store.commit('filters/setMapKey', value);
 			}
+		},
+		embed () {
+			return {
+				title: '',
+				subtitle: '',
+				text: '',
+				mapKey: this.mapKey,
+				mapLevel: this.mapLevel,
+				period: this.mapPeriodIDX,
+				lang: this.locale.code,
+				id: 'map-view'
+			};
 		}
 	},
 	watch: {
 		mapLevel (value, old) {
-			if (value !== old) {
+			if (value !== old && this.map && !this.$route.meta.iframe) {
 				// this.resetFilters();
 				this.load();
 				this.updatePosition(
 					this.mapLevel === 'greece' ? [23.7208298, 37.9908697] : [0, 30],
-					this.mapLevel === 'greece' ? 4.5 : 2
+					this.mapLevel === 'greece' ? 5.5 : 2.5
 				);
 			}
 		},
 		mapKey (value, old) {
-			if (value !== old) {
+			if (value !== old && this.map && !this.$route.meta.iframe) {
 				this.load();
 			}
 		},
 		mapPeriod (value, old) {
-			if (value !== old) {
+			if (value !== old && this.map && !this.$route.meta.iframe) {
 				this.load();
 			}
 		}
@@ -139,6 +190,15 @@ export default {
 		};
 	},
 	mounted () {
+		if (this.$route.query.mapLevel && this.$route.query.mapLevel !== '') {
+			this.$store.commit('filters/setMapLevel', this.$route.query.mapLevel);
+		}
+		if (this.$route.query.period && this.$route.query.period !== '') {
+			this.$store.commit('filters/setMapPeriodFromIDX', parseInt(this.$route.query.period));
+		}
+		if (this.$route.query.mapKey && this.$route.query.mapKey !== '') {
+			this.$store.commit('filters/setMapKey', this.$route.query.mapKey);
+		}
 		if (this.geo) {
 			console.debug('geo loaded from storage');
 			this.load();
@@ -151,10 +211,13 @@ export default {
 		}
 	},
 	methods: {
+		setEmbed () {
+			this.$store.commit('setEmbedDialog', true);
+			this.$store.commit('setEmbed', this.embed);
+		},
 		beforeDestroy () {
 			if (!this.map) return;
 			this.map.off('load', this.onLoad);
-			this.map.off('data', this.onData);
 			this.map.off('mouseenter', 'covid', this.onMouseEnter);
 			this.map.off('mouseleave', 'covid', this.onMouseLeave);
 			this.map = null;
@@ -196,7 +259,25 @@ export default {
 						m.properties.active = false;
 						m.properties.opacity = 0;
 						m.properties.color = '#fafafa';
+						let unk = [];
 						if (m.properties.group === this.mapLevel) {
+							if (m.properties.group === 'greece') {
+								unk = res.filter(m => m.geo_unit === '-').map(m => {
+									let x = [];
+									if (this.mapPeriodIDX === 0) {
+										x = m['new_' + this.mapKey][m['new_' + this.mapKey].length - 1];
+									} else {
+										x = sum(m['new_' + this.mapKey]);
+									}
+									if (x <= 0) return false;
+									if (!m.region) return false;
+									return {
+										region: m.region,
+										value: x
+									};
+								});
+							}
+
 							const obj = res.find(o => o.uid === m.properties.uid);
 							if (obj) {
 								m.properties.data = obj;
@@ -218,21 +299,8 @@ export default {
 								m.properties.color = obj.population > 0 ? palette((v / obj.population) * 100000) : palette(0);
 								m.properties.opacity = v > 0 ? 0.9 : 0.9;
 
-								if (m.properties.uid === 'EL300') {
-									const unk = res.filter(m => m.geo_unit === '-').map(m => {
-										let x = [];
-										if (this.mapPeriodIDX === 0) {
-											x = m['new_' + this.mapKey][m['new_' + this.mapKey].length - 1];
-										} else {
-											x = sum(m['new_' + this.mapKey]);
-										}
-										if (x <= 0) return;
-										return `
-											<h4 class="caption grey--text">${this.$t(m.region)}: <span class="text-uppercase font-weight-bold">
-											${new Intl.NumberFormat('el-GR').format(x.toFixed(2))}</span></h4>
-										`;
-									});
-									m.properties.data.note = unk.length > 0 ? unk.join('') : null;
+								if (m.properties.group === 'greece') {
+									m.properties.data.note = unk.filter(m => !!m); // unk.length > 0 ? unk.join('') : null;
 								}
 							}
 						}
@@ -253,20 +321,19 @@ export default {
 				.domain([min + d * 1, min + d * 2, min + d * 3, min + d * 4, min + d * 5, min + d * 6, min + d * 7, min + d * 8, min + d * 9, min + d * 10, min + d * 11]);
 		},
 		draw () {
-			mapboxgl.accessToken = process.env.VUE_APP_MAPBOX || '';
+			mapboxgl.accessToken = this.$APP_MAPBOX;
+			const zoom = this.mapLevel === 'greece' ? 5.5 : 2.5;
+			// zoom = this.$vuetify.breakpoint.smAndDown ? 5 : 10;
 			this.map = new mapboxgl.Map({
 				container: 'map',
 				style: 'mapbox://styles/trilikis/ck808u6u50uqs1iodusadk0ua',
-				zoom: this.mapLevel === 'greece' ? 4.5 : 2,
+				zoom: zoom,
 				center: this.mapLevel === 'greece' ? [23.7208298, 37.9908697] : [0, 30],
 				maxZoom: 15,
 				minZoom: 1,
 				antialias: true,
 				attributionControl: true,
-				interactive: true,
-				pitchWithRotate: false,
-				dragRotate: false,
-				touchZoomRotate: false
+				interactive: true
 			});
 
 			this.map.on('load', this.onLoad);
@@ -302,9 +369,6 @@ export default {
 				id: 'covid',
 				type: 'fill',
 				source: 'covid',
-				// layout: {
-				// 	visibility: this.level === 'admin-0' ? 'visible' : 'none'
-				// },
 				paint: {
 					'fill-color': {
 						type: 'identity',
@@ -329,12 +393,8 @@ export default {
 				},
 				filter: ['in', 'uid', '']
 			}, this.bottomLayer);
-			// , this.bottomLayer
 			this.map.on('mousemove', 'covid', this.onMouseEnter);
 			this.map.on('mouseleave', 'covid', this.onMouseLeave);
-		},
-		onData () {
-			// if (!this.map) return;
 		},
 		onMouseEnter (e) {
 			if (!this.map) return;
@@ -362,30 +422,20 @@ export default {
 			}
 		},
 		onMouseLeave () {
-			// if (!this.map) return;
+			if (!this.map) return;
 
 			this.map.getCanvas().style.cursor = '';
 			this.tooltip = false;
 			this.point = null;
 		},
-		onClick () {
-			// if (!this.map) return;
-		},
-		updatePosition (coords = [0, 30], zoom = 2) {
+		updatePosition (coords = [23.7208298, 37.9908697], zoom = 5.5) {
 			if (!this.map) return;
 
 			this.map.flyTo({
 				center: coords,
-				zoom: zoom,
-				essential: true,
-				padding: { top: 0, bottom: 0, right: 0, left: Math.floor((window.innerWidth / 2) - 240) }
+				zoom: zoom
+				// speed: this.$vuetify.breakpoint.smAndDown ? 0 : 5
 			});
-		},
-		updateData () {
-			// if (!this.map) return;
-		},
-		toggleLayers () {
-			// if (!this.map) return;
 		}
 	}
 };
@@ -395,24 +445,68 @@ export default {
 @import "~mapbox-gl/dist/mapbox-gl.css";
 
 #map {
-	top: 0;
+	top: 64px;
 	left: 0;
 	bottom: 0;
 	right: 0;
 	position: absolute;
-	z-index: -1;
 	border: none !important;
 	canvas {
 		border: none !important;
 		outline: none !important;
 	}
 
+	.link-to-map {
+		position: absolute;
+		z-index: 1;
+		right: 24px;
+		top: 0;
+	}
+
+	&.mobile {
+		top: 160px;
+		.link-to-map {
+			// top: 172px;
+			right: 50%;
+			transform: translate(50%, 0);
+		}
+	}
+
+	&.frame {
+		top: 0;
+	}
+
+	.embed-map {
+		position: absolute;
+		z-index: 1;
+		right: 24px;
+		top: 12px;
+
+		&.mobile {
+			top: 172px;
+		}
+	}
+
 	.key-toggle {
 		z-index: 1;
-		top: 76px;
+		top: 16px;
 		left: 50%;
 		transform: translate(-50%, 0);
 		position: absolute;
+		&.frame {
+			left: 24px;
+			top: 68px;
+			transform: translate(0, 0);
+		}
+		&.mobile {
+			// top: 172px;
+			left: 50%;
+			transform: translate(-50%, 0);
+
+			&.frame {
+				top: 120px;
+			};
+		}
 	}
 
 	.tooltip {
@@ -420,7 +514,7 @@ export default {
 		position: absolute;
 		top: 0;
 		left: 0;
-		transform: translate(-50%, -120%);
+		transform: translate(-50%, -105%);
 
 		.arrow_box:after {
 			top: 100%;

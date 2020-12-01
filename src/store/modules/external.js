@@ -25,9 +25,12 @@ export default {
 				return false;
 			}
 		},
-		async getGreeceTotal ({ commit }, playload) {
+		async getGreeceTotal ({ state, commit }, playload) {
 			try {
 				const res = await externalSVC.getGreeceTotal(playload);
+				if (res[0].last_updated_at && !state.lastUpdateAt) {
+					commit('setLastUpdatedAt', res[0].last_updated_at, { root: true });
+				}
 				return res;
 			} catch (error) {
 				commit('errors/REQUEST_ERROR', error, { root: true });

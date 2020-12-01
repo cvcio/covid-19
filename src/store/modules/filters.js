@@ -7,22 +7,22 @@ export default {
 		mapSource: 'covid',
 		mapKey: 'cases',
 		mapPeriodIDX: 0,
-		mapPeriod: moment().subtract(14, 'days').format('YYYY-MM-DD'),
+		mapPeriod: moment().subtract(7, 'days').format('YYYY-MM-DD'),
 		periodInterval: [
 			{
-				text: 'Now',
+				text: { en: 'Last day', el: 'Τελευταία ημέρα' },
+				value: moment().subtract(7, 'days').format('YYYY-MM-DD')
+			},
+			{
+				text: { en: 'Last 14 days', el: 'Τελευταίες 14 ημέρες' },
 				value: moment().subtract(14, 'days').format('YYYY-MM-DD')
 			},
 			{
-				text: 'Last 15 Days',
-				value: moment().subtract(15, 'days').format('YYYY-MM-DD')
-			},
-			{
-				text: 'Last 3 Months',
+				text: { en: 'Last 3 months', el: 'Τελευταίο τρίμηνο' },
 				value: moment().subtract(3, 'months').format('YYYY-MM-DD')
 			},
 			{
-				text: 'Historical',
+				text: { en: 'Historical data', el: 'Από την αρχή' },
 				value: '2020-01-01'
 			}
 		],
@@ -38,6 +38,9 @@ export default {
 		timeInterval: state => state.timeInterval
 	},
 	mutations: {
+		setMapLevel (state, data) {
+			state.mapLevel = data;
+		},
 		setMapKey (state, data) {
 			state.mapKey = data;
 		},
@@ -47,6 +50,10 @@ export default {
 		setMapPeriod (state, data) {
 			state.mapPeriod = data;
 			state.mapPeriodIDX = state.periodInterval.findIndex(m => m.value === data);
+		},
+		setMapPeriodFromIDX (state, data) {
+			state.mapPeriodIDX = data;
+			state.mapPeriod = state.periodInterval[data].value;
 		}
 	},
 	actions: {}
