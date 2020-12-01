@@ -46,7 +46,7 @@
 								dark
 								class=""
 								v-bind="attrs"
-								v-on="on" href="https://lab.imedd.org/" target="_blank">
+								v-on="on" href="https://github.com/iMEdD-Lab/open-data" target="_blank">
 								<v-icon x-small>fa-info-circle</v-icon>
 							</v-btn>
 						</template>

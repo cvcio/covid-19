@@ -32,6 +32,7 @@ Vue.prototype.$BASE_URL = process.env.VUE_APP_BASE_URL || '/';
 Vue.prototype.$BASE_API = process.env.VUE_APP_BASE_API || '';
 Vue.prototype.$APP_DOMAINNAME = process.env.VUE_APP_DOMAINNAME;
 Vue.prototype.$APP_TITLE = process.env.VUE_APP_TITLE;
+Vue.prototype.$APP_MAPBOX = process.env.VUE_APP_MAPBOX || 'pk.eyJ1IjoiYW5kZWZpbmVkIiwiYSI6ImNpcWY2OHN5bDAwOHZpMWt4ODV2a2EzdnUifQ.q-XTbW4kXMSRhT5alQ2J4g';
 Vue.prototype.$CHARTS_URL = 'https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/charts/';
 
 Vue.use(filters);

@@ -321,12 +321,12 @@ export default {
 				.domain([min + d * 1, min + d * 2, min + d * 3, min + d * 4, min + d * 5, min + d * 6, min + d * 7, min + d * 8, min + d * 9, min + d * 10, min + d * 11]);
 		},
 		draw () {
-			mapboxgl.accessToken = 'pk.eyJ1IjoiYW5kZWZpbmVkIiwiYSI6ImNpcWY2OHN5bDAwOHZpMWt4ODV2a2EzdnUifQ.q-XTbW4kXMSRhT5alQ2J4g';
+			mapboxgl.accessToken = this.$APP_MAPBOX;
 			const zoom = this.mapLevel === 'greece' ? 5.5 : 2.5;
 			// zoom = this.$vuetify.breakpoint.smAndDown ? 5 : 10;
 			this.map = new mapboxgl.Map({
 				container: 'map',
-				style: 'mapbox://styles/mapbox/light-v10',
+				style: 'mapbox://styles/trilikis/ck808u6u50uqs1iodusadk0ua',
 				zoom: zoom,
 				center: this.mapLevel === 'greece' ? [23.7208298, 37.9908697] : [0, 30],
 				maxZoom: 15,
