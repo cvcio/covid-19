@@ -134,6 +134,9 @@ export default {
 				return this.$store.state.filters.mapKey;
 			},
 			set (value) {
+				if (value === 'deaths') {
+					this.$store.commit('filters/setMapPeriodFromIDX', 3);
+				}
 				this.$store.commit('filters/setMapKey', value);
 			}
 		},
@@ -320,7 +323,6 @@ export default {
 		draw () {
 			mapboxgl.accessToken = 'pk.eyJ1IjoiYW5kZWZpbmVkIiwiYSI6ImNpcWY2OHN5bDAwOHZpMWt4ODV2a2EzdnUifQ.q-XTbW4kXMSRhT5alQ2J4g';
 			const zoom = this.mapLevel === 'greece' ? 5.5 : 2.5;
-			console.log(this.$vuetify.breakpoint.smAndDown);
 			// zoom = this.$vuetify.breakpoint.smAndDown ? 5 : 10;
 			this.map = new mapboxgl.Map({
 				container: 'map',

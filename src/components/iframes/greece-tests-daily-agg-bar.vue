@@ -131,14 +131,14 @@ export default {
 		load () {
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
 			this.$store.dispatch('external/getGlobalAGG',
-				'GRC/cumulative_rtpcr_tests_raw,estimated_new_rtpcr_tests,cumulative_rapid_tests_raw,esitmated_new_rapid_tests,estimated_new_total_tests/' +
+				'GRC/cumulative_rtpcr_tests_raw,estimated_new_rtpcr_tests,cumulative_rapid_tests_raw,esitmated_new_rapid_tests,new_tests/' +
 				this.periodInterval[3].value)
 				.then(res => {
 					this.item = res.map(m => {
 						m.dates = getDates(m.from, m.to);
 						m.new_pcr = m.estimated_new_rtpcr_tests.map(m => Math.max(0, m));
 						m.new_rapid = m.esitmated_new_rapid_tests.map(m => Math.max(0, m));
-						m.new_tests = m.estimated_new_total_tests.map(m => Math.max(0, m));
+						m.new_tests = m.new_tests.map(m => Math.max(0, m));
 
 						m.new_pcr.unshift(...Array(m.dates.length - m.new_pcr.length).fill(0));
 						m.new_rapid.unshift(...Array(m.dates.length - m.new_rapid.length).fill(0));

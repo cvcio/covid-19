@@ -65,8 +65,6 @@ export default {
 
 <style lang="less" scoped>
 .bottom-navigation {
-	margin-top: 32px !important;
 	margin-bottom: 32px !important;
 }
-
 </style>

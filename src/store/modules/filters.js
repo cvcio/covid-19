@@ -6,8 +6,8 @@ export default {
 		mapLevel: 'greece',
 		mapSource: 'covid',
 		mapKey: 'cases',
-		mapPeriodIDX: 1,
-		mapPeriod: moment().subtract(14, 'days').format('YYYY-MM-DD'),
+		mapPeriodIDX: 0,
+		mapPeriod: moment().subtract(7, 'days').format('YYYY-MM-DD'),
 		periodInterval: [
 			{
 				text: { en: 'Last day', el: 'Τελευταία ημέρα' },

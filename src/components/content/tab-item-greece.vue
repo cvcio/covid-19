@@ -87,7 +87,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { sumBy } from 'lodash';
+import { sumBy, sum} from 'lodash';
 
 export default {
 	name: 'tab-item-greece',
@@ -144,7 +144,13 @@ export default {
 					this.active = sumBy(res, 'total_active') || 0;
 					this.critical = sumBy(res, 'total_critical') || 0;
 					this.recovered = sumBy(res, 'total_recovered') || 0;
-					this.tests = sumBy(res, 'total_tests') || 0;
+				});
+
+			this.$store.dispatch('external/getGlobalAGG',
+				'GRC/new_tests/' + this.mapPeriod)
+				.then(res => {
+					const lastDay = res[0].new_tests[res[0].new_tests.length - 1] === 0 ? res[0].new_tests[res[0].new_tests.length - 2] : res[0].new_tests[res[0].new_tests.length - 1];
+					this.tests = this.mapPeriodIDX > 0 ? sum(res[0].new_tests) : lastDay; // sumBy(res[0], 'estimated_new_total_tests') || 0;
 				});
 
 			this.$store.dispatch('external/getGlobalAGG', 'GRC/new_cases,new_deaths' + (this.mapPeriodIDX > 0 ? '/' + this.mapPeriod : ''))
