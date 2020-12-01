@@ -13,16 +13,16 @@
 							</v-btn>
 						</v-btn-toggle>
 					</v-col>
-					<!-- <v-col class="pa-0 shrink" align-self="center">
+					<v-col class="pa-0 shrink" align-self="center">
 						<v-btn-toggle dense class="mr-2" rounded v-model="calc" mandatory @click="doSort">
 							<v-btn x-small class="primary--text" value="_new">
 								{{($tc('Daily', 1)) | normalizeNFD }}
 							</v-btn>
 							<v-btn x-small class="primary--text" value="_p100p">
-								{{($tc('Per 1M', 1)) | normalizeNFD }}
+								{{($tc('Per 100K', 1)) | normalizeNFD }}
 							</v-btn>
 						</v-btn-toggle>
-					</v-col> -->
+					</v-col>
 					<v-col class="pa-0" align-self="center" cols="5">
 						<v-autocomplete
 							dense
@@ -82,7 +82,7 @@
 								:dates="item.dates"
 								:sources="item.sources"
 								:max="max"
-								:pp100="calc === '_p100p' ? $t('Per 1M') : ''"
+								:pp100="calc === '_p100p' ? $t('Per 100K') : ''"
 								/>
 						</v-col>
 					</v-row>
@@ -200,8 +200,8 @@ export default {
 					const items = res.map(m => {
 						m.new_cases = m.new_cases.map(n => Math.max(0, n));
 						m.new_deaths = m.new_deaths.map(n => Math.max(0, n));
-						m.new_cases_p100p = m.new_cases.map(n => m.population > 0 ? (n / m.population) * 1000000 : 0);
-						m.new_deaths_p100p = m.new_deaths.map(n => m.population > 0 ? (n / m.population) * 1000000 : 0);
+						m.new_cases_p100p = m.new_cases.map(n => m.population > 0 ? (n / m.population) * 100000 : 0);
+						m.new_deaths_p100p = m.new_deaths.map(n => m.population > 0 ? (n / m.population) * 100000 : 0);
 						const max_cases_new = m.new_cases[m.new_cases.length - 1]; // sum(m.new_cases.slice(m.new_cases.length - 2, m.new_cases.length - 1));
 						const max_deaths_new = m.new_deaths[m.new_deaths.length - 1]; // sum(m.new_deaths.slice(m.new_deaths.length - 2, m.new_deaths.length - 1));
 						const max_cases_p100p = Math.max(...m.new_cases_p100p); // sum(m.new_cases.slice(m.new_cases.length - 2, m.new_cases.length - 1));
@@ -225,8 +225,8 @@ export default {
 
 							max_cases: Math.max(...m.new_cases),
 							max_deaths: Math.max(...m.new_deaths),
-							max_cases_index: (max_cases_new / m.population) * 1000000,
-							max_deaths_index: (max_deaths_new / m.population) * 1000000,
+							max_cases_index: m.population > 0 ? (max_cases_new / m.population) * 100000 : 0,
+							max_deaths_index: m.population > 0 ? (max_deaths_new / m.population) * 100000 : 0,
 							max_cases_index_p100p: (max_cases_p100p),
 							max_deaths_index_p100p: (max_deaths_p100p)
 						};

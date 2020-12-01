@@ -13,16 +13,16 @@
 							</v-btn>
 						</v-btn-toggle>
 					</v-col>
-					<!-- <v-col class="pa-0 shrink" align-self="center">
+					<v-col class="pa-0 shrink" align-self="center">
 						<v-btn-toggle dense class="mr-2" rounded v-model="calc" mandatory @change="doSort">
 							<v-btn x-small class="primary--text" value="_new">
 								{{($tc('Daily', 1)) | normalizeNFD }}
 							</v-btn>
 							<v-btn x-small class="primary--text" value="_p100p">
-								{{($tc('Per 1M', 1)) | normalizeNFD }}
+								{{($tc('Per 100K', 1)) | normalizeNFD }}
 							</v-btn>
 						</v-btn-toggle>
-					</v-col> -->
+					</v-col>
 					<v-col class="grow pa-0 text-end ml-2" align-self="center" v-if="!$route.meta.iframe">
 						<v-btn x-small :fab="!$vuetify.breakpoint.smAndDown" :icon="$vuetify.breakpoint.smAndDown" color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
 							<v-icon x-small>fa-code</v-icon>
@@ -202,14 +202,14 @@ export default {
 
 							max_cases: Math.max(...m.new_cases),
 							max_deaths: Math.max(...m.new_deaths),
-							max_cases_index: (max_cases_new / m.population) * 100000,
-							max_deaths_index: (max_deaths_new / m.population) * 100000,
+							max_cases_index: m.population > 0 ? (max_cases_new / m.population) * 100000 : 0,
+							max_deaths_index: m.population > 0 ? (max_deaths_new / m.population) * 100000 : 0,
 							max_cases_index_p100p: (max_cases_p100p),
 							max_deaths_index_p100p: (max_deaths_p100p)
 						};
 					});
 
-					remove(items, m => ['EL000', 'EL001', 'EL002'].includes(m.uid));
+					// remove(items, m => ['EL000', 'EL001', 'EL002'].includes(m.uid));
 					this.items = items;
 					this.numberOfPages = Math.ceil(this.items.length / this.itemsPerPage);
 
