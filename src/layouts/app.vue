@@ -39,7 +39,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import AddThis from 'vue-simple-addthis-share';
 
 export default {
 	name: 'layout-app',
