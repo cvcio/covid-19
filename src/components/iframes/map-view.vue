@@ -137,9 +137,9 @@ export default {
 				return this.$store.state.filters.mapKey;
 			},
 			set (value) {
-				if (value === 'deaths') {
-					this.$store.commit('filters/setMapPeriodFromIDX', 3);
-				}
+				// if (value === 'deaths') {
+				// 	this.$store.commit('filters/setMapPeriodFromIDX', 3);
+				// }
 				this.$store.commit('filters/setMapKey', value);
 			}
 		},
