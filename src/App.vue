@@ -1,5 +1,5 @@
 <template>
-	<v-app id="app" :toolbar="!iframe" :footer="!iframe">
+	<v-app id="app" :toolbar="!iframe" :footer="!iframe" :class="iframe ? 'iframe-view' : 'app-view'">
 		<component :is="this.$route.meta.layout || 'div'">
 			<router-view />
 		</component>
@@ -18,7 +18,14 @@ export default {
 	data () {
 		return {};
 	},
-	mounted () {},
+	mounted () {
+		if (this.iframe) {
+			const d = document.getElementById('at-share-dock');
+			if (d) {
+				d.parentNode.removeChild(d);
+			};
+		}
+	},
 	methods: {}
 };
 </script>
@@ -85,4 +92,9 @@ canvas {
 .v-btn--active {
 	font-weight: bold;
 }
+.at-share-dock.atss.atss-bottom.at-shfs-small.addthis-animated.slideInUp {
+	background-color: white !important;
+}
+
+.iframe-view {}
 </style>

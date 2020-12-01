@@ -9865,6 +9865,11 @@ vue-router@^3.4.7:
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.4.7.tgz#bf189bafd16f4e4ef783c4a6250a3090f2c1fa1b"
   integrity sha512-CbHXue5BLrDivOk5O4eZ0WT4Yj8XwdXa4kCnsEIOzYUPF/07ZukayA2jGxDCJxLc9SgVQX9QX0OuGOwGlVB4Qg==
 
+vue-simple-addthis-share@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/vue-simple-addthis-share/-/vue-simple-addthis-share-0.1.5.tgz#e421803dec03deec24f88e261a92a23f98a28be0"
+  integrity sha512-QJ46fvhMvEQDLUsv8ZzlM/s6/LW+OTq0zqvTaiX9Ipg5SCnTjG/5ylWM+hdDUo58n3jlWXtXmxtA2P9N/o6Z8g==
+
 vue-style-loader@^4.1.0, vue-style-loader@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/vue-style-loader/-/vue-style-loader-4.1.2.tgz#dedf349806f25ceb4e64f3ad7c0a44fba735fcf8"

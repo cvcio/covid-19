@@ -110,7 +110,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { remove } from 'lodash';
+// import { remove } from 'lodash';
 import { getDates } from '@/utils';
 
 export default {

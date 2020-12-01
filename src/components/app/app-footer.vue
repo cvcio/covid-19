@@ -1,5 +1,5 @@
 <template>
-	<v-footer absolute height="44" class="elevation-0 pa-0 px-4">
+	<v-footer app absolute height="44" class="elevation-0 pa-0 px-4" :class="$vuetify.breakpoint.smAndDown ? 'mb-8' : ''">
 		<span class="caption mr-2">{{ new Date().getFullYear() }} <v-icon small color="">mdi-creative-commons</v-icon> iMEdD LAB</span>
 		<a class="caption mr-2" href="https://github.com/iMEdD-Lab/open-data" target="_blank">{{ $t('Terms of Use') }}</a>
 		<a class="caption mr-2" href="https://github.com/iMEdD-Lab/open-data" target="_blank">Github</a>
