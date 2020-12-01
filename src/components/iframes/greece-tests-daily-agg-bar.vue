@@ -162,7 +162,7 @@ export default {
 						};
 					});
 					this.item = this.item[0];
-					console.log(this.item)
+					console.log(this.item);
 					this.loading = false;
 				});
 		},

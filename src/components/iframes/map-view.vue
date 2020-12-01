@@ -319,8 +319,8 @@ export default {
 		},
 		draw () {
 			mapboxgl.accessToken = 'pk.eyJ1IjoiYW5kZWZpbmVkIiwiYSI6ImNpcWY2OHN5bDAwOHZpMWt4ODV2a2EzdnUifQ.q-XTbW4kXMSRhT5alQ2J4g';
-			let zoom = this.mapLevel === 'greece' ? 5.5 : 2.5;
-			console.log(this.$vuetify.breakpoint.smAndDown );
+			const zoom = this.mapLevel === 'greece' ? 5.5 : 2.5;
+			console.log(this.$vuetify.breakpoint.smAndDown);
 			// zoom = this.$vuetify.breakpoint.smAndDown ? 5 : 10;
 			this.map = new mapboxgl.Map({
 				container: 'map',
@@ -331,7 +331,7 @@ export default {
 				minZoom: 1,
 				antialias: true,
 				attributionControl: true,
-				interactive: true,
+				interactive: true
 			});
 
 			this.map.on('load', this.onLoad);
@@ -431,7 +431,7 @@ export default {
 
 			this.map.flyTo({
 				center: coords,
-				zoom: zoom,
+				zoom: zoom
 				// speed: this.$vuetify.breakpoint.smAndDown ? 0 : 5
 			});
 		}
@@ -473,7 +473,6 @@ export default {
 	&.frame {
 		top: 0;
 	}
-
 
 	.embed-map {
 		position: absolute;

@@ -34,7 +34,7 @@ import { mapGetters } from 'vuex';
 export default {
 	name: 'posts-greece',
 	components: {
-		'post': require('@/components/content/post').default,
+		post: require('@/components/content/post').default,
 		'greece-key-by-region-table': require('@/components/iframes/greece-key-by-region-table').default,
 		'greece-key-daily-agg-bar': require('@/components/iframes/greece-key-daily-agg-bar').default,
 		'greece-intubated-daily-agg-bar': require('@/components/iframes/greece-intubated-daily-agg-bar').default,

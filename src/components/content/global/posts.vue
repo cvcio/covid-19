@@ -34,7 +34,7 @@ import { mapGetters } from 'vuex';
 export default {
 	name: 'posts-global',
 	components: {
-		'post': require('@/components/content/post').default,
+		post: require('@/components/content/post').default,
 		'global-key-by-country-table': require('@/components/iframes/global-key-by-country-table').default,
 		'global-key-daily-agg-bar': require('@/components/iframes/global-key-daily-agg-bar').default,
 		'global-key-subplot-countries': require('@/components/iframes/global-key-subplot-countries').default,

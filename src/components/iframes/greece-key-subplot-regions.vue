@@ -14,7 +14,7 @@
 						</v-btn-toggle>
 					</v-col>
 					<!-- <v-col class="pa-0 shrink" align-self="center">
-						<v-btn-toggle dense class="mr-2" rounded v-model="calc" mandatory>
+						<v-btn-toggle dense class="mr-2" rounded v-model="calc" mandatory @change="doSort">
 							<v-btn x-small class="primary--text" value="_new">
 								{{($tc('Daily', 1)) | normalizeNFD }}
 							</v-btn>
@@ -24,9 +24,6 @@
 						</v-btn-toggle>
 					</v-col> -->
 					<v-col class="grow pa-0 text-end ml-2" align-self="center" v-if="!$route.meta.iframe">
-						<!-- <v-btn x-small :fab="!$vuetify.breakpoint.smAndDown" color="grey" dark class="mx-2 elevation-0" @click="update">
-							<v-icon x-small>fa-redo</v-icon>
-						</v-btn> -->
 						<v-btn x-small :fab="!$vuetify.breakpoint.smAndDown" :icon="$vuetify.breakpoint.smAndDown" color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
 							<v-icon x-small>fa-code</v-icon>
 						</v-btn>
@@ -48,6 +45,7 @@
 				:page="page"
 				hide-default-footer
 				class="d-inline"
+				:key="point + '-' + calc"
 				>
 				<template v-slot:default="props">
 					<v-row class="px-0">
@@ -112,7 +110,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { sum, remove } from 'lodash';
+import { remove } from 'lodash';
 import { getDates } from '@/utils';
 
 export default {
@@ -176,40 +174,46 @@ export default {
 		},
 		load () {
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
-			this.$store.dispatch('external/getGreeceAGG', 'all/all/' + this.periodInterval[3].value)
+			this.$store.dispatch('external/getGreeceAGG', 'all/new_cases,new_deaths/' + this.periodInterval[3].value)
 				.then(res => {
-					let items = res.map(m => {
+					const items = res.map(m => {
 						m.new_cases = m.new_cases.map(n => Math.max(0, n));
 						m.new_deaths = m.new_deaths.map(n => Math.max(0, n));
 						m.new_cases_p100p = m.new_cases.map(n => m.population > 0 ? (n / m.population) * 100000 : 0);
 						m.new_deaths_p100p = m.new_deaths.map(n => m.population > 0 ? (n / m.population) * 100000 : 0);
-						const max_cases_now = m.new_cases[m.new_cases.length - 1]; //sum(m.new_cases.slice(m.new_cases.length - 2, m.new_cases.length - 1));
-						const max_deaths_now = m.new_deaths[m.new_deaths.length - 1]; // sum(m.new_deaths.slice(m.new_deaths.length - 2, m.new_deaths.length - 1));
-						console.log(m.region, m.population, max_cases_now);
+						const max_cases_new = m.new_cases[m.new_cases.length - 1]; // sum(m.new_cases.slice(m.new_cases.length - 2, m.new_cases.length - 1));
+						const max_deaths_new = m.new_deaths[m.new_deaths.length - 1]; // sum(m.new_deaths.slice(m.new_deaths.length - 2, m.new_deaths.length - 1));
+						const max_cases_p100p = Math.max(...m.new_cases_p100p); // sum(m.new_cases.slice(m.new_cases.length - 2, m.new_cases.length - 1));
+						const max_deaths_p100p = Math.max(...m.new_deaths_p100p); // sum(m.new_deaths.slice(m.new_deaths.length - 2, m.new_deaths.length - 1));
 						return {
 							uid: m.uid,
+							del: m.population > 0,
 							region: m.region,
 							dates: getDates(m.from, m.to),
-							cases: m.new_cases,
-							deaths: m.new_deaths,
+							// cases: m.new_cases,
+							// deaths: m.new_deaths,
+
 							cases_new: m.new_cases,
 							deaths_new: m.new_deaths,
 							cases_p100p: m.new_cases_p100p,
 							deaths_p100p: m.new_deaths_p100p,
+
 							sources: m.sources.sort(),
-							max_cases_now: max_cases_now,
-							max_deaths_now: max_deaths_now,
+
 							max_cases: Math.max(...m.new_cases),
 							max_deaths: Math.max(...m.new_deaths),
-							max_cases_index: (max_cases_now / m.population) * 100000,
-							max_deaths_index: (max_deaths_now / m.population) * 100000,
+							max_cases_index: (max_cases_new / m.population) * 100000,
+							max_deaths_index: (max_deaths_new / m.population) * 100000,
+							max_cases_index_p100p: (max_cases_p100p),
+							max_deaths_index_p100p: (max_deaths_p100p)
 						};
 					});
 
-					this.items = remove(items, m => ['EL000', 'EL001', 'EL002'].includes(m.uid));
-					this.items = items.sort((a, b) => b['max_' + this.point + '_index'] - a['max_' + this.point + '_index']);
-					this.numberOfPages = Math.ceil(this.items.length / this.itemsPerPage);
+					remove(items, m => ['EL000', 'EL001', 'EL002'].includes(m.uid));
 					this.items = items;
+					this.numberOfPages = Math.ceil(this.items.length / this.itemsPerPage);
+
+					this.doSort();
 					this.loading = false;
 				});
 		},
@@ -219,8 +223,10 @@ export default {
 		formerPage () {
 			if (this.page - 1 >= 1) this.page -= 1;
 		},
-		update () {
-			this.load();
+
+		doSort () {
+			this.max = this.calc === '_new' ? null : Math.max(...this.items.map(m => m['max_' + this.point + '_index' + this.calc]));
+			this.items = this.items.sort((a, b) => b['max_' + this.point + '_index'] - a['max_' + this.point + '_index']);
 		}
 	}
 };

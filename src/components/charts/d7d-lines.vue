@@ -48,7 +48,7 @@ export default {
 			px: 100,
 			py: 100,
 			tooltip: false,
-			d: null,
+			d: null
 			// max: 0,
 			// min: 0
 		};
