@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { line, select, scaleLinear, max } from 'd3';
+import { line, select, scaleLinear, max, min } from 'd3';
 import { ma } from 'moving-averages';
 
 export default {
@@ -44,7 +44,7 @@ export default {
 
 			const width = div.clientWidth;
 			const height = 60;
-			const margin = { top: 6, left: 6, bottom: 6, right: 36 };
+			const margin = { top: 12, left: 6, bottom: 12, right: 36 };
 			const innerWidth = width - margin.left - margin.right;
 			const innerHeight = height - margin.top - margin.bottom;
 
@@ -53,7 +53,7 @@ export default {
 				.attr('height', height + margin.top + margin.bottom);
 
 			const x = scaleLinear().domain([0, sma.length]).rangeRound([0, innerWidth]);
-			const y = scaleLinear().domain([0, max(sma)]).rangeRound([innerHeight, 0]);
+			const y = scaleLinear().domain([min(sma), max(sma)]).rangeRound([innerHeight, 0]);
 
 			const l = line()
 				.x((d, i) => x(i))

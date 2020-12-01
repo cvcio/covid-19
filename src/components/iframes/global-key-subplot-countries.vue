@@ -42,7 +42,7 @@
 					<v-col class="pa-0 text-end ml-2" align-self="center" v-if="!$route.meta.iframe && !$vuetify.breakpoint.smAndDown">
 						<v-btn x-small
 							:fab="!$vuetify.breakpoint.smAndDown"
-							:icon="$vuetify.breakpoint.smAndDown" color="grey" dark class="elevation-0"
+							:icon="$vuetify.breakpoint.smAndDown" color="grey" dark class="mr-1 elevation-0"
 							@click="update">
 							<v-icon x-small>fa-redo</v-icon>
 						</v-btn>
