@@ -13,6 +13,7 @@
 				<router-view />
 			</v-scroll-y-transition>
 		</v-main>
+		<eody-disclaimer/>
 		<app-footer />
 		<v-bottom-navigation v-model="m" v-if="$vuetify.breakpoint.smAndDown" app class="bottom-navigation">
 			<v-btn value="recent" class="primary--text" to="/">
@@ -39,7 +40,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import AddThis from 'vue-simple-addthis-share';
 
 export default {
 	name: 'layout-app',
@@ -47,6 +47,7 @@ export default {
 		'app-bar': require('@/components/app/app-bar').default,
 		'app-footer': require('@/components/app/app-footer').default,
 		tabs: require('@/components/content/tabs').default,
+		'eody-disclaimer': require('@/components/shared/eody-disclaimer').default,
 		'embed-dialog': require('@/components/content/embeds/dialog').default,
 		addthis: require('vue-simple-addthis-share').default
 	},

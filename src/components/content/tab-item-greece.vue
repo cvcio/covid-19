@@ -89,7 +89,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { sumBy, sum} from 'lodash';
+import { sumBy, sum } from 'lodash';
 
 export default {
 	name: 'tab-item-greece',

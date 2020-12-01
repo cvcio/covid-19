@@ -53,10 +53,13 @@
 						</h4>
 						<h4 class="subtitle-2 primary--text text-capitalize secondary--text">
 							{{ $tc("deaths", 1) }}:
-							<span class="font-weight-bold" v-if="mapPeriodIDX < 3 && mapLevel === 'greece'">
+							<!-- <span class="font-weight-bold" v-if="mapPeriodIDX < 3 && mapLevel === 'greece'">
 								- ({{ $t('No Data') }})
 							</span>
 							<span class="font-weight-bold" v-else>
+								{{ new Intl.NumberFormat('el-GR').format(point.data.vD.toFixed(2)) }}
+							</span> -->
+							<span class="font-weight-bold">
 								{{ new Intl.NumberFormat('el-GR').format(point.data.vD.toFixed(2)) }}
 							</span>
 						</h4>
@@ -254,56 +257,96 @@ export default {
 					this.median = mean([...values, 1]);
 					this.colors = colors[this.mapKey + 'CS'];
 
-					const palette = this.palette(this.min, this.max, this.colors);
+					let palette = this.palette(this.min, this.max, this.colors);
 					this.geo.features.map(m => {
 						m.properties.active = false;
 						m.properties.opacity = 0;
 						m.properties.color = '#fafafa';
 						let unk = [];
-						if (m.properties.group === this.mapLevel) {
-							if (m.properties.group === 'greece') {
-								unk = res.filter(m => m.geo_unit === '-').map(m => {
-									let x = [];
-									if (this.mapPeriodIDX === 0) {
-										x = m['new_' + this.mapKey][m['new_' + this.mapKey].length - 1];
-									} else {
-										x = sum(m['new_' + this.mapKey]);
-									}
-									if (x <= 0) return false;
-									if (!m.region) return false;
-									return {
-										region: m.region,
-										value: x
-									};
-								});
-							}
+						if (this.mapKey === 'deaths' && this.mapLevel === 'greece') {
+							if (m.properties.uid === 300) {
+								m.properties.active = true;
 
-							const obj = res.find(o => o.uid === m.properties.uid);
-							if (obj) {
-								m.properties.data = obj;
+								let values = [];
+								if (this.mapPeriodIDX === 0) {
+									values = res.map(n => n.new_deaths[n.new_deaths.length - 1]);
+								} else {
+									values = res.map(n => sum(n.new_deaths));
+								}
+								const v = sum(values);
+
+								m.properties.data = {
+									sources: ['imedd']
+								};
 								m.properties.data.vD = 0;
 								m.properties.data.vC = 0;
 
-								let v = [];
 								if (this.mapPeriodIDX === 0) {
-									m.properties.data.vD = obj.new_deaths[obj.new_deaths.length - 1];
-									m.properties.data.vC = obj.new_cases[obj.new_cases.length - 1];
-									v = obj['new_' + this.mapKey][obj['new_' + this.mapKey].length - 1];
+									m.properties.data.vD = sum(res.map(n => n.new_deaths[n.new_deaths.length - 1]).flat());
+									m.properties.data.vC = sum(res.map(n => n.new_cases[n.new_cases.length - 1]).flat());
+									m.properties.data.new_deaths = [];
+									m.properties.data.new_cases = [];
 								} else {
-									m.properties.data.vD = sum(obj.new_deaths);
-									m.properties.data.vC = sum(obj.new_cases);
-									v = sum(obj['new_' + this.mapKey]);
+									var s = (r, a) => r.map((b, i) => a[i] + b);
+									m.properties.data.vD = sum(res.map(n => sum(n.new_deaths)).flat());
+									m.properties.data.vC = sum(res.map(n => sum(n.new_cases)).flat());
+									m.properties.data.new_deaths = res.map(n => n.new_deaths).reduce(s);
+									m.properties.data.new_cases = res.map(n => n.new_cases).reduce(s);
 								}
 
-								m.properties.active = true;
-								m.properties.color = obj.population > 0 ? palette((v / obj.population) * 100000) : palette(0);
+								this.min = 0;
+								this.max = v;
+								palette = this.palette(0, v, this.colors);
+								m.properties.color = this.colors[this.colors.length - 1];
 								m.properties.opacity = v > 0 ? 0.9 : 0.9;
-
+							}
+						} else {
+							if (m.properties.group === this.mapLevel) {
 								if (m.properties.group === 'greece') {
-									m.properties.data.note = unk.filter(m => !!m); // unk.length > 0 ? unk.join('') : null;
+									unk = res.filter(m => m.geo_unit === '-').map(m => {
+										let x = [];
+										if (this.mapPeriodIDX === 0) {
+											x = m['new_' + this.mapKey][m['new_' + this.mapKey].length - 1];
+										} else {
+											x = sum(m['new_' + this.mapKey]);
+										}
+										if (x <= 0) return false;
+										if (!m.region) return false;
+										return {
+											region: m.region,
+											value: x
+										};
+									});
+								}
+
+								const obj = res.find(o => o.uid === m.properties.uid);
+								if (obj) {
+									m.properties.data = obj;
+									m.properties.data.vD = 0;
+									m.properties.data.vC = 0;
+
+									let v = [];
+									if (this.mapPeriodIDX === 0) {
+										m.properties.data.vD = obj.new_deaths[obj.new_deaths.length - 1];
+										m.properties.data.vC = obj.new_cases[obj.new_cases.length - 1];
+										v = obj['new_' + this.mapKey][obj['new_' + this.mapKey].length - 1];
+									} else {
+										m.properties.data.vD = sum(obj.new_deaths);
+										m.properties.data.vC = sum(obj.new_cases);
+										v = sum(obj['new_' + this.mapKey]);
+									}
+
+									m.properties.active = true;
+									m.properties.color = obj.population > 0 ? palette((v / obj.population) * 100000) : palette(0);
+									m.properties.opacity = v > 0 ? 0.9 : 0.9;
+
+									if (m.properties.group === 'greece') {
+										m.properties.data.note = unk.filter(m => !!m); // unk.length > 0 ? unk.join('') : null;
+									}
 								}
 							}
 						}
+
 						return m;
 					});
 
@@ -404,7 +447,7 @@ export default {
 
 			const features = this.map.queryRenderedFeatures(e.point, {
 				layers: ['covid']
-			}).filter(m => m.properties.group === this.mapLevel);
+			}).filter(m => this.mapKey === 'deaths' && this.mapLevel === 'greece' ? m.properties.uid === 300 : m.properties.group === this.mapLevel);
 
 			if (features.length) {
 				this.map.setFilter('covid-border',

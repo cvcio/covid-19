@@ -7,7 +7,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --mode development",
-    "build": "vue-cli-service build --mode production",
+    "build": "NODE_ENV=production vue-cli-service build --mode production",
     "production": "vue-cli-service build --mode production",
     "staging": "vue-cli-service build --mode staging",
     "lint": "vue-cli-service lint"
@@ -30,7 +30,7 @@
     "vue-observe-visibility": "^0.4.6",
     "vue-router": "^3.4.7",
     "vue-simple-addthis-share": "^0.1.5",
-    "vuetify": "^2.3.17",
+    "vuetify": "^2.3.19",
     "vuex": "^3.5.1",
     "vuex-router-sync": "^5.0.0"
   },
