@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueGtag from 'vue-gtag';
 
 import { sync } from 'vuex-router-sync';
-import '@/registerServiceWorker';
+// import '@/registerServiceWorker';
 
 // Components
 import { api } from '@/api';
@@ -40,8 +40,6 @@ Vue.use(VueGtag, {
 	enabled: false
 }, router);
 Vue.use(VueObserveVisibility);
-// Init Base API Handler
-api.init(Vue.prototype.$BASE_API);
 sync(store, router);
 
 // Create Application

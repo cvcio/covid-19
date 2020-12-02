@@ -1,9 +1,10 @@
 const CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = {
-	publicPath: process.env.NODE_ENV === 'production'
-		? '/covid19/'
-		: '/',
+	// publicPath: process.env.NODE_ENV === 'production'
+	// 	? '/covid19/'
+	// 	: '/',
+	publicPath: '/covid19/',
 	pwa: {
 		name: 'COVID—19',
 		themeColor: '#114B5F',

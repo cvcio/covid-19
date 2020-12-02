@@ -11,7 +11,7 @@ class APIError extends Error {
 
 const api = {
 	init (baseURL) {
-		axios.defaults.baseURL = baseURL;
+		// axios.defaults.baseURL = baseURL;
 	},
 
 	get (resource, data) {
