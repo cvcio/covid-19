@@ -141,9 +141,8 @@ export default {
 					this.deaths = sumBy(res, 'deaths') || 0;
 				});
 
-			this.$store.dispatch('external/getGlobal', 'GRC/all')
+			this.$store.dispatch('external/getGlobal', 'GRC')
 				.then(res => {
-					// console.log(res);
 					this.totalDeaths = sumBy(res, 'total_deaths') || 0;
 					this.active = sumBy(res, 'total_active') || 0;
 					this.critical = sumBy(res, 'total_critical') || 0;

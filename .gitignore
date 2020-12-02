@@ -25,3 +25,4 @@ yarn-error.log*
 covid19/
 *tmp/
 /design
+proxy.*
