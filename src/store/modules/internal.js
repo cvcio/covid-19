@@ -1,5 +1,6 @@
 import { storageSVC } from '@/services/storage.service';
 import { internalSVC } from '@/services/internal.service';
+import { IsSafari } from '@/utils';
 
 export default {
 	namespaced: true,
@@ -28,7 +29,7 @@ export default {
 		async getGeo ({ commit }) {
 			try {
 				const res = await internalSVC.getGeo();
-				storageSVC.set('geo', res);
+				if (!IsSafari()) storageSVC.set('geo', res);
 				commit('setGeo', res);
 				return res;
 			} catch (error) {

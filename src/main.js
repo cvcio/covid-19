@@ -28,11 +28,11 @@ Vue.config.devtools = process.env.NODE_ENV === 'development';
 Vue.config.debug = process.env.NODE_ENV === 'development';
 Vue.config.silent = process.env.NODE_ENV === 'production';
 
-Vue.prototype.$BASE_URL = process.env.VUE_APP_BASE_URL || '/';
+Vue.prototype.$BASE_URL = process.env.VUE_APP_BASE_URL;
 Vue.prototype.$BASE_API = process.env.VUE_APP_BASE_API || '';
 Vue.prototype.$DISPLAY_URL = process.env.VUE_APP_DISPLAY_URL || '';
 Vue.prototype.$APP_MAPBOX = process.env.VUE_APP_MAPBOX || 'pk.eyJ1IjoiYW5kZWZpbmVkIiwiYSI6ImNpcWY2OHN5bDAwOHZpMWt4ODV2a2EzdnUifQ.q-XTbW4kXMSRhT5alQ2J4g';
-Vue.prototype.$CHARTS_URL = 'https://raw.githubusercontent.com/iMEdD-Lab/open-data/master/COVID-19/charts/';
+Vue.prototype.$APP_MAPBOX_STYLE = process.env.VUE_APP_MAPBOX_STYLE || 'mapbox://styles/mapbox/light-v10';
 
 Vue.use(filters);
 Vue.use(VueGtag, {

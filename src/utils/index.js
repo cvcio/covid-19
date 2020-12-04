@@ -15,7 +15,13 @@ const getDates = (from, to) => {
 	return dates;
 };
 
+const IsSafari = () => {
+	var is_safari = navigator.userAgent.toLowerCase().indexOf('safari/') > -1;
+	return is_safari;
+};
+
 export {
 	normalizeNFD,
-	getDates
+	getDates,
+	IsSafari
 };

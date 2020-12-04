@@ -202,7 +202,7 @@ export default {
 		if (this.$route.query.mapKey && this.$route.query.mapKey !== '') {
 			this.$store.commit('filters/setMapKey', this.$route.query.mapKey);
 		}
-		if (this.geo) {
+		if (this.geo && this.geo.features) {
 			console.debug('geo loaded from storage');
 			this.load();
 		} else {
@@ -366,10 +366,9 @@ export default {
 		draw () {
 			mapboxgl.accessToken = this.$APP_MAPBOX;
 			const zoom = this.mapLevel === 'greece' ? 5.5 : 2.5;
-			// zoom = this.$vuetify.breakpoint.smAndDown ? 5 : 10;
 			this.map = new mapboxgl.Map({
 				container: 'map',
-				style: 'mapbox://styles/trilikis/ck808u6u50uqs1iodusadk0ua',
+				style: this.$APP_MAPBOX_STYLE,
 				zoom: zoom,
 				center: this.mapLevel === 'greece' ? [23.7208298, 37.9908697] : [0, 30],
 				maxZoom: 15,

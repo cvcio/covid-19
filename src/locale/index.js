@@ -5,14 +5,14 @@ const SUPPORTED_LOCALES = [
 		base: '',
 		name: 'Ελληνικά',
 		short: 'ΕΛ',
-		translation: '/locale/el.json'
+		translation: 'locale/el.json'
 	},
 	{
 		code: 'en',
 		base: '/en',
 		name: 'English',
 		short: 'EN',
-		translation: '/locale/en.json'
+		translation: 'locale/en.json'
 	}
 ];
 

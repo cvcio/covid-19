@@ -16,7 +16,7 @@ SUPPORTED_LOCALES.forEach((locale) => {
 		i18n.mergeLocaleMessage(locale.code, res.data || {});
 	}).catch(err => console.error(err));
 
-	api.get(process.env.VUE_APP_BASE_URL + '/locale/locale.json').then(res => {
+	api.get(process.env.VUE_APP_BASE_URL + 'locale/locale.json').then(res => {
 		const messages = { el: {}, en: {} };
 		for (const [key, value] of Object.entries(res.data)) {
 			messages.el[key] = value;
