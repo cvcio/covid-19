@@ -1,11 +1,11 @@
 <template>
 	<v-card color="white" :class="$route.meta.iframe ? 'elevation-0' : ''" :tile="$route.meta.iframe">
 		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'"
-			:height="$vuetify.breakpoint.smAndDown ? 112 : 56">
-			<v-container class="pa-0 ma-0" fluid>
-				<v-row class="pa-0 ma-0" justify="space-between">
-					<v-col class="pa-0 shrink" align-self="center">
-						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory @change="doSort">
+			:height="$vuetify.breakpoint.smAndDown ? 180 : 136">
+			<v-container class="pa-0 ma-0 mb-4" fluid>
+				<v-row class="pa-0 ma-0">
+					<v-col class="pa-0 shrink" cols="12" sm="12">
+						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory @change="doSort;doSimilar">
 							<v-btn x-small class="primary--text" value="cases">
 								{{($tc('cases', 1)) | normalizeNFD }}
 							</v-btn>
@@ -14,48 +14,31 @@
 							</v-btn>
 						</v-btn-toggle>
 					</v-col>
-					<v-col class="pa-0 shrink" align-self="center">
-						<v-btn-toggle dense class="mr-2" rounded v-model="calc" mandatory @click="doSort">
-							<v-btn x-small class="primary--text" value="_new">
-								{{($tc('Daily', 1)) | normalizeNFD }}
+					<v-col class="pa-0 shrink" cols="12" sm="12">
+						<v-btn-toggle dense class="mr-2" rounded v-model="calc" mandatory @click="doSort;doSimilar">
+							<v-btn x-small class="primary--text" value="_cum">
+								{{($tc('Cumulative Per 100K', 1)) | normalizeNFD }}
 							</v-btn>
-							<v-btn x-small class="primary--text" value="_p100p">
-								{{($tc('Per 100K', 1)) | normalizeNFD }}
+							<v-btn x-small class="primary--text" value="_new">
+								{{($tc('Daily Per 100K', 1)) | normalizeNFD }}
 							</v-btn>
 						</v-btn-toggle>
 					</v-col>
-					<v-col class="pa-0" align-self="center" cols="12" md="5" v-if="!$vuetify.breakpoint.smAndDown">
-						<v-autocomplete
-							dense
-							outlined
-							color="primary"
-							hide-details
-							class="caption fa-xs"
-							prepend-icon="fa-globe-europe"
-							:items="items"
-							:label="$t('Country')"
-							item-text="region" item-value="uid"
-							v-model="search"
-							@change="doSimilar">
-						</v-autocomplete>
-					</v-col>
-					<v-col class="pa-0 text-end ml-2" align-self="center" v-if="!$route.meta.iframe && !$vuetify.breakpoint.smAndDown">
+					<v-col class="pa-0 text-end ml-2" v-if="!$route.meta.iframe" cols="12" sm="12">
 						<v-btn x-small
-							:fab="!$vuetify.breakpoint.smAndDown"
-							:icon="$vuetify.breakpoint.smAndDown" color="grey" dark class="mr-1 elevation-0"
+							fab color="grey" dark class="mr-1 elevation-0"
 							@click="update">
 							<v-icon x-small>fa-redo</v-icon>
 						</v-btn>
 						<v-btn x-small
-							:fab="!$vuetify.breakpoint.smAndDown"
-							:icon="$vuetify.breakpoint.smAndDown" color="primary" dark class="mx-0 elevation-0"
+							fab color="primary" dark class="mr-2 elevation-0"
 							@click="setEmbed">
 							<v-icon x-small>fa-code</v-icon>
 						</v-btn>
 					</v-col>
 				</v-row>
-				<v-row class="pa-0 ma-0 my-4" justify="space-between" v-if="$vuetify.breakpoint.smAndDown">
-					<v-col class="pa-0" align-self="center" cols="8">
+				<v-row class="pa-0 ma-0 mt-4" justify="center">
+					<v-col class="pa-0" cols="12" md="6">
 						<v-autocomplete
 							dense
 							outlined
@@ -69,21 +52,6 @@
 							v-model="search"
 							@change="doSimilar">
 						</v-autocomplete>
-					</v-col>
-					<v-col class="pa-0 text-end ml-2" align-self="center" v-if="!$route.meta.iframe">
-						<v-btn x-small
-							:fab="!$vuetify.breakpoint.smAndDown"
-							:icon="$vuetify.breakpoint.smAndDown" color="grey" dark class="elevation-0"
-							:class="$vuetify.breakpoint.smAndDown ? 'mx-0' : 'mr-1'"  @click="update">
-							<v-icon x-small>fa-redo</v-icon>
-						</v-btn>
-						<v-btn x-small
-							:fab="!$vuetify.breakpoint.smAndDown"
-							:icon="$vuetify.breakpoint.smAndDown" color="primary" dark class="mx-0 elevation-0"
-							:class="$vuetify.breakpoint.smAndDown ? 'mx-0' : ''"
-							@click="setEmbed">
-							<v-icon x-small>fa-code</v-icon>
-						</v-btn>
 					</v-col>
 				</v-row>
 			</v-container>
@@ -121,7 +89,7 @@
 								:dates="item.dates"
 								:sources="item.sources"
 								:max="max"
-								:pp100="calc === '_p100p' ? $t('Per 100K') : ''"
+								:pp100="$t('Per 100K')"
 								/>
 						</v-col>
 					</v-row>
@@ -190,6 +158,7 @@ export default {
 				subtitle: '',
 				text: '',
 				mapLevel: null,
+				mapKey: null,
 				period: null,
 				lang: this.locale.code,
 				id: 'global-key-subplot-countries'
@@ -208,7 +177,7 @@ export default {
 			search: '', //  'U300',
 			filter: {},
 			max: 0,
-			calc: '_p100p',
+			calc: '_new',
 			title: { en: '', el: '' }
 		};
 	},
@@ -234,40 +203,46 @@ export default {
 		},
 		load () {
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
-			this.$store.dispatch('external/getGlobalAGG', 'all/new_cases,new_deaths/' + this.periodInterval[3].value + '/' + this.$moment().subtract(1, 'days').format('YYYY-MM-DD'))
+			this.$store.dispatch('external/getGlobalAGG', 'all/cases,deaths,new_cases,new_deaths/' + this.periodInterval[3].value + '/' + this.$moment().subtract(1, 'days').format('YYYY-MM-DD'))
 				.then(res => {
 					const items = res.map(m => {
+						m.cases = m.cases.map(n => Math.max(0, n));
 						m.new_cases = m.new_cases.map(n => Math.max(0, n));
+						m.deaths = m.deaths.map(n => Math.max(0, n));
 						m.new_deaths = m.new_deaths.map(n => Math.max(0, n));
-						m.new_cases_p100p = m.new_cases.map(n => m.population > 0 ? (n / m.population) * 100000 : 0);
-						m.new_deaths_p100p = m.new_deaths.map(n => m.population > 0 ? (n / m.population) * 100000 : 0);
-						const max_cases_new = m.new_cases[m.new_cases.length - 1]; // sum(m.new_cases.slice(m.new_cases.length - 2, m.new_cases.length - 1));
-						const max_deaths_new = m.new_deaths[m.new_deaths.length - 1]; // sum(m.new_deaths.slice(m.new_deaths.length - 2, m.new_deaths.length - 1));
-						const max_cases_p100p = Math.max(...m.new_cases_p100p); // sum(m.new_cases.slice(m.new_cases.length - 2, m.new_cases.length - 1));
-						const max_deaths_p100p = Math.max(...m.new_deaths_p100p); // sum(m.new_deaths.slice(m.new_deaths.length - 2, m.new_deaths.length - 1));
-						// console.log(m.country, (max_deaths_new / m.population) * 1000000);
+
+						m.cases = m.cases.map(n => m.population > 0 ? (n / m.population) * 100000 : 0);
+						m.new_cases = m.new_cases.map(n => m.population > 0 ? (n / m.population) * 100000 : 0);
+						m.deaths = m.deaths.map(n => m.population > 0 ? (n / m.population) * 100000 : 0);
+						m.new_deaths = m.new_deaths.map(n => m.population > 0 ? (n / m.population) * 100000 : 0);
+
+						const max_cases_new = m.new_cases[m.new_cases.length - 1];
+						const max_deaths_new = m.new_deaths[m.new_deaths.length - 1];
+						const max_cases_cum = m.cases[m.cases.length - 1];
+						const max_deaths_cum = m.deaths[m.deaths.length - 1];
 						return {
 							uid: 'U' + m.uid,
 							del: m.population > 100000,
 							region: this.$t(m.country),
 							dates: getDates(m.from, m.to),
-							// cases: m.new_cases,
-							// deaths: m.new_deaths,
-
-							cases_new: m.new_cases,
-							deaths_new: m.new_deaths,
-							cases_p100p: m.new_cases_p100p,
-							deaths_p100p: m.new_deaths_p100p,
-
 							sources: m.sources.sort(),
 							population: m.population,
 
-							max_cases: Math.max(...m.new_cases),
-							max_deaths: Math.max(...m.new_deaths),
-							max_cases_index: m.population > 0 ? (max_cases_new / m.population) * 100000 : 0,
-							max_deaths_index: m.population > 0 ? (max_deaths_new / m.population) * 100000 : 0,
-							max_cases_index_p100p: (max_cases_p100p),
-							max_deaths_index_p100p: (max_deaths_p100p)
+							cases_cum: m.cases,
+							deaths_cum: m.deaths,
+							cases_new: m.new_cases,
+							deaths_new: m.new_deaths,
+
+							max_cases: max_cases_cum,
+							max_deaths: max_deaths_cum,
+							max_cases_new: max_cases_new,
+							max_deaths_new: max_deaths_new,
+
+							max_cases_index_cum: max_cases_cum,
+							max_deaths_index_cum: max_deaths_cum,
+							max_cases_index_new: max_cases_new,
+							max_deaths_index_new: max_deaths_new
+
 						};
 					});
 					// change similar
@@ -278,9 +253,9 @@ export default {
 					this.loading = false;
 				});
 		},
-		doSimilar (uid) {
+		doSimilar () {
 			// this.items = this.items.sort((b, a) => a['max_' + this.point + '_index'] - b['max_' + this.point + '_index']);
-			if (uid !== '') {
+			if (this.search !== '') {
 				const idx = this.items.findIndex(m => m.uid === this.search);
 				if (idx < 0) return;
 				this.page = Math.ceil((idx + 1) / this.itemsPerPage);
@@ -310,8 +285,7 @@ export default {
 		},
 		doSort () {
 			// this.max = this.calc === '_new' ? null : Math.max(...this.items.map(m => m['max_' + this.point + '_index' + this.calc]));;
-			this.items = this.items.sort((a, b) => b['max_' + this.point + '_index'] - a['max_' + this.point + '_index']);
-			// this.items.forEach((m) => console.log(m.region, m['max_' + this.point + '_index'], m[this.point +'_new'][m[this.point +'_new'].length - 1]));
+			this.items = this.items.sort((a, b) => b['max_' + this.point + '_index' + this.calc] - a['max_' + this.point + '_index' + this.calc]);
 		}
 	}
 };

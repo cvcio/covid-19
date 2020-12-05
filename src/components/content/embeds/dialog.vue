@@ -46,27 +46,14 @@
 					</v-col>
 					<v-col v-if="embed.period !== null">
 						<h5>{{ $t('Time Period') }}</h5>
-						<v-radio-group
-							v-model="embed.period"
-							mandatory
-						>
-							<v-radio
-								:label="$t('Last day')"
-								value="0"
-							></v-radio>
-							<v-radio
-								:label="$t('Last 14 days')"
-								value="1"
-							></v-radio>
-							<v-radio
-								:label="$t('Last 3 months')"
-								value="2"
-							></v-radio>
-							<v-radio
-								:label="$t('Historical data')"
-								value="3"
-							></v-radio>
-						</v-radio-group>
+						<v-select dense prepend-icon="" class="pt-3" :label="$t('Time Period')" color="primary"
+							:items="periodInterval" :item-text="'text.'+locale.code" item-value="value" v-model="embed.period" auto-select-first>
+							<template v-slot:prepend>
+								<v-icon small class="mt-1" color="primary">
+									fa-clock
+								</v-icon>
+							</template>
+						</v-select>
 					</v-col>
 					<v-col v-if="embed.lang !== null">
 						<h5>{{ $t('Language') }}</h5>
@@ -148,7 +135,25 @@ export default {
 		return {
 			dialog: true,
 			color: 'grey',
-			icon: 'fa-copy'
+			icon: 'fa-copy',
+			periodInterval: [
+				{
+					text: { en: 'Last day', el: 'Τελευταία ημέρα' },
+					value: 0
+				},
+				{
+					text: { en: 'Last 14 days', el: 'Τελευταίες 14 ημέρες' },
+					value: 1
+				},
+				{
+					text: { en: 'Last 3 months', el: 'Τελευταίο τρίμηνο' },
+					value: 2
+				},
+				{
+					text: { en: 'Historical data', el: 'Από την αρχή' },
+					value: 3
+				}
+			],
 		};
 	},
 	methods: {

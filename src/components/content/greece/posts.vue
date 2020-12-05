@@ -2,17 +2,23 @@
 	<v-container class="pa-4">
 		<template v-for="(post, idx) in posts.greece">
 			<v-row class="pt-12 my-12" align="stretch" :key="idx">
-				<v-col cols="12" md="4">
-					<h4 class="text-h4 primary--text mb-8">
-						<span class="font-weight-thin slab">{{ post.title[locale.code] }}</span>
-					</h4>
-					<template v-for="(p, i) in post.body[locale.code]">
-						<p class="primary--text body-1" :key="'p-' + i">
-							{{ p }}
-						</p>
-					</template>
+				<v-col cols="12" md="4" class="px-4">
+					<v-row>
+						<v-col cols="12">
+							<h4 class="text-h4 primary--text mb-8">
+								<span class="font-weight-thin slab">{{ post.title[locale.code] }}</span>
+							</h4>
+						</v-col>
+						<v-col cols="12" sm="12" md="8">
+							<template v-for="(p, i) in post.body[locale.code]">
+								<p class="primary--text body-1" :key="'p-' + i">
+									{{ p }}
+								</p>
+							</template>
+						</v-col>
+					</v-row>
 				</v-col>
-				<v-col cols="12" md="8">
+				<v-col cols="12" md="8" class="px-4">
 					<post :component="post.component.id" :once="true" :threshold="50" v-slot="{inView}">
 						<component
 							v-if="inView"

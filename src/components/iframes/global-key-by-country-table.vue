@@ -20,7 +20,7 @@
 						<!-- <v-btn x-small :fab="!$vuetify.breakpoint.smAndDown" color="grey" dark class="mx-2 elevation-0" @click="update">
 							<v-icon x-small>fa-redo</v-icon>
 						</v-btn> -->
-						<v-btn x-small :fab="!$vuetify.breakpoint.smAndDown" :icon="$vuetify.breakpoint.smAndDown" color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
+						<v-btn x-small fab color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
 							<v-icon x-small>fa-code</v-icon>
 						</v-btn>
 					</v-col>
@@ -45,6 +45,9 @@
 						:items-per-page="20"
 						class="elevation-0"
 					>
+						<template v-slot:header="{ header }">
+							{{ header }}
+						</template>
 						<template v-slot:item="props">
 							<tr class="">
 								<td class="caption">
@@ -97,7 +100,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import { sum } from 'lodash';
-import { getDates } from '@/utils';
+import { getDates, normalizeNFD } from '@/utils';
 
 export default {
 	name: 'global-key-by-country-table',
@@ -119,6 +122,7 @@ export default {
 				subtitle: '',
 				text: '',
 				mapLevel: null,
+				mapKey: null,
 				period: null,
 				lang: this.locale.code,
 				id: 'global-key-by-country-table'
@@ -194,15 +198,15 @@ export default {
 		headers (key) {
 			return [
 				{
-					text: this.$t('Country'),
+					text: normalizeNFD(this.$t('Country').toUpperCase()),
 					align: 'start',
 					sortable: true,
 					value: 'region',
 					class: 'text-capitalize',
-					width: '30%'
+					width: '25%'
 				},
 				{
-					text: this.$t('Total'),
+					text: normalizeNFD(this.$t('Total').toUpperCase()),
 					align: 'start',
 					sortable: true,
 					value: 'total_' + key,
@@ -210,15 +214,15 @@ export default {
 					width: '15%'
 				},
 				{
-					text: this.$t('Per 100K'),
+					text: normalizeNFD(this.$t('Per 100K').toUpperCase()),
 					align: 'start',
 					sortable: true,
 					value: 'p100p_' + key,
 					class: 'text-capitalize',
-					width: '15%'
+					width: '20%'
 				},
 				{
-					text: this.$t('Weekly'),
+					text: normalizeNFD(this.$t('Weekly').toUpperCase()),
 					align: 'start',
 					sortable: false,
 					value: 'region',

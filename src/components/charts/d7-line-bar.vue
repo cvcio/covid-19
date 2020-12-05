@@ -13,7 +13,7 @@
 					<v-divider/>
 					<v-card-subtitle class="pa-2">
 						<h4 class="subtitle-2 primary--text  primary--text">
-							<span class="text-capitalize">{{ $tc(point, 1) }}</span>
+							<span class="text-capitalize mr-1">{{ $tc(point, 1) }}</span>
 							<span class="text-lowercase">{{pp100}}</span>: {{ new Intl.NumberFormat('el-GR').format(d.value.toFixed(0)) }}
 						</h4>
 					</v-card-subtitle>

@@ -3,28 +3,28 @@
 		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'">
 			<v-container class="pa-0 ma-0" fluid>
 				<v-row class="pa-0 ma-0" justify="space-between">
-					<v-col class="pa-0 shrink" align-self="center">
+					<!-- <v-col class="pa-0 shrink" align-self="center">
 						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory @change="doSort">
 							<v-btn x-small class="primary--text" value="cases">
 								{{($tc('cases', 1)) | normalizeNFD }}
 							</v-btn>
-							<!-- <v-btn x-small class="primary--text" value="deaths">
+							<v-btn x-small class="primary--text" value="deaths">
 								{{($tc('deaths', 1)) | normalizeNFD }}
-							</v-btn> -->
+							</v-btn>
 						</v-btn-toggle>
-					</v-col>
+					</v-col> -->
 					<v-col class="pa-0 shrink" align-self="center">
 						<v-btn-toggle dense class="mr-2" rounded v-model="calc" mandatory @change="doSort">
-							<v-btn x-small class="primary--text" value="_new">
-								{{($tc('Daily', 1)) | normalizeNFD }}
+							<v-btn x-small class="primary--text" value="_cum">
+								{{($tc('Cumulative Per 100K', 1)) | normalizeNFD }}
 							</v-btn>
-							<v-btn x-small class="primary--text" value="_p100p">
-								{{($tc('Per 100K', 1)) | normalizeNFD }}
+							<v-btn x-small class="primary--text" value="_new">
+								{{($tc('Daily Per 100K', 1)) | normalizeNFD }}
 							</v-btn>
 						</v-btn-toggle>
 					</v-col>
 					<v-col class="grow pa-0 text-end ml-2" align-self="center" v-if="!$route.meta.iframe">
-						<v-btn x-small :fab="!$vuetify.breakpoint.smAndDown" :icon="$vuetify.breakpoint.smAndDown" color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
+						<v-btn x-small fab color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
 							<v-icon x-small>fa-code</v-icon>
 						</v-btn>
 					</v-col>
@@ -63,7 +63,7 @@
 								:point="point" :values="item[point + calc]"
 								:dates="item.dates"
 								:sources="item.sources" :max="max"
-								:pp100="calc === '_p100p' ? $t('Per 100K') : ''"
+								:pp100="$t('Per 100K')"
 								/>
 						</v-col>
 					</v-row>
@@ -133,6 +133,7 @@ export default {
 				subtitle: '',
 				text: '',
 				mapLevel: null,
+				mapKey: null,
 				period: null,
 				lang: this.locale.code,
 				id: 'greece-key-subplot-regions'
@@ -174,42 +175,31 @@ export default {
 		},
 		load () {
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
-			this.$store.dispatch('external/getGreeceAGG', 'all/new_cases,new_deaths/' + this.periodInterval[3].value)
+			this.$store.dispatch('external/getGreeceAGG', 'all/cases,new_cases/' + this.periodInterval[3].value)
 				.then(res => {
 					const items = res.map(m => {
+						m.cases = m.cases.map(n => Math.max(0, n));
 						m.new_cases = m.new_cases.map(n => Math.max(0, n));
-						m.new_deaths = m.new_deaths.map(n => Math.max(0, n));
-						m.new_cases_p100p = m.new_cases.map(n => m.population > 0 ? (n / m.population) * 100000 : 0);
-						m.new_deaths_p100p = m.new_deaths.map(n => m.population > 0 ? (n / m.population) * 100000 : 0);
-						const max_cases_new = m.new_cases[m.new_cases.length - 1]; // sum(m.new_cases.slice(m.new_cases.length - 2, m.new_cases.length - 1));
-						const max_deaths_new = m.new_deaths[m.new_deaths.length - 1]; // sum(m.new_deaths.slice(m.new_deaths.length - 2, m.new_deaths.length - 1));
-						const max_cases_p100p = Math.max(...m.new_cases_p100p); // sum(m.new_cases.slice(m.new_cases.length - 2, m.new_cases.length - 1));
-						const max_deaths_p100p = Math.max(...m.new_deaths_p100p); // sum(m.new_deaths.slice(m.new_deaths.length - 2, m.new_deaths.length - 1));
+
+						m.cases = m.cases.map(n => m.population > 0 ? (n / m.population) * 100000 : 0);
+						m.new_cases = m.new_cases.map(n => m.population > 0 ? (n / m.population) * 100000 : 0);
+						const max_cases_new = m.new_cases[m.new_cases.length - 1];
+						const max_cases_cum = m.cases[m.cases.length - 1];
 						return {
 							uid: m.uid,
 							del: m.population > 0,
 							region: m.region,
 							dates: getDates(m.from, m.to),
-							// cases: m.new_cases,
-							// deaths: m.new_deaths,
-
-							cases_new: m.new_cases,
-							deaths_new: m.new_deaths,
-							cases_p100p: m.new_cases_p100p,
-							deaths_p100p: m.new_deaths_p100p,
-
 							sources: m.sources.sort(),
-
-							max_cases: Math.max(...m.new_cases),
-							max_deaths: Math.max(...m.new_deaths),
-							max_cases_index: m.population > 0 ? (max_cases_new / m.population) * 100000 : 0,
-							max_deaths_index: m.population > 0 ? (max_deaths_new / m.population) * 100000 : 0,
-							max_cases_index_p100p: (max_cases_p100p),
-							max_deaths_index_p100p: (max_deaths_p100p)
+							cases_new: m.new_cases,
+							cases_cum: m.cases,
+							max_cases_cum: max_cases_cum,
+							max_cases_new: max_cases_new,
+							max_cases_index_new: max_cases_new,
+							max_cases_index_cum: max_cases_cum,
 						};
 					});
 
-					// remove(items, m => ['EL000', 'EL001', 'EL002'].includes(m.uid));
 					this.items = items;
 					this.numberOfPages = Math.ceil(this.items.length / this.itemsPerPage);
 
@@ -226,7 +216,7 @@ export default {
 
 		doSort () {
 			this.max = this.calc === '_new' ? null : Math.max(...this.items.map(m => m['max_' + this.point + '_index' + this.calc]));
-			this.items = this.items.sort((a, b) => b['max_' + this.point + '_index'] - a['max_' + this.point + '_index']);
+			this.items = this.items.sort((a, b) => b['max_' + this.point + '_index' + this.calc] - a['max_' + this.point + '_index' + this.calc]);
 		}
 	}
 };

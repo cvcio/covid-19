@@ -5,9 +5,9 @@
 				<v-btn fab tile left class="text-inherit" color="primary" @click="$vuetify.goTo(0)">
 					<v-icon small>fa-map</v-icon>
 				</v-btn>
-				<!-- <v-btn fab tile left class="text-inherit" color="accent">
+				<v-btn fab tile left class="text-inherit" color="accent" @click="$vuetify.goTo('#posts')">
 					<v-icon small>fa-home</v-icon>
-				</v-btn> -->
+				</v-btn>
 			</div>
 		</v-scroll-y-transition>
 		<v-row justify="center" class="pa-0 ma-0 my-n12" v-if="!$vuetify.breakpoint.smAndDown">

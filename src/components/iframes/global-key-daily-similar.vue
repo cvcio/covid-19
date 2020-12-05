@@ -18,10 +18,10 @@
 						</v-autocomplete>
 					</v-col>
 					<v-col class="pa-0 grow text-end ml-2" align-self="center" v-if="!$route.meta.iframe">
-						<v-btn x-small :fab="!$vuetify.breakpoint.smAndDown" :icon="$vuetify.breakpoint.smAndDown" color="grey" dark class="mr-1 elevation-0" @click="update">
+						<v-btn x-small fab color="grey" dark class="mr-1 elevation-0" @click="update">
 							<v-icon x-small>fa-redo</v-icon>
 						</v-btn>
-						<v-btn x-small :fab="!$vuetify.breakpoint.smAndDown" :icon="$vuetify.breakpoint.smAndDown" color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
+						<v-btn x-small fab color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
 							<v-icon x-small>fa-code</v-icon>
 						</v-btn>
 					</v-col>
@@ -83,6 +83,7 @@ export default {
 				subtitle: '',
 				text: '',
 				mapLevel: null,
+				mapKey: null,
 				period: null,
 				lang: this.locale.code,
 				id: 'global-key-daily-similar'

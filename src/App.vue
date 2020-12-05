@@ -95,6 +95,10 @@ canvas {
 .at-share-dock.atss.atss-bottom.at-shfs-small.addthis-animated.slideInUp {
 	background-color: white !important;
 }
-
-.iframe-view {}
+.text-2rem {
+	font-size: 2rem;
+}
+.text-1-2rem {
+	font-size: 1.2rem;
+}
 </style>

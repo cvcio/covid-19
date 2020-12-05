@@ -5,9 +5,9 @@
 				<v-row class="pa-0 ma-0" justify="space-between">
 					<v-col cols="5" sm="5" class="pa-0" align-self="center">
 						<v-btn-toggle dense class="mr-2" rounded v-model="key" mandatory>
-							<v-btn x-small class="primary--text" value="cases">
+							<!-- <v-btn x-small class="primary--text" value="cases">
 								{{($tc('cases', 1)) | normalizeNFD }}
-							</v-btn>
+							</v-btn> -->
 							<!-- <v-btn x-small class="primary--text" value="deaths">
 								{{($tc('deaths', 1)) | normalizeNFD }}
 							</v-btn> -->
@@ -18,7 +18,7 @@
 						<!-- <v-btn x-small :fab="!$vuetify.breakpoint.smAndDown" color="grey" dark class="mx-2 elevation-0" @click="update">
 							<v-icon x-small>fa-redo</v-icon>
 						</v-btn> -->
-						<v-btn x-small :fab="!$vuetify.breakpoint.smAndDown" :icon="$vuetify.breakpoint.smAndDown" color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
+						<v-btn x-small fab color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
 							<v-icon x-small>fa-code</v-icon>
 						</v-btn>
 					</v-col>
@@ -95,7 +95,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import { sum } from 'lodash';
-import { getDates } from '@/utils';
+import { getDates, normalizeNFD } from '@/utils';
 
 export default {
 	name: 'greece-key-by-region-table',
@@ -117,6 +117,7 @@ export default {
 				subtitle: '',
 				text: '',
 				mapLevel: null,
+				mapKey: null,
 				period: null,
 				lang: this.locale.code,
 				id: 'greece-key-by-region-table'
@@ -149,7 +150,6 @@ export default {
 			}
 		},
 		setEmbed () {
-			console.log(this.embed);
 			this.$store.commit('setEmbedDialog', true);
 			this.$store.commit('setEmbed', this.embed);
 		},
@@ -190,15 +190,15 @@ export default {
 		headers (key) {
 			return [
 				{
-					text: this.$t('Area'),
+					text: normalizeNFD(this.$t('Area').toUpperCase()),
 					align: 'start',
 					sortable: true,
 					value: 'region',
 					class: 'text-capitalize',
-					width: '30%'
+					width: '25%'
 				},
 				{
-					text: this.$t('Total'),
+					text: normalizeNFD(this.$t('Total').toUpperCase()),
 					align: 'start',
 					sortable: true,
 					value: 'total_' + key,
@@ -206,15 +206,15 @@ export default {
 					width: '15%'
 				},
 				{
-					text: this.$t('Per 100K'),
+					text: normalizeNFD(this.$t('Per 100K').toUpperCase()),
 					align: 'start',
 					sortable: true,
 					value: 'p100p_' + key,
 					class: 'text-capitalize',
-					width: '15%'
+					width: '20%'
 				},
 				{
-					text: this.$t('Weekly'),
+					text: normalizeNFD(this.$t('Weekly').toUpperCase()),
 					align: 'start',
 					sortable: false,
 					value: 'region',

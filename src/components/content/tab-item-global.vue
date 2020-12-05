@@ -12,7 +12,7 @@
 				</v-row>
 				<v-row class="px-4" align="center" no-gutters>
 					<v-col cols="12" class="primary--opac pa-2 mb-1" style="position:relative">
-						<h4 class="text-h5 font-weight-bold grey--text">
+						<h4 class="text-2rem text-xs-h5 font-weight-bold grey--text">
 							<span class="primary--text" v-if="mapPeriodIDX < 3">{{ new Intl.NumberFormat('el-GR').format(cases.toFixed(2)) }}</span>
 							<span class="primary--text" v-if="mapPeriodIDX === 3">{{ new Intl.NumberFormat('el-GR').format(totalCases.toFixed(2)) }}</span>
 							<span class="" v-if="mapPeriodIDX < 3"> / {{ new Intl.NumberFormat('el-GR').format(totalCases.toFixed(2)) }}</span>
@@ -25,7 +25,7 @@
 							v-if="sparks.new_cases.length > 7" class="d-block totals-sparklines" :data="sparks.new_cases" id="totals-gl-cases-sparklines" style="height: 60px;"/>
 					</v-col>
 					<v-col cols="12" class="secondary--opac pa-2" style="position:relative">
-						<h4 class="text-h5 font-weight-bold grey--text">
+						<h4 class="text-2rem text-xs-h5 font-weight-bold grey--text">
 							<span class="secondary--text" v-if="mapPeriodIDX < 3">{{ new Intl.NumberFormat('el-GR').format(deaths.toFixed(2)) }}</span>
 							<span class="secondary--text" v-if="mapPeriodIDX === 3">{{ new Intl.NumberFormat('el-GR').format(totalDeaths.toFixed(2)) }}</span>
 							<span class="" v-if="mapPeriodIDX < 3"> / {{ new Intl.NumberFormat('el-GR').format(totalDeaths.toFixed(2)) }}</span>
@@ -42,7 +42,7 @@
 					<v-col cols="12" class="py-0 px-3">
 						<v-row class="outlined">
 							<v-col class="pa-2 primary--text" v-if="mapPeriodIDX === 0">
-								<h4 class="subtitle-2 font-weight-bold">
+								<h4 class="text-1-2rem text-xs-subtitle-2 font-weight-bold">
 									{{ new Intl.NumberFormat('el-GR').format(active.toFixed(2)) }}
 								</h4>
 								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
@@ -50,7 +50,7 @@
 								</p>
 							</v-col>
 							<v-col class="pa-2 orange--text" v-if="mapPeriodIDX === 0">
-								<h4 class="subtitle-2 font-weight-bold">
+								<h4 class="text-1-2rem text-xs-subtitle-2 font-weight-bold">
 									{{ new Intl.NumberFormat('el-GR').format(critical.toFixed(2)) }}
 								</h4>
 								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
@@ -58,7 +58,7 @@
 								</p>
 							</v-col>
 							<v-col class="pa-2 success--text">
-								<h4 class="subtitle-2 font-weight-bold">
+								<h4 class="text-1-2rem text-xs-subtitle-2 font-weight-bold">
 									{{ new Intl.NumberFormat('el-GR').format(recovered.toFixed(2)) }}
 								</h4>
 								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
@@ -66,7 +66,7 @@
 								</p>
 							</v-col>
 							<v-col class="pa-2 grey--text">
-								<h4 class="subtitle-2 font-weight-bold">
+								<h4 class="text-1-2rem text-xs-subtitle-2 font-weight-bold">
 									{{ new Intl.NumberFormat('el-GR').format(tests.toFixed(2)) }}
 								</h4>
 								<p class="caption small-caption text-uppercase blue-grey--text mb-0">

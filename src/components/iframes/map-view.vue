@@ -296,9 +296,9 @@ export default {
 
 								this.min = 0;
 								this.max = v;
-								palette = this.palette(0, v, this.colors);
-								m.properties.color = this.colors[this.colors.length - 1];
-								m.properties.opacity = v > 0 ? 0.9 : 0.9;
+								palette = this.palette(0, v * 2, this.colors);
+								m.properties.color = this.colors[5];
+								m.properties.opacity = v > 0 ? 0.6 : 0.9;
 							}
 						} else {
 							if (m.properties.group === this.mapLevel) {

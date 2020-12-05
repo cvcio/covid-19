@@ -30,10 +30,6 @@
 				<v-icon color="primary" small class="mb-1">fa-globe</v-icon>
 			</v-btn>
 		</v-bottom-navigation>
-		<addthis
-			publicId="ra-5e6e40408bf2d5f7"
-			:async="true"
-		/>
 		<embed-dialog/>
 	</div>
 </template>
@@ -48,8 +44,7 @@ export default {
 		'app-footer': require('@/components/app/app-footer').default,
 		tabs: require('@/components/content/tabs').default,
 		'eody-disclaimer': require('@/components/shared/eody-disclaimer').default,
-		'embed-dialog': require('@/components/content/embeds/dialog').default,
-		addthis: require('vue-simple-addthis-share').default
+		'embed-dialog': require('@/components/content/embeds/dialog').default
 	},
 	computed: {
 		...mapGetters(['sidebar'])
@@ -59,7 +54,11 @@ export default {
 			m: true
 		};
 	},
-	mounted () {},
+	mounted () {
+		let addthis = document.createElement('script');
+		addthis.setAttribute('src', '//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5e6e40408bf2d5f7');
+		document.head.appendChild(addthis);
+	},
 	methods: {}
 };
 </script>
