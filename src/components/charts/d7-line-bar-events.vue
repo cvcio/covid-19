@@ -4,7 +4,7 @@
 			<div class="tooltip elevation-4" :style="'top:'+py+'px;left:'+px+'px;'" v-if="d" v-show="tooltip">
 				<v-card class="elevation-0 white pa-0 arrow_box" min-width="180px">
 					<v-card-title class="pa-2 subtitle-2">
-						<span class="">
+						<span class="text-uppercase">
 							{{
 								$moment(d.date).locale(locale.code).format("ll")
 							}}

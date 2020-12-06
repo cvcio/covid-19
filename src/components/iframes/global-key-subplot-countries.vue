@@ -3,9 +3,9 @@
 		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'"
 			:height="$vuetify.breakpoint.smAndDown ? 180 : 136">
 			<v-container class="pa-0 ma-0 mb-4" fluid>
-				<v-row class="pa-0 ma-0">
-					<v-col class="pa-0 shrink" cols="12" sm="12">
-						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory @change="doSort;doSimilar">
+				<v-row class="pa-0 ma-0" justify="start">
+					<v-col class="pa-0 shrink" align-self="center">
+						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory @change="doSort;doSimilar" sm="12">
 							<v-btn x-small class="primary--text" value="cases">
 								{{($tc('cases', 1)) | normalizeNFD }}
 							</v-btn>
@@ -14,7 +14,7 @@
 							</v-btn>
 						</v-btn-toggle>
 					</v-col>
-					<v-col class="pa-0 shrink" cols="12" sm="12">
+					<v-col class="pa-0 shrink" align-self="center" >
 						<v-btn-toggle dense class="mr-2" rounded v-model="calc" mandatory @click="doSort;doSimilar">
 							<v-btn x-small class="primary--text" value="_cum">
 								{{($tc('Cumulative Per 100K', 1)) | normalizeNFD }}
@@ -24,14 +24,14 @@
 							</v-btn>
 						</v-btn-toggle>
 					</v-col>
-					<v-col class="pa-0 text-end ml-2" v-if="!$route.meta.iframe" cols="12" sm="12">
+					<v-col class="pa-0 text-end ml-2 align-end" align-self="center" v-if="!$route.meta.iframe">
 						<v-btn x-small
-							fab color="grey" dark class="mr-1 elevation-0"
+							fab color="grey" dark class="mb-1 elevation-0"
 							@click="update">
 							<v-icon x-small>fa-redo</v-icon>
 						</v-btn>
 						<v-btn x-small
-							fab color="primary" dark class="mr-2 elevation-0"
+							fab color="primary" dark class="ml-1 mb-1 elevation-0"
 							@click="setEmbed">
 							<v-icon x-small>fa-code</v-icon>
 						</v-btn>
@@ -80,8 +80,8 @@
 							cols="12" xs="12" md="4"
 							class="px-4" :class="search === item.uid ? 'yellow lighten-5' : ''"
 						>
-							<v-card-subtitle class="body-2 font-weight-bold px-0">
-								{{ $t(item.region) }}
+							<v-card-subtitle class="body-2 font-weight-bold px-0 text-uppercase">
+								{{ $t(item.region) | normalizeNFD }}
 							</v-card-subtitle>
 							<d7-line-bar
 								:key="'ggcb7l-' + item.uid + '-' + point + '-' + calc" :id="'ggcb7l-uid-' + item.uid + '-' + point + '-' + calc"

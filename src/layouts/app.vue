@@ -55,7 +55,7 @@ export default {
 		};
 	},
 	mounted () {
-		let addthis = document.createElement('script');
+		const addthis = document.createElement('script');
 		addthis.setAttribute('src', '//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5e6e40408bf2d5f7');
 		document.head.appendChild(addthis);
 	},

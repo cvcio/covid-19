@@ -2,9 +2,9 @@
 	<v-card color="white" :class="$route.meta.iframe ? 'elevation-0' : ''" :tile="$route.meta.iframe">
 		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'">
 			<v-container class="pa-0 ma-0" fluid>
-				<v-row class="pa-0 ma-0" justify="space-between">
+				<v-row class="pa-0 ma-0">
 					<v-col class="pa-0 shrink" align-self="center">
-						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory>
+						<v-btn-toggle dense class="mr-1" rounded v-model="point" mandatory>
 							<v-btn x-small class="primary--text" value="tests">
 								{{( $t('All')) | normalizeNFD }}
 							</v-btn>
@@ -17,7 +17,7 @@
 						</v-btn-toggle>
 					</v-col>
 					<v-col class="pa-0 shrink" align-self="center">
-						<v-btn-toggle dense class="mr-2" rounded v-model="calc" mandatory>
+						<v-btn-toggle dense class="" rounded v-model="calc" mandatory>
 							<v-btn x-small class="primary--text" value="new">
 								{{($tc('Daily', 1)) | normalizeNFD }}
 							</v-btn>
@@ -27,9 +27,6 @@
 						</v-btn-toggle>
 					</v-col>
 					<v-col class="pa-0 text-end ml-2" align-self="center" v-if="!$route.meta.iframe">
-						<!-- <v-btn x-small :fab="!$vuetify.breakpoint.smAndDown" color="grey" dark class="mx-2 elevation-0" @click="update">
-							<v-icon x-small>fa-redo</v-icon>
-						</v-btn> -->
 						<v-btn x-small fab color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
 							<v-icon x-small>fa-code</v-icon>
 						</v-btn>
@@ -132,13 +129,13 @@ export default {
 		load () {
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
 			this.$store.dispatch('external/getGlobalAGG',
-				'GRC/cumulative_rtpcr_tests_raw,estimated_new_rtpcr_tests,cumulative_rapid_tests_raw,esitmated_new_rapid_tests,new_tests/' +
+				'GRC/new_tests,new_tests_rtpcr,new_tests_rapid/' +
 				this.periodInterval[3].value)
 				.then(res => {
 					this.item = res.map(m => {
 						m.dates = getDates(m.from, m.to);
-						m.new_pcr = m.estimated_new_rtpcr_tests.map(m => Math.max(0, m));
-						m.new_rapid = m.esitmated_new_rapid_tests.map(m => Math.max(0, m));
+						m.new_pcr = m.new_tests_rtpcr.map(m => Math.max(0, m));
+						m.new_rapid = m.new_tests_rapid.map(m => Math.max(0, m));
 						m.new_tests = m.new_tests.map(m => Math.max(0, m));
 
 						m.new_pcr.unshift(...Array(m.dates.length - m.new_pcr.length).fill(0));
@@ -163,7 +160,6 @@ export default {
 						};
 					});
 					this.item = this.item[0];
-					console.log(this.item);
 					this.loading = false;
 				});
 		},

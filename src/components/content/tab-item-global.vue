@@ -49,14 +49,14 @@
 									{{ $t('Active Cases') | normalizeNFD }}
 								</p>
 							</v-col>
-							<v-col class="pa-2 orange--text" v-if="mapPeriodIDX === 0">
+							<!-- <v-col class="pa-2 orange--text" v-if="mapPeriodIDX === 0">
 								<h4 class="text-1-2rem text-xs-subtitle-2 font-weight-bold">
 									{{ new Intl.NumberFormat('el-GR').format(critical.toFixed(2)) }}
 								</h4>
 								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
 									{{ $t('Intubated') | normalizeNFD }}
 								</p>
-							</v-col>
+							</v-col> -->
 							<v-col class="pa-2 success--text">
 								<h4 class="text-1-2rem text-xs-subtitle-2 font-weight-bold">
 									{{ new Intl.NumberFormat('el-GR').format(recovered.toFixed(2)) }}
@@ -65,14 +65,14 @@
 									{{ $t('Recovered') | normalizeNFD }}
 								</p>
 							</v-col>
-							<v-col class="pa-2 grey--text">
+							<!-- <v-col class="pa-2 grey--text">
 								<h4 class="text-1-2rem text-xs-subtitle-2 font-weight-bold">
 									{{ new Intl.NumberFormat('el-GR').format(tests.toFixed(2)) }}
 								</h4>
 								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
 									{{ $t('Tests') | normalizeNFD }}
 								</p>
-							</v-col>
+							</v-col> -->
 						</v-row>
 					</v-col>
 				</v-row>
@@ -125,18 +125,40 @@ export default {
 	},
 	methods: {
 		load () {
-			this.$store.dispatch('external/getGlobalTotal', { from: this.mapPeriodIDX > 0 ? this.mapPeriod : null })
-				.then(res => {
-					this.totalCases = sumBy(res, 'total_cases') || 0;
-					this.cases = sumBy(res, 'cases') || 0;
-					this.totalDeaths = sumBy(res, 'total_deaths') || 0;
-					this.deaths = sumBy(res, 'deaths') || 0;
-					this.active = sumBy(res, 'total_active') || 0;
-					this.critical = sumBy(res, 'total_critical') || 0;
-					this.recovered = sumBy(res, 'total_recovered') || 0;
-					this.tests = sumBy(res, 'total_tests') || 0;
-				});
+			if (this.mapPeriodIDX > 0) {
+				this.$store.dispatch('external/getGlobalTotal', { from: this.mapPeriodIDX > 0 ? this.mapPeriod : null })
+					.then(res => {
+						this.totalCases = sumBy(res, 'total_cases') || 0;
+						this.cases = sumBy(res, 'cases') || 0;
+						this.totalDeaths = sumBy(res, 'total_deaths') || 0;
+						this.deaths = sumBy(res, 'deaths') || 0;
+						this.active = sumBy(res, 'total_active') || 0;
+						this.critical = sumBy(res, 'total_critical') || 0;
+						this.recovered = sumBy(res, 'recovered') || 0;
+						this.tests = sumBy(res, 'total_tests') || 0;
+					});
+			} else {
+				this.$store.dispatch('external/getGlobalAGG', 'all/cases,new_cases,deaths,new_deaths,active,recovered,new_recovered/' + this.$moment().subtract(1, 'days').format('YYYY-MM-DD'))
+					.then(res => {
+						const data = res.map(m => {
+							m.cases = m.cases[m.cases.length - 1];
+							m.deaths = m.deaths[m.deaths.length - 1];
+							m.recovered = m.recovered[m.recovered.length - 1];
+							m.active = m.active[m.active.length - 1];
 
+							m.new_cases = m.new_cases[m.new_cases.length - 1];
+							m.new_deaths = m.new_deaths[m.new_deaths.length - 1];
+							m.new_recovered = m.new_recovered[m.new_recovered.length - 1];
+							return m;
+						});
+						this.totalCases = sumBy(data, 'cases') || 0;
+						this.totalDeaths = sumBy(data, 'deaths') || 0;
+						this.cases = sumBy(data, 'new_cases') || 0;
+						this.deaths = sumBy(data, 'new_deaths') || 0;
+						this.active = sumBy(data, 'active') || 0;
+						this.recovered = sumBy(data, 'new_recovered') || 0;
+					});
+			}
 			this.$store.dispatch('external/getGlobalAGG', 'all/new_cases,new_deaths' + (this.mapPeriodIDX > 0 ? '/' + this.mapPeriod : ''))
 				.then(res => {
 					const items = res.map(m => {

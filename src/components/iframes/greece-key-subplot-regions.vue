@@ -55,8 +55,8 @@
 							cols="12" xs="12" md="4"
 							class="px-4"
 						>
-							<v-card-subtitle class="caption font-weight-bold px-0">
-								{{ $t(item.region) }}
+							<v-card-subtitle class="caption font-weight-bold px-0 text-uppercase">
+								{{ $t(item.region) | normalizeNFD }}
 							</v-card-subtitle>
 							<d7-line-bar
 								:key="'gcb7l-' + item.uid + '-' + point + '-' + calc" :id="'gcb7l-uid-' + item.uid + '-' + point + '-' + calc"
@@ -196,7 +196,7 @@ export default {
 							max_cases_cum: max_cases_cum,
 							max_cases_new: max_cases_new,
 							max_cases_index_new: max_cases_new,
-							max_cases_index_cum: max_cases_cum,
+							max_cases_index_cum: max_cases_cum
 						};
 					});
 

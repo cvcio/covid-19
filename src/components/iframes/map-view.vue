@@ -37,8 +37,8 @@
 			<div class="tooltip elevation-4" :style="'top:'+y+'px;left:'+x+'px;'" ref="tooltipGlobal" v-if="point !== null" v-show="tooltip && point !== null">
 				<v-card class="elevation-0 white pa-0 arrow_box" min-width="180px">
 					<v-card-title class="pa-2 subtitle-2">
-						<span class="">
-							{{ point["name_" + locale.code] }}
+						<span class="text-uppercase">
+							{{ point["name_" + locale.code] | normalizeNFD }}
 						</span>
 					</v-card-title>
 					<v-divider/>
@@ -245,7 +245,11 @@ export default {
 					const values = res.map(m => {
 						let v = 0;
 						if (this.mapPeriodIDX === 0) {
-							v = m['new_' + this.mapKey][m['new_' + this.mapKey].length - 1];
+							if (m.cases.length > 1 && m.cases[0] === m.cases[1]) {
+								v = m['new_' + this.mapKey][m['new_' + this.mapKey].length - 2];
+							} else {
+								v = m['new_' + this.mapKey][m['new_' + this.mapKey].length - 1];
+							}
 						} else {
 							v = sum(m['new_' + this.mapKey]);
 						}
@@ -256,7 +260,6 @@ export default {
 					this.max = Math.max(...values, 1);
 					this.median = mean([...values, 1]);
 					this.colors = colors[this.mapKey + 'CS'];
-
 					let palette = this.palette(this.min, this.max, this.colors);
 					this.geo.features.map(m => {
 						m.properties.active = false;
@@ -267,13 +270,13 @@ export default {
 							if (m.properties.uid === 300) {
 								m.properties.active = true;
 
-								let values = [];
+								let cs = [];
 								if (this.mapPeriodIDX === 0) {
-									values = res.map(n => n.new_deaths[n.new_deaths.length - 1]);
+									cs = res.map(n => n.new_deaths[n.new_deaths.length - 1]);
 								} else {
-									values = res.map(n => sum(n.new_deaths));
+									cs = res.map(n => sum(n.new_deaths));
 								}
-								const v = sum(values);
+								const v = sum(cs);
 
 								m.properties.data = {
 									sources: ['imedd']
@@ -327,9 +330,15 @@ export default {
 
 									let v = [];
 									if (this.mapPeriodIDX === 0) {
-										m.properties.data.vD = obj.new_deaths[obj.new_deaths.length - 1];
-										m.properties.data.vC = obj.new_cases[obj.new_cases.length - 1];
-										v = obj['new_' + this.mapKey][obj['new_' + this.mapKey].length - 1];
+										if (obj.cases.length > 1 && obj.cases[0] === obj.cases[1]) {
+											m.properties.data.vD = obj.new_deaths[obj.new_deaths.length - 2];
+											m.properties.data.vC = obj.new_cases[obj.new_cases.length - 2];
+											v = obj['new_' + this.mapKey][obj['new_' + this.mapKey].length - 2];
+										} else {
+											m.properties.data.vD = obj.new_deaths[obj.new_deaths.length - 1];
+											m.properties.data.vC = obj.new_cases[obj.new_cases.length - 1];
+											v = obj['new_' + this.mapKey][obj['new_' + this.mapKey].length - 1];
+										}
 									} else {
 										m.properties.data.vD = sum(obj.new_deaths);
 										m.properties.data.vC = sum(obj.new_cases);
@@ -338,7 +347,7 @@ export default {
 
 									m.properties.active = true;
 									m.properties.color = obj.population > 0 ? palette((v / obj.population) * 100000) : palette(0);
-									m.properties.opacity = v > 0 ? 0.9 : 0.9;
+									m.properties.opacity = v > 0 ? 0.9 : 0.6;
 
 									if (m.properties.group === 'greece') {
 										m.properties.data.note = unk.filter(m => !!m); // unk.length > 0 ? unk.join('') : null;
@@ -475,7 +484,9 @@ export default {
 
 			this.map.flyTo({
 				center: coords,
-				zoom: zoom
+				zoom: zoom,
+				essential: true,
+				padding: { top: 0, bottom: 0, left: 360, right: 0 }
 				// speed: this.$vuetify.breakpoint.smAndDown ? 0 : 5
 			});
 		}

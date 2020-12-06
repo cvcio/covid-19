@@ -153,7 +153,7 @@ export default {
 					text: { en: 'Historical data', el: 'Από την αρχή' },
 					value: 3
 				}
-			],
+			]
 		};
 	},
 	methods: {
