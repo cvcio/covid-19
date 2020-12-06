@@ -446,6 +446,7 @@ export default {
 			}, this.bottomLayer);
 			this.map.on('mousemove', 'covid', this.onMouseEnter);
 			this.map.on('mouseleave', 'covid', this.onMouseLeave);
+			this.updatePosition();
 		},
 		onMouseEnter (e) {
 			if (!this.map) return;
@@ -484,9 +485,9 @@ export default {
 
 			this.map.flyTo({
 				center: coords,
-				zoom: zoom,
+				zoom: this.$vuetify.breakpoint.smAndDown ? 0.9 * zoom : zoom,
 				essential: true,
-				padding: { top: 0, bottom: 0, left: 360, right: 0 }
+				padding: { top: 0, bottom: 0, left: (this.$vuetify.breakpoint.smAndDown ? 0 : 360), right: 0 }
 				// speed: this.$vuetify.breakpoint.smAndDown ? 0 : 5
 			});
 		}
