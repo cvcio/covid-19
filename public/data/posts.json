@@ -159,6 +159,27 @@
 				"id": "global-key-subplot-countries",
 				"embed": true
 			}
+		},
+		{
+			"title": {
+				"el": "Viral",
+				"en": "Viral"
+			},
+			"body": {
+				"el": [
+					"Τα γραφήματα αποτυπώνουν τα νέα κρούσματα ή τους νέους θανάτους, ανά 100.000 πληθυσμού και σε απόλυτους αριθμούς, ημερησίως σε κάθε χώρα. Η σειρά εμφάνισής τους εξαρτάται από τον αριθμό νέων κρουσμάτων ανά 100.000 πληθυσμού. Δηλαδή, στην κορυφή εμφανίζονται οι χώρες που, προς το παρόν, έχουν μεγαλύτερο πρόβλημα.",
+					"Η γραμμή με το σκούρο χρώμα καταγράφει τον κυλιόμενο μέσο όρο των τελευταίων 7 ημερών, ο οποίος χρησιμοποιείται για να εξομαλύνει τις τιμές."
+				],
+				"en": [
+					"The subplots represent daily new cases or daily new deaths both per 100,000 residents and in absolule numbers in each country. Countries are ranked based on the number of new cases or new deaths reported per 100,000 residents, meaning that countries on top currently face severe outbreak.",
+					"The darker line stands for the 7-day moving average of each metric, which is used to smooth values."
+				]
+			},
+			"component": {
+				"id": "global-key-daily-similar",
+				"embed": true,
+				"defaults": ["U300","U56","U380","U840"]
+			}
 		}
 	]
 }

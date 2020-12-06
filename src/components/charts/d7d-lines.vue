@@ -31,7 +31,11 @@
 <script>
 import { mapGetters } from 'vuex';
 
-import { line, select, scaleLinear, axisBottom, axisRight, max } from 'd3';
+import { line, select, scaleLinear, axisBottom, axisRight, max, scaleOrdinal, schemeCategory10 } from 'd3';
+import {
+	layoutTextLabel, layoutGreedy,
+	layoutLabel, layoutRemoveOverlaps
+} from '@d3fc/d3fc-label-layout';
 import { ma } from 'moving-averages';
 import * as colors from '@/helper/colors';
 import annotation from 'd3-svg-annotation';
@@ -69,8 +73,6 @@ export default {
 				this.chart.selectAll('*').remove();
 			}
 
-			const self = this;
-
 			const data = this.data.map(m => {
 				const sma = ma(m[this.point], 7).filter((el) => {
 					return el != null;
@@ -87,9 +89,11 @@ export default {
 			}
 			this.chart = null;
 
+			const colorScale = scaleOrdinal().domain([0, data.length]).range(schemeCategory10);
+
 			const width = div.clientWidth;
-			const height = 360;
-			const margin = { top: 12, left: 0, bottom: 12, right: 96 };
+			const height = 460;
+			const margin = { top: 12, left: 0, bottom: 12, right: 64 };
 			const innerWidth = width - margin.left - margin.right;
 			const innerHeight = height - margin.top - margin.bottom;
 
@@ -118,7 +122,7 @@ export default {
 				.attr('transform', `translate(0, ${innerHeight})`)
 				.call(
 					axisBottom(x)
-						.ticks(1)
+						.ticks(6)
 						.tickFormat(d => this.$moment(data[0].dates[d]).format('MM/Y'))
 				)
 				.call(g => g.select('.domain').remove());
@@ -147,28 +151,29 @@ export default {
 				.attr('id', d => 'line-' + d.uid)
 				.attr('transform', `translate(0,${margin.top})`)
 				.attr('fill', 'none')
-				.attr('stroke', (d) => {
-					return d.uid === this.uid ? 'black' : colors.deathsCS[1];
+				.attr('stroke', (d, i) => {
+					return colorScale(i);
 				})
-				.attr('stroke-width', 1)
+				.attr('stroke-width', 2)
 				.attr('stroke-opacity', 0.7)
 				.attr('d', (d) => {
 					return l(d.sma);
 				})
-				.on('mouseover', function (e, d, i) {
+				.on('mouseover', function (e, d) {
 					select(this)
 						.attr('stroke', colors.testsCS[7])
-						.attr('stroke-width', 2)
-						.attr('stroke-opacity', 1);
+						.attr('stroke-width', 4)
+						.attr('stroke-opacity', 0.9);
 
 					select('.annotation-' + d.uid)
 						.selectAll('g.annotation-connector, g.annotation-note')
 						.classed('hidden', false);
 				})
-				.on('mouseout', function (e, d, i) {
+				.on('mouseout', function (e, d) {
+					const i = data.findIndex(x => x.uid === d.uid);
 					select(this)
-						.attr('stroke', d.uid === self.uid ? 'black' : colors.deathsCS[1])
-						.attr('stroke-width', 1)
+						.attr('stroke', colorScale(i))
+						.attr('stroke-width', 2)
 						.attr('stroke-opacity', 0.7);
 					select('.annotation-' + d.uid)
 						.selectAll('g.annotation-connector, g.annotation-note')
@@ -210,15 +215,17 @@ export default {
 						.classed('hidden', false);
 					select('#line-' + a.data.uid)
 						.attr('stroke', colors.testsCS[7])
-						.attr('stroke-width', 2)
-						.attr('stroke-opacity', 1);
+						.attr('stroke-width', 4)
+						.attr('stroke-opacity', 0.9);
 				})
 				.on('subjectout', function (a) {
 					a.type.a.selectAll('g.annotation-connector, g.annotation-note')
 						.classed('hidden', true);
+
+					const i = data.findIndex(x => x.uid === a.data.uid);
 					select('#line-' + a.data.uid)
-						.attr('stroke', a.data.uid === self.uid ? 'black' : colors.deathsCS[1])
-						.attr('stroke-width', 1)
+						.attr('stroke', colorScale(i))
+						.attr('stroke-width', 2)
 						.attr('stroke-opacity', 0.7);
 				});
 
@@ -248,22 +255,48 @@ export default {
 				.attr('cy', (d, i) => y(d.sma[d.maxIdx]))
 				.attr('opacity', 0);
 
-			this.chart
-				.selectAll('.title')
-				.data(data)
-				.enter()
-				.append('text')
-				.attr('transform', `translate(${margin.left},${margin.top})`)
-				.attr('id', d => 'title-' + d.uid)
-				.classed('hidden', d => d.uid !== this.uid)
-				.attr('x', width - margin.right + 12)
-				.attr('y', (d) => y(d.sma[d.sma.length - 1]) + 3)
-				.attr('fill', () => {
+			// const labels = this.chart
+			// 	.selectAll('.title')
+			// 	.data(data)
+			// 	.enter()
+			// 	.append('text')
+			// 	.attr('transform', `translate(${margin.left},${margin.top})`)
+			// 	.attr('id', d => 'title-' + d.uid)
+			// 	// .classed('hidden', d => d.uid !== this.uid)
+			// 	.attr('x', width - margin.right + 12)
+			// 	.attr('y', (d) => y(d.sma[d.sma.length - 1]) + 3)
+			// 	.attr('dy', (d) => 0)
+			// 	.attr('fill', () => {
 
-				})
-				.text((d) => {
+			// 	})
+			// 	.text((d) => {
+			// 		return d.region;
+			// 	});
+
+			const labelPadding = 2;
+			const textLabel = layoutTextLabel()
+				.padding(labelPadding)
+				.value(d => {
 					return d.region;
 				});
+			const strategy = layoutRemoveOverlaps(layoutGreedy());
+			const ls = layoutLabel(strategy)
+				.size((d, i, g) => {
+					const textSize = g[i].getElementsByTagName('text')[0].getBBox();
+					return [textSize.width + labelPadding * 2, textSize.height + labelPadding * 2];
+				})
+				.position(d => {
+					return [
+						width - margin.right,
+						y(d.sma[d.sma.length - 1])
+					];
+				})
+				.component(textLabel);
+
+			this.chart
+				.append('g')
+				.attr('transform', `translate(${margin.left},${margin.top})`)
+				.datum(data).call(ls);
 		}
 	}
 };
@@ -273,7 +306,7 @@ export default {
 .d7d-lines{
 	display: inline-block;
 	// width: 140px;
-	max-height: 360px;
+	max-height: 460px;
 	width: 100%;
 	svg {
 		.axis {
@@ -313,6 +346,17 @@ export default {
 			fill: rgba(180, 180, 180, 1);;
 			text-anchor: start;
 			font: normal 9px 'Roboto';
+		}
+
+		.label {
+			rect {
+				fill: none;
+			}
+
+			text {
+				fill: rgba(180, 180, 180, 1);;
+				font: normal 9px 'Roboto';
+			}
 		}
 
 		.annotation path {

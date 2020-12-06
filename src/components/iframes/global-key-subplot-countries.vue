@@ -5,7 +5,7 @@
 			<v-container class="pa-0 ma-0 mb-4" fluid>
 				<v-row class="pa-0 ma-0" justify="start">
 					<v-col class="pa-0 shrink" align-self="center">
-						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory @change="doSort;doSimilar" sm="12">
+						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory @change="doSimilar">
 							<v-btn x-small class="primary--text" value="cases">
 								{{($tc('cases', 1)) | normalizeNFD }}
 							</v-btn>
@@ -15,7 +15,7 @@
 						</v-btn-toggle>
 					</v-col>
 					<v-col class="pa-0 shrink" align-self="center" >
-						<v-btn-toggle dense class="mr-2" rounded v-model="calc" mandatory @click="doSort;doSimilar">
+						<v-btn-toggle dense class="mr-2" rounded v-model="calc" mandatory @change="doSimilar">
 							<v-btn x-small class="primary--text" value="_cum">
 								{{($tc('Cumulative Per 100K', 1)) | normalizeNFD }}
 							</v-btn>
@@ -254,6 +254,7 @@ export default {
 				});
 		},
 		doSimilar () {
+			this.doSort();
 			// this.items = this.items.sort((b, a) => a['max_' + this.point + '_index'] - b['max_' + this.point + '_index']);
 			if (this.search !== '') {
 				const idx = this.items.findIndex(m => m.uid === this.search);

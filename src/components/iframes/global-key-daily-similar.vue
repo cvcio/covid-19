@@ -3,25 +3,38 @@
 		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'">
 			<v-container class="pa-0 ma-0" fluid>
 				<v-row class="pa-0 ma-0" justify="space-between">
-					<v-col class="pa-0" align-self="center" cols="5">
+					<v-col class="pa-0 grow" align-self="center">
 						<v-autocomplete
 							dense
+							multiple
 							outlined
 							color="primary"
 							hide-details
 							class="caption fa-xs"
 							prepend-icon="fa-globe-europe"
 							:items="items"
+							:label="$t('Country')"
 							item-text="region" item-value="uid"
 							v-model="search"
 							@change="doSimilar">
+							<template v-slot:selection="{ item, index }">
+								<span v-if="index < 5" class="caption small-caption mr-1">
+									<span class="">{{ item.region + (search.length - 1 > index ? ', ' : '')}}</span>
+								</span>
+								<span
+									v-if="index === 5"
+									class="grey--text caption small-caption ml-1"
+								>
+									<span class="">(+{{ search.length - 5 }})</span>
+								</span>
+							</template>
 						</v-autocomplete>
 					</v-col>
-					<v-col class="pa-0 grow text-end ml-2" align-self="center" v-if="!$route.meta.iframe">
-						<v-btn x-small fab color="grey" dark class="mr-1 elevation-0" @click="update">
+					<v-col class="pa-0 text-end ml-2" align-self="center" v-if="!$route.meta.iframe" cols="3">
+						<v-btn x-small fab color="grey" dark class="elevation-0" @click="update">
 							<v-icon x-small>fa-redo</v-icon>
 						</v-btn>
-						<v-btn x-small fab color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
+						<v-btn x-small fab color="primary" dark class="ml-1 elevation-0" @click="setEmbed">
 							<v-icon x-small>fa-code</v-icon>
 						</v-btn>
 					</v-col>
@@ -42,7 +55,7 @@
 				>
 					<d7d-lines
 						:point="point" :uid="search"
-						:key="'gnd7d-'+search" :id="'gnd7d-'+search" :data="similar"/>
+						:key="'gnd7d-'+search.join('-')" :id="'gnd7d-'+search.join('-')" :data="similar"/>
 				</v-col>
 			</v-row>
 		</v-container>
@@ -68,6 +81,10 @@ export default {
 	props: {
 		delay: {
 			default: 100
+		},
+		defaults: {
+			type: Array,
+			default: () => ['U300', 'U56', 'U380', 'U840']
 		}
 	},
 	components: {
@@ -96,7 +113,8 @@ export default {
 			point: 'new_deaths',
 			items: [],
 			similar: [],
-			search: 'U300',
+			search: ['U300'],
+			max: 30,
 			title: { en: '', el: '' }
 		};
 	},
@@ -122,14 +140,14 @@ export default {
 		},
 		load () {
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
-			this.$store.dispatch('external/getGlobalAGG', 'all/new_deaths,cases/' + this.periodInterval[3].value + '/' + this.$moment().subtract(1, 'days').format('YYYY-MM-DD'))
+			this.$store.dispatch('external/getGlobalAGG', 'all/new_deaths/' + this.periodInterval[3].value + '/' + this.$moment().subtract(1, 'days').format('YYYY-MM-DD'))
 				.then(res => {
 					const items = res.map(m => {
 						m.new_deaths = m.new_deaths.map(m => Math.max(0, m));
 						m.new_deaths = m.new_deaths.map(n => m.population > 0 ? (n / m.population) * 100000 : 0);
 						m.dates = getDates(m.from, m.to);
-						m.new_deaths.pop();
-						m.dates.pop();
+						// m.new_deaths.pop();
+						// m.dates.pop();
 						return {
 							uid: 'U' + m.uid,
 							region: this.$t(m.country),
@@ -140,21 +158,19 @@ export default {
 							lastIndex: (sum(m.new_deaths.slice(m.new_deaths.length - 3, m.new_deaths.length - 1)) / m.population) * 100000
 						};
 					});
-					this.items = items.sort((a, b) => a.lastIndex - b.lastIndex);
+					this.items = items.sort((a, b) => a.region - b.region);
+					this.search = this.defaults;
 					this.doSimilar();
 
 					this.loading = false;
 				});
 		},
 		doSimilar (uid) {
-			const idx = this.items.findIndex(m => m.uid === this.search);
-			const next7 = this.items.slice(idx + 1, idx + 4);
-			const prev7 = this.items.slice(idx - 4, idx - 1);
-			this.similar = [...prev7, ...next7, this.items[idx]];
+			this.search = this.search.slice(Math.max(this.search.length - this.max, 0));
+			this.similar = this.items.filter(m => this.search.includes(m.uid));
 		},
 		update () {
-			if (this.search === 'U300') return;
-			this.search = 'U300';
+			this.search = this.defaults;
 			this.doSimilar();
 		}
 	}

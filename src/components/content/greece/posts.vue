@@ -24,6 +24,7 @@
 							v-if="inView"
 							:delay="50"
 							v-bind:is="post.component.id"
+							:defaults="post.component.defaults"
 						/>
 					</post>
 					<!-- <component :delay="250 * idx" v-bind:is="post.component.id" /> -->
