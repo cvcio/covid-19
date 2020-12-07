@@ -18,14 +18,14 @@
 							v-model="search"
 							@change="doSimilar">
 							<template v-slot:selection="{ item, index }">
-								<span v-if="index < 5" class="caption small-caption mr-1">
+								<span v-if="index < 6" class="caption small-caption mr-1">
 									<span class="">{{ item.region + (search.length - 1 > index ? ', ' : '')}}</span>
 								</span>
 								<span
-									v-if="index === 5"
+									v-if="index === 6"
 									class="grey--text caption small-caption ml-1"
 								>
-									<span class="">(+{{ search.length - 5 }})</span>
+									<span class="">(+{{ search.length - 6 }})</span>
 								</span>
 							</template>
 						</v-autocomplete>
@@ -113,7 +113,7 @@ export default {
 			point: 'new_deaths',
 			items: [],
 			similar: [],
-			search: ['U300'],
+			search: [],
 			max: 30,
 			title: { en: '', el: '' }
 		};

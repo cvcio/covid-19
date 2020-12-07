@@ -184,10 +184,11 @@ export default {
 				return {
 					id: 'annotation-' + m.uid,
 					note: {
-						title: m.region + ' ' + this.$moment(m.dates[m.maxIdx]).format('LL'), // this.$moment(m.date, 'DD/MM/YYYY').format('LL'),
-						label: `Deaths / 100K Ratio ${m.sma[m.maxIdx].toFixed(2)}`,
+						title: m.region + ', ' + this.$moment(m.dates[m.maxIdx]).format('LL'), // this.$moment(m.date, 'DD/MM/YYYY').format('LL'),
+						label: `${this.$t('Νέοι θάνατοι/100Κ')}: ${m.sma[m.maxIdx].toFixed(2)}\n
+						${this.$t('(7-day mov avg)')}`,
 						padding: 6,
-						wrap: 180,
+						wrap: 148,
 						align: 'middle',
 						id: m.uid
 					},

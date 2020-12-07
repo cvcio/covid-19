@@ -162,23 +162,23 @@
 		},
 		{
 			"title": {
-				"el": "Viral",
-				"en": "Viral"
+				"el": "Αναλογία θανάτων στον πληθυσμό",
+				"en": "Deaths ratio in population"
 			},
 			"body": {
 				"el": [
-					"Τα γραφήματα αποτυπώνουν τα νέα κρούσματα ή τους νέους θανάτους, ανά 100.000 πληθυσμού και σε απόλυτους αριθμούς, ημερησίως σε κάθε χώρα. Η σειρά εμφάνισής τους εξαρτάται από τον αριθμό νέων κρουσμάτων ανά 100.000 πληθυσμού. Δηλαδή, στην κορυφή εμφανίζονται οι χώρες που, προς το παρόν, έχουν μεγαλύτερο πρόβλημα.",
-					"Η γραμμή με το σκούρο χρώμα καταγράφει τον κυλιόμενο μέσο όρο των τελευταίων 7 ημερών, ο οποίος χρησιμοποιείται για να εξομαλύνει τις τιμές."
+					"Το διάγραμμα αποτυπώνει πώς εξελίσσεται η αναλογία νέων θανάτων ανά 100.000 κατοίκους στον χρόνο για κάθε χώρα, παρουσιάζοντας τον κυλιόμενο μέσο όρο των τελευταίων 7 ημερών για την εξομάλυνση των τιμών.",
+					"Η ημέρα όποτε παρατηρείται κορύφωση της αναλογίας για μία χώρα, επισημαίνεται στο γράφημα. Για παράδειγμα, στην περίπτωση της Ελλάδας, κορύφωση σημειώθηκε στις 3 Δεκεμβρίου. Μπορείτε να αλλάξετε τις προεπιλεγμένες χώρες, ώστε να συγκρίνετε εκείνες που σας ενδιαφέρουν, επιλέγοντας ως δέκα χώρες κάθε φορά."
 				],
 				"en": [
-					"The subplots represent daily new cases or daily new deaths both per 100,000 residents and in absolule numbers in each country. Countries are ranked based on the number of new cases or new deaths reported per 100,000 residents, meaning that countries on top currently face severe outbreak.",
-					"The darker line stands for the 7-day moving average of each metric, which is used to smooth values."
+					"The chart shows what is the evolution of new deaths ratio in population (per 100,000 residents) over time by country and presents the 7-day moving average of said ratio to smooth values.",
+					"Annotations stand for the peak of this ratio for each country on specific dates. For instance, Greece presents a spike on December, 3. You may change the preselected countries to see how those of your interest compare to each other by selecting up to ten countries a time."
 				]
 			},
 			"component": {
 				"id": "global-key-daily-similar",
 				"embed": true,
-				"defaults": ["U300","U56","U380","U840"]
+				"defaults": ["U300", "U840", "U826", "U250", "U276", "U380"]
 			}
 		}
 	]
