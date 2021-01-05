@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import VueGtag from 'vue-gtag';
 
 import { sync } from 'vuex-router-sync';
 // import '@/registerServiceWorker';
@@ -35,10 +34,6 @@ Vue.prototype.$APP_MAPBOX = process.env.VUE_APP_MAPBOX || 'pk.eyJ1IjoiYW5kZWZpbm
 Vue.prototype.$APP_MAPBOX_STYLE = process.env.VUE_APP_MAPBOX_STYLE || 'mapbox://styles/mapbox/light-v10';
 
 Vue.use(filters);
-Vue.use(VueGtag, {
-	config: { id: process.env.VUE_APP_GOOGLE_TAG || 'UA-129030467-1' },
-	enabled: false
-}, router);
 Vue.use(VueObserveVisibility);
 sync(store, router);
 

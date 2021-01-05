@@ -26,7 +26,6 @@
     "simple-statistics": "^7.3.0",
     "simple-syntax-highlighter": "^1.4.4",
     "vue": "^2.6.12",
-    "vue-gtag": "^1.9.1",
     "vue-i18n": "^8.22.0",
     "vue-observe-visibility": "^0.4.6",
     "vue-router": "^3.4.7",
