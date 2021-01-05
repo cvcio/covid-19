@@ -63,7 +63,7 @@
 									{{ $t('Intubated') | normalizeNFD }}
 								</p>
 							</v-col>
-							<v-col class="pa-2 success--text">
+							<v-col class="pa-2 success--text" v-if="mapPeriodIDX > 0">
 								<h4 class="text-1-2rem text-xs-subtitle-2 font-weight-bold">
 									{{ new Intl.NumberFormat('el-GR').format(recovered.toFixed(2)) }}
 								</h4>
