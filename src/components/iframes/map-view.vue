@@ -38,6 +38,17 @@
 				<v-card class="elevation-0 white pa-0 arrow_box" min-width="180px">
 					<v-card-title class="pa-2 subtitle-2">
 						<span class="text-uppercase">
+							{{
+								mapPeriodIDX > 0 ? $moment(point.data.from).format("ll") + ' - ': ''
+							}}
+							{{
+								$moment(point.data.to).format("ll")
+							}}
+						</span>
+					</v-card-title>
+					<v-divider/>
+					<v-card-title class="pa-2 subtitle-2">
+						<span class="text-uppercase">
 							{{ point["name_" + locale.code] | normalizeNFD }}
 						</span>
 					</v-card-title>
@@ -45,10 +56,13 @@
 					<v-card-subtitle class="pa-2">
 						<h4 class="subtitle-2 primary--text text-capitalize primary--text">
 							{{ $tc("cases", 1) }}:
-							<span class="font-weight-bold">
+							<span class="font-weight-bold text-lowercase">
 								{{
 									new Intl.NumberFormat('el-GR').format(point.data.vC.toFixed(2))
 								}}
+								({{
+									new Intl.NumberFormat('el-GR').format(point.data.vIC.toFixed(2)) + ' ' + $t('Per 100K')
+								}})
 							</span>
 						</h4>
 						<h4 class="subtitle-2 primary--text text-capitalize secondary--text">
@@ -59,8 +73,11 @@
 							<span class="font-weight-bold" v-else>
 								{{ new Intl.NumberFormat('el-GR').format(point.data.vD.toFixed(2)) }}
 							</span> -->
-							<span class="font-weight-bold">
+							<span class="font-weight-bold text-lowercase">
 								{{ new Intl.NumberFormat('el-GR').format(point.data.vD.toFixed(2)) }}
+								({{
+									new Intl.NumberFormat('el-GR').format(point.data.vID.toFixed(2)) + ' ' + $t('Per 100K')
+								}})
 							</span>
 						</h4>
 					</v-card-subtitle>
@@ -327,6 +344,7 @@ export default {
 									m.properties.data = obj;
 									m.properties.data.vD = 0;
 									m.properties.data.vC = 0;
+									m.properties.data.vIC = 0;
 
 									let v = [];
 									if (this.mapPeriodIDX === 0) {
@@ -344,6 +362,9 @@ export default {
 										m.properties.data.vC = sum(obj.new_cases);
 										v = sum(obj['new_' + this.mapKey]);
 									}
+
+									m.properties.data.vIC = (m.properties.data.vC / obj.population) * 100000;
+									m.properties.data.vID = (m.properties.data.vD / obj.population) * 100000;
 
 									m.properties.active = true;
 									m.properties.color = obj.population > 0 ? palette((v / obj.population) * 100000) : palette(0);
