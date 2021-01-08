@@ -59,6 +59,13 @@
 								<td class="caption">
 									{{ typeof props.item['p100p_' + key] !== 'string' ? new Intl.NumberFormat('el-GR').format(props.item['p100p_' + key].toFixed(0)) : '-'}}
 								</td>
+								<td class="caption">
+									{{
+										!isNaN(props.item['mo_7d_' + key]) ? new Intl.NumberFormat('el-GR').format(
+											Math.abs(props.item['mo_7d_' + key].toFixed(2))
+										) : '-'
+									}}
+								</td>
 								<td class="caption" v-if="!$vuetify.breakpoint.smAndDown">
 									<heatbar
 									:key="'gcbc-' + props.item.uid + '-' + key"
@@ -101,6 +108,7 @@
 import { mapGetters } from 'vuex';
 import { sum } from 'lodash';
 import { getDates, normalizeNFD } from '@/utils';
+import { ma } from 'moving-averages';
 
 export default {
 	name: 'global-key-by-country-table',
@@ -171,6 +179,14 @@ export default {
 						const p100p_cases = m.population > 0 ? ((sum(m.new_cases) / m.population) * 100000) : '-';
 						const p100p_deaths = m.population > 0 ? ((sum(m.new_deaths) / m.population) * 100000) : '-';
 						const p100p_recovered = m.population > 0 ? ((sum(m.new_recovered) / m.population) * 100000) : '-';
+						let mo_7d_cases = ma(m.new_cases.map(n => (n / m.population) * 100000), 7).filter((el) => {
+							return el != null;
+						});
+						mo_7d_cases = mo_7d_cases[mo_7d_cases.length - 1];
+						let mo_7d_deaths = ma(m.new_deaths.map(n => (n / m.population) * 100000), 7).filter((el) => {
+							return el != null;
+						});
+						mo_7d_deaths = mo_7d_deaths[mo_7d_deaths.length - 1];
 						return {
 							uid: m.uid,
 							region: m.country,
@@ -180,6 +196,8 @@ export default {
 							p100p_cases,
 							p100p_deaths,
 							p100p_recovered,
+							mo_7d_cases,
+							mo_7d_deaths,
 							dates: getDates(m.from, m.to),
 							cases: m.new_cases,
 							deaths: m.new_deaths,
@@ -203,7 +221,7 @@ export default {
 					sortable: true,
 					value: 'region',
 					class: 'text-capitalize',
-					width: '25%'
+					width: '20%'
 				},
 				{
 					text: normalizeNFD(this.$t('Total').toUpperCase()),
@@ -222,11 +240,19 @@ export default {
 					width: '20%'
 				},
 				{
+					text: normalizeNFD(this.$t('MO7d').toUpperCase()),
+					align: 'start',
+					sortable: true,
+					value: 'mo_7d_' + key,
+					class: 'text-capitalize',
+					width: '15%'
+				},
+				{
 					text: normalizeNFD(this.$t('Weekly').toUpperCase()),
 					align: 'start',
 					sortable: false,
 					value: 'region',
-					width: '40%',
+					width: '30%',
 					class: 'text-capitalize'
 				}
 			];
