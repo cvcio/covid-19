@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@d3fc/d3fc-label-layout": "^7.0.3",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "chroma-js": "^2.1.0",
     "d3": "^6.2.0",
     "d3-svg-annotation": "^2.5.1",
