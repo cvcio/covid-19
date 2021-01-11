@@ -168,6 +168,8 @@ export default {
 				mapKey: this.mapKey,
 				mapLevel: this.mapLevel,
 				period: this.mapPeriodIDX,
+				view: null,
+				aggregation: null,
 				lang: this.locale.code,
 				id: 'map-view'
 			};

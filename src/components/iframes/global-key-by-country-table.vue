@@ -243,7 +243,7 @@ export default {
 					width: '20%'
 				},
 				{
-					text: normalizeNFD(this.$t('MO7d').toUpperCase()),
+					text: normalizeNFD(this.$t('7 Day MA').toUpperCase()),
 					align: 'start',
 					sortable: true,
 					value: 'mo_7d_' + key,

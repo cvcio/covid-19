@@ -11,37 +11,37 @@
 					</v-col>
 				</v-row>
 				<v-row class="px-4" align="center" no-gutters>
-					<v-col cols="12" class="primary--opac pa-2 mb-1" style="position:relative">
-						<h4 class="text-2rem text-xs-h5 font-weight-bold grey--text">
+					<v-col cols="12" class="primary--opac pa-2 mb-1" style="position:relative;">
+						<h4 class="text-2rem text-xs-h5 font-weight-bold grey--text"  style="z-index:1;">
 							<span class="primary--text" v-if="mapPeriodIDX < 3">{{ new Intl.NumberFormat('el-GR').format(cases.toFixed(2)) }}</span>
 							<span class="primary--text" v-if="mapPeriodIDX === 3">{{ new Intl.NumberFormat('el-GR').format(totalCases.toFixed(2)) }}</span>
 							<span class="" v-if="mapPeriodIDX < 3"> / {{ new Intl.NumberFormat('el-GR').format(totalCases.toFixed(2)) }}</span>
 						</h4>
-						<p class="caption small-caption text-uppercase primary--text mb-0">
+						<p class="caption small-caption text-uppercase primary--text mb-0" style="z-index:1;">
 							<span v-if="mapPeriodIDX < 3">{{ $tc('cases', 1) | normalizeNFD }} / </span>{{ $t('total cases') | normalizeNFD }}
 						</p>
 						<sparklines
 							:key="'gr-sparks-new_cases-'+mapPeriodIDX"
 							v-if="sparks.new_cases.length > 7"
-							class="d-block totals-sparklines"
+							class="d-block mt-3 totals-sparklines"
 							:data="sparks.new_cases"
-							id="totals-g-cases-sparklines" style="height: 60px;"/>
+							id="totals-g-cases-sparklines" style="height: 60px;z-index:1;"/>
 					</v-col>
 					<v-col cols="12" class="secondary--opac pa-2" style="position:relative">
-						<h4 class="text-2rem text-xs-h5 font-weight-bold grey--text">
+						<h4 class="text-2rem text-xs-h5 font-weight-bold grey--text" style="z-index:1;">
 							<span class="secondary--text" v-if="mapPeriodIDX < 3">{{ new Intl.NumberFormat('el-GR').format(deaths.toFixed(2)) }}</span>
 							<span class="secondary--text" v-if="mapPeriodIDX === 3">{{ new Intl.NumberFormat('el-GR').format(totalDeaths.toFixed(2)) }}</span>
 							<span class="" v-if="mapPeriodIDX < 3"> / {{ new Intl.NumberFormat('el-GR').format(totalDeaths.toFixed(2)) }}</span>
 						</h4>
-						<p class="caption small-caption text-uppercase secondary--text mb-0">
+						<p class="caption small-caption text-uppercase secondary--text mb-0" style="z-index:1;">
 							<span v-if="mapPeriodIDX < 3">{{ $tc('deaths', 1) | normalizeNFD }} / </span>{{ $t('total deaths') | normalizeNFD }}
 						</p>
 						<sparklines
 							:key="'gr-sparks-new_deaths-'+mapPeriodIDX"
 							v-if="sparks.new_deaths.length > 7"
-							class="d-block totals-sparklines"
+							class="d-block mt-3 totals-sparklines"
 							:data="sparks.new_deaths"
-							id="totals-g-deaths-sparklines" style="height: 60px;"/>
+							id="totals-g-deaths-sparklines" style="height: 60px;z-index:1;"/>
 					</v-col>
 				</v-row>
 				<v-row class="mt-1 mb-4 px-7 py-0" align="center">
@@ -101,7 +101,7 @@ export default {
 	},
 	computed: {
 		...mapGetters(['locale']),
-		...mapGetters('filters', ['mapPeriod', 'mapPeriodIDX'])
+		...mapGetters('filters', ['mapPeriod', 'mapPeriodIDX', 'periodInterval'])
 	},
 	watch: {
 		mapPeriod (value, old) {
@@ -138,6 +138,12 @@ export default {
 					this.cases = sumBy(res, 'cases') || 0;
 					this.deaths = sumBy(res, 'deaths') || 0;
 				});
+
+			// this.$store.dispatch('external/getGreeceTotal', { from: this.periodInterval[3].value })
+			// 	.then(res => {
+			// 		this.totalCases = sumBy(res, 'cases') - this.cases || 0;
+			// 		this.totalDeaths = sumBy(res, 'deaths') - this.deaths || 0;
+			// 	});
 
 			this.$store.dispatch('external/getGlobal', 'GRC' + (this.mapPeriodIDX > 0 ? `/${this.mapPeriod}` : ''))
 				.then(res => {
@@ -182,5 +188,6 @@ export default {
 	height: 60px;
 	top: 0;
 	right: 0;
+	z-index: 0;
 }
 </style>

@@ -432,9 +432,10 @@ export default {
 
 .d7d-lines-legend {
 	z-index: 2;
-	position: absolute;
+	position: relative;
 	.legend-item {
 		cursor: pointer;
+		position: relative;
 		.legend-line {
 			position: relative;
 			width: 24px;

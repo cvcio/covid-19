@@ -52,11 +52,12 @@
 									{{ new Intl.NumberFormat('el-GR').format(props.item['total_' + key].toFixed(2)) }}
 								</td>
 								<td class="caption">
-									{{ typeof props.item['p100p_' + key] !== 'string' ? new Intl.NumberFormat('el-GR').format(props.item['p100p_' + key].toFixed(0)) : '-'}}
+									{{ props.item['p100p_' + key] >= 0 ?
+										new Intl.NumberFormat('el-GR').format(props.item['p100p_' + key].toFixed(0)) : '-'}}
 								</td>
 								<td class="caption">
 									{{
-										!isNaN(props.item['mo_7d_' + key]) ? new Intl.NumberFormat('el-GR').format(
+										props.item['mo_7d_' + key] >= 0 ? new Intl.NumberFormat('el-GR').format(
 											Math.abs(props.item['mo_7d_' + key].toFixed(2))
 										) : '-'
 									}}
@@ -174,12 +175,12 @@ export default {
 						m.new_deaths = m.new_deaths.map(m => Math.max(0, m));
 						const total_cases = sum(m.new_cases);
 						const total_deaths = sum(m.new_deaths);
-						const p100p_cases = m.population > 0 ? ((sum(m.new_cases) / m.population) * 100000) : '-';
-						const p100p_deaths = m.population > 0 ? ((sum(m.new_deaths) / m.population) * 100000) : '-';
+						const p100p_cases = m.population > 0 ? ((sum(m.new_cases) / m.population) * 100000) : -1;
+						const p100p_deaths = m.population > 0 ? ((sum(m.new_deaths) / m.population) * 100000) : -1;
 						let mo_7d_cases = ma(m.new_cases.map(n => (n / m.population) * 100000), 7).filter((el) => {
 							return el != null;
 						});
-						mo_7d_cases = mo_7d_cases[mo_7d_cases.length - 1];
+						mo_7d_cases = m.population > 0 ? mo_7d_cases[mo_7d_cases.length - 1] : -1;
 						return {
 							uid: m.uid,
 							region: m.region,
@@ -230,7 +231,7 @@ export default {
 					width: '20%'
 				},
 				{
-					text: normalizeNFD(this.$t('MO7d').toUpperCase()),
+					text: normalizeNFD(this.$t('7 Day MA').toUpperCase()),
 					align: 'start',
 					sortable: true,
 					value: 'mo_7d_' + key,
