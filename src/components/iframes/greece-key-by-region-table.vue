@@ -127,6 +127,8 @@ export default {
 				mapLevel: null,
 				mapKey: null,
 				period: null,
+				view: null,
+				aggregation: null,
 				lang: this.locale.code,
 				id: 'greece-key-by-region-table'
 			};
@@ -163,6 +165,7 @@ export default {
 		},
 		getHeaders () {},
 		load () {
+			this.loading = true;
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
 			this.$store.dispatch('external/getGreeceAGG', 'all/new_cases,new_deaths/' + this.periodInterval[3].value)
 				.then(res => {

@@ -44,10 +44,43 @@
 							></v-radio>
 						</v-radio-group>
 					</v-col>
+					<v-col v-if="embed.view !== null">
+						<h5>{{ $t('View') }}</h5>
+						<v-radio-group
+							v-model="embed.view"
+							mandatory
+							class="text-capitalize"
+						>
+							<template v-for="view in embed.availableViews">
+								<v-radio
+									:key="'view-'+ view"
+									:label="$tc(view, 1)"
+									:value="view"
+								></v-radio>
+							</template>
+						</v-radio-group>
+					</v-col>
+					<v-col v-if="embed.aggregation !== null">
+						<h5>{{ $t('Aggregation') }}</h5>
+						<v-radio-group
+							v-model="embed.aggregation"
+							mandatory
+							class="text-capitalize"
+						>
+							<template v-for="aggregation in embed.availableAggregations">
+								<v-radio
+									:key="'aggregation-'+ aggregation"
+									:label="$tc(aggregation, 1)"
+									:value="aggregation"
+								></v-radio>
+							</template>
+						</v-radio-group>
+					</v-col>
 					<v-col v-if="embed.period !== null">
 						<h5>{{ $t('Time Period') }}</h5>
 						<v-select dense prepend-icon="" class="pt-3" :label="$t('Time Period')" color="primary"
-							:items="periodInterval" :item-text="'text.'+locale.code" item-value="value" v-model="embed.period" auto-select-first>
+							:items="embed.availablePeriods"
+							:item-text="'text.'+locale.code" item-value="value" v-model="embed.period" auto-select-first>
 							<template v-slot:prepend>
 								<v-icon small class="mt-1" color="primary">
 									fa-clock
@@ -128,6 +161,13 @@ export default {
 			if (this.embed.mapKey) {
 				str += '&mapKey=' + this.embed.mapKey;
 			}
+
+			if (this.embed.view) {
+				str += '&view=' + this.embed.view.toLowerCase();
+			}
+			if (this.embed.aggregation) {
+				str += '&aggregation=' + this.embed.aggregation.toLowerCase();
+			}
 			return str;
 		}
 	},
@@ -157,6 +197,11 @@ export default {
 		};
 	},
 	methods: {
+		getPeriod (arr) {
+			return this.periodInterval.filter(m => {
+				return arr.indexOf(m.value) > -1;
+			});
+		},
 		escapeHtml (str) {
 			return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 		},

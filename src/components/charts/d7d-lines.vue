@@ -24,6 +24,14 @@
 				</v-card>
 			</div>
 		</v-scroll-y-reverse-transition>
+		<div :id="id + '-legend'" class="d7d-lines-legend">
+			<template v-for="(item, i) in data">
+				<span :id="'legend-item-' + item.uid" :key="i" class="legend-item caption mr-2 mb-2 d-inline-flex flex-nowrap align-center">
+					<v-icon :id="'legend-item-dash-' + item.uid">mdi-minus</v-icon>
+					<span class="legend-text">{{ item.region }}</span>
+				</span>
+			</template>
+		</div>
 		<div :id="id" class="d7d-lines"></div>
 	</div>
 </template>
@@ -32,10 +40,10 @@
 import { mapGetters } from 'vuex';
 
 import { line, select, scaleLinear, axisBottom, axisRight, max, scaleOrdinal, schemeCategory10 } from 'd3';
-import {
-	layoutTextLabel, layoutGreedy,
-	layoutLabel, layoutRemoveOverlaps
-} from '@d3fc/d3fc-label-layout';
+// import {
+// 	layoutTextLabel, layoutGreedy,
+// 	layoutLabel, layoutRemoveOverlaps
+// } from '@d3fc/d3fc-label-layout';
 import { ma } from 'moving-averages';
 import * as colors from '@/helper/colors';
 import annotation from 'd3-svg-annotation';
@@ -58,6 +66,11 @@ export default {
 		};
 	},
 	watch: {
+		id (value, old) {
+			if (value !== old) {
+				this.draw();
+			}
+		},
 		'locale.code' (value, old) {
 			if (value !== old) {
 				this.draw();
@@ -68,6 +81,9 @@ export default {
 		this.draw();
 	},
 	methods: {
+		colorScale () {
+			return scaleOrdinal().domain([0, this.data.length]).range(schemeCategory10);
+		},
 		draw () {
 			if (this.chart) {
 				this.chart.selectAll('*').remove();
@@ -77,6 +93,8 @@ export default {
 				const sma = ma(m[this.point], 7).filter((el) => {
 					return el != null;
 				});
+				// sma.push(m[this.point][m[this.point].length - 1]);
+				// sma.unshift(...Array(m.dates.length - sma.length).fill(sma[sma.findIndex(m => m > 0)]));
 				sma.unshift(...Array(m.dates.length - sma.length).fill(0));
 				m.sma = sma;
 				m.maxIdx = sma.indexOf(Math.max(...sma));
@@ -93,7 +111,7 @@ export default {
 
 			const width = div.clientWidth;
 			const height = 460;
-			const margin = { top: 12, left: 0, bottom: 12, right: 64 };
+			const margin = { top: 12, left: 0, bottom: 12, right: 0 };
 			const innerWidth = width - margin.left - margin.right;
 			const innerHeight = height - margin.top - margin.bottom;
 
@@ -256,6 +274,30 @@ export default {
 				.attr('cy', (d, i) => y(d.sma[d.maxIdx]))
 				.attr('opacity', 0);
 
+			data.forEach((d, i) => {
+				document.getElementById('legend-item-dash-' + d.uid).style.color = colorScale(i);
+				const el = document.getElementById('legend-item-' + d.uid);
+				el.addEventListener('mouseover', function (e, c) {
+					select('#line-' + d.uid)
+						.attr('stroke', colors.testsCS[7])
+						.attr('stroke-width', 4)
+						.attr('stroke-opacity', 0.9);
+
+					select('.annotation-' + d.uid)
+						.selectAll('g.annotation-connector, g.annotation-note')
+						.classed('hidden', false);
+				});
+				el.addEventListener('mouseout', function (e, c) {
+					select('#line-' + d.uid)
+						.attr('stroke', colorScale(i))
+						.attr('stroke-width', 2)
+						.attr('stroke-opacity', 0.7);
+					select('.annotation-' + d.uid)
+						.selectAll('g.annotation-connector, g.annotation-note')
+						.classed('hidden', true);
+				});
+			});
+
 			// const labels = this.chart
 			// 	.selectAll('.title')
 			// 	.data(data)
@@ -273,7 +315,7 @@ export default {
 			// 	.text((d) => {
 			// 		return d.region;
 			// 	});
-
+			/*
 			const labelPadding = 2;
 			const textLabel = layoutTextLabel()
 				.padding(labelPadding)
@@ -298,6 +340,8 @@ export default {
 				.append('g')
 				.attr('transform', `translate(${margin.left},${margin.top})`)
 				.datum(data).call(ls);
+
+			*/
 		}
 	}
 };
@@ -309,6 +353,7 @@ export default {
 	// width: 140px;
 	max-height: 460px;
 	width: 100%;
+	z-index: 1;
 	svg {
 		.axis {
 			&.x {
@@ -381,6 +426,22 @@ export default {
 
 		.hidden {
 			display: none;
+		}
+	}
+}
+
+.d7d-lines-legend {
+	z-index: 2;
+	position: absolute;
+	.legend-item {
+		cursor: pointer;
+		.legend-line {
+			position: relative;
+			width: 24px;
+			height: 2px;
+			content: ' ';
+			background: red;
+			display: block;
 		}
 	}
 }

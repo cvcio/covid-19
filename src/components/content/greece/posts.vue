@@ -46,7 +46,8 @@ export default {
 		'greece-key-daily-agg-bar': require('@/components/iframes/greece-key-daily-agg-bar').default,
 		'greece-intubated-daily-agg-bar': require('@/components/iframes/greece-intubated-daily-agg-bar').default,
 		'greece-key-subplot-regions': require('@/components/iframes/greece-key-subplot-regions').default,
-		'greece-tests-daily-agg-bar': require('@/components/iframes/greece-tests-daily-agg-bar').default
+		'greece-tests-daily-agg-bar': require('@/components/iframes/greece-tests-daily-agg-bar').default,
+		'global-key-daily-similar': require('@/components/iframes/global-key-daily-similar').default
 	},
 	computed: {
 		...mapGetters(['locale']),

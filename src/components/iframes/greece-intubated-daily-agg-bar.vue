@@ -3,6 +3,22 @@
 		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'">
 			<v-container class="pa-0 ma-0" fluid>
 				<v-row class="pa-0 ma-0" justify="space-between">
+					<v-col class="pa-0" align-self="center">
+						<v-select
+							dense
+							outlined
+							color="primary"
+							hide-details prepend-icon="" class="caption" :label="$t('Time Period')"
+							:items="[periodInterval[2], periodInterval[3]]"
+							:item-text="'text.'+locale.code" item-value="value" v-model="period" auto-select-first
+							@change="load">
+							<template v-slot:prepend>
+								<v-icon small class="mt-1" color="primary">
+									fa-clock
+								</v-icon>
+							</template>
+						</v-select>
+					</v-col>
 					<v-col class="pa-0 grow text-end ml-2" align-self="center" v-if="!$route.meta.iframe">
 						<v-btn x-small fab color="primary" dark class="mx-0 elevation-0" @click="setEmbed">
 							<v-icon x-small>fa-code</v-icon>
@@ -24,7 +40,7 @@
 					class="px-4"
 				>
 					<d7-line-bar-events
-						:key="'gidagb-' + item.uid + '-' + point" :id="'gidagb-uid-' + item.uid + '-' + point"
+						:key="'gidagb-' + item.uid + '-' + point + '-' + period" :id="'gidagb-uid-' + item.uid + '-' + point + '-' + period"
 						:point="point" :values="item[point]"
 						:dates="item.dates" :annotations="annotations" :sources="item.sources"/>
 				</v-col>
@@ -68,7 +84,19 @@ export default {
 				text: '',
 				mapLevel: null,
 				mapKey: null,
-				period: null,
+				view: null,
+				aggregation: null,
+				period: 3,
+				availablePeriods: [
+					{
+						text: { en: 'Last 3 months', el: 'Τελευταίο τρίμηνο' },
+						value: 2
+					},
+					{
+						text: { en: 'Historical data', el: 'Από την αρχή' },
+						value: 3
+					}
+				],
 				lang: this.locale.code,
 				id: 'greece-intubated-daily-agg-bar'
 			};
@@ -79,6 +107,7 @@ export default {
 			loading: true,
 			point: 'critical',
 			item: null,
+			period: '2020-01-01',
 			title: { en: '', el: '' }
 		};
 	},
@@ -91,6 +120,9 @@ export default {
 		preload () {
 			if (this.annotations.length === 0) {
 				this.$store.dispatch('internal/getAnnotations');
+			}
+			if (this.$route.query.period && this.$route.query.period !== '') {
+				this.period = this.periodInterval[parseInt(this.$route.query.period)].value;
 			}
 			if (this.posts.greece.length === 0) {
 				this.$store.dispatch('internal/getPosts')
@@ -106,12 +138,16 @@ export default {
 			this.$store.commit('setEmbed', this.embed);
 		},
 		load () {
+			this.loading = true;
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
-			this.$store.dispatch('external/getGlobalAGG', 'GRC/critical/' + this.periodInterval[3].value)
+			this.$store.dispatch('external/getGlobalAGG', 'GRC/critical/' + this.period)
 				.then(res => {
 					this.item = res.map(m => {
 						m.critical = m.critical.map(m => Math.max(0, m));
-						m.critical.unshift(...Array(getDates(m.from, m.to).length - m.critical.length).fill(0));
+						if (getDates(m.from, m.to).length - m.critical.length > 0) {
+							m.critical.unshift(...Array(getDates(m.from, m.to).length - m.critical.length).fill(0));
+						}
+
 						return {
 							uid: m.uid,
 							region: m.country,

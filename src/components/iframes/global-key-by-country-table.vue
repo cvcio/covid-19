@@ -131,6 +131,8 @@ export default {
 				text: '',
 				mapLevel: null,
 				mapKey: null,
+				view: null,
+				aggregation: null,
 				period: null,
 				lang: this.locale.code,
 				id: 'global-key-by-country-table'
@@ -166,6 +168,7 @@ export default {
 			this.$store.commit('setEmbed', this.embed);
 		},
 		load () {
+			this.loading = true;
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
 			this.$store.dispatch('external/getGlobalAGG', 'all/new_cases,new_deaths,new_recovered/' + this.periodInterval[3].value + '/' + this.$moment().subtract(1, 'days').format('YYYY-MM-DD'))
 				.then(res => {

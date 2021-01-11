@@ -56,6 +56,11 @@ export default {
 				this.draw();
 			}
 		},
+		dates (value, old) {
+			if (value.length !== old.length) {
+				this.draw();
+			}
+		},
 		'locale.code' (value, old) {
 			if (value !== old) {
 				this.draw();
@@ -110,6 +115,7 @@ export default {
 			const sma = ma(this.values, 7).filter((el) => {
 				return el != null;
 			});
+			// sma.push(this.values[this.values.length - 1]);
 			sma.unshift(...Array(data.length - sma.length).fill(0));
 			const self = this;
 			this.chart
@@ -178,28 +184,32 @@ export default {
 			if (this.annotations) {
 				const annotations = this.annotations.map(m => {
 					const idx = this.dates.findIndex(moment => moment.format('DD/MM/YYYY') === m.date);
-					return {
-						note: {
-							title: this.$moment(m.date, 'DD/MM/YYYY').format('LL'),
-							label: m['name_' + this.locale.code],
-							padding: 6,
-							wrap: 180,
-							align: 'middle'
-						},
-						type: annotation.annotationCalloutCircle,
-						x: x(idx),
-						y: y(data[idx].value),
-						dy: 80 - y(data[idx].value),
-						dx: 200 - x(idx),
-						subject: { radius: 8 },
-						color: m.importance > 10 ? 'black' : 'grey',
-						connector: {
-							type: 'line',
-							lineType: 'horizontal',
-							endScale: 1
-						}
-					};
-				});
+					if (idx > -1) {
+						return {
+							note: {
+								title: this.$moment(m.date, 'DD/MM/YYYY').format('LL'),
+								label: m['name_' + this.locale.code],
+								padding: 6,
+								wrap: 180,
+								align: 'middle'
+							},
+							type: annotation.annotationCalloutCircle,
+							x: x(idx),
+							y: y(data[idx].value),
+							dy: 80 - y(data[idx].value),
+							dx: 200 - x(idx),
+							subject: { radius: 8 },
+							color: m.importance > 10 ? 'black' : 'grey',
+							connector: {
+								type: 'line',
+								lineType: 'horizontal',
+								endScale: 1
+							}
+						};
+					} else {
+						return null;
+					}
+				}).filter(Boolean);
 
 				const makeAnnotations = annotation.annotation()
 					.annotations(annotations)

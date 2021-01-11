@@ -38,7 +38,7 @@
 					</v-col>
 				</v-row>
 				<v-row class="pa-0 ma-0 mt-4" justify="center">
-					<v-col class="pa-0" cols="12" md="6">
+					<v-col class="pa-0 pr-2" cols="12" md="6">
 						<v-autocomplete
 							dense
 							outlined
@@ -51,7 +51,28 @@
 							item-text="region" item-value="uid"
 							v-model="search"
 							@change="doSimilar">
+							<template v-slot:prepend>
+								<v-icon small class="mt-1" color="primary">
+									fa-globe-europe
+								</v-icon>
+							</template>
 						</v-autocomplete>
+					</v-col>
+					<v-col class="pa-0 pl-2" cols="12" md="6">
+						<v-select
+							dense
+							outlined
+							color="primary"
+							hide-details prepend-icon="" class="caption" :label="$t('Time Period')"
+							:items="[periodInterval[2], periodInterval[3]]"
+							:item-text="'text.'+locale.code" item-value="value" v-model="period" auto-select-first
+							@change="load">
+							<template v-slot:prepend>
+								<v-icon small class="mt-1" color="primary">
+									fa-clock
+								</v-icon>
+							</template>
+						</v-select>
 					</v-col>
 				</v-row>
 			</v-container>
@@ -84,7 +105,7 @@
 								{{ $t(item.region) | normalizeNFD }}
 							</v-card-subtitle>
 							<d7-line-bar
-								:key="'ggcb7l-' + item.uid + '-' + point + '-' + calc" :id="'ggcb7l-uid-' + item.uid + '-' + point + '-' + calc"
+								:key="'ggcb7l-' + item.uid + '-' + point + '-' + calc + '-' + period" :id="'ggcb7l-uid-' + item.uid + '-' + point + '-' + calc + '-' + period"
 								:point="point" :values="item[point + calc]"
 								:dates="item.dates"
 								:sources="item.sources"
@@ -159,7 +180,21 @@ export default {
 				text: '',
 				mapLevel: null,
 				mapKey: null,
-				period: null,
+				view: 'cases',
+				availableViews: ['cases', 'deaths'],
+				aggregation: 'daily',
+				availableAggregations: ['Daily', 'Cumulative'],
+				period: 3,
+				availablePeriods: [
+					{
+						text: { en: 'Last 3 months', el: 'Τελευταίο τρίμηνο' },
+						value: 2
+					},
+					{
+						text: { en: 'Historical data', el: 'Από την αρχή' },
+						value: 3
+					}
+				],
 				lang: this.locale.code,
 				id: 'global-key-subplot-countries'
 			};
@@ -172,6 +207,7 @@ export default {
 			point: 'cases',
 			items: [],
 			similar: [],
+			period: '2020-01-01',
 			page: 1,
 			itemsPerPage: 15,
 			search: '', //  'U300',
@@ -188,6 +224,15 @@ export default {
 	},
 	methods: {
 		preload () {
+			if (this.$route.query.view && this.$route.query.view !== '') {
+				this.point = this.$route.query.view;
+			}
+			if (this.$route.query.aggregation && this.$route.query.aggregation !== '') {
+				this.calc = this.$route.query.aggregation === 'daily' ? '_new' : '_cum';
+			}
+			if (this.$route.query.period && this.$route.query.period !== '') {
+				this.period = this.periodInterval[parseInt(this.$route.query.period)].value;
+			}
 			if (this.posts.global.length === 0) {
 				this.$store.dispatch('internal/getPosts')
 					.then(() => {
@@ -202,8 +247,9 @@ export default {
 			this.$store.commit('setEmbed', this.embed);
 		},
 		load () {
+			this.loading = true;
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
-			this.$store.dispatch('external/getGlobalAGG', 'all/cases,deaths,new_cases,new_deaths/' + this.periodInterval[3].value + '/' + this.$moment().subtract(1, 'days').format('YYYY-MM-DD'))
+			this.$store.dispatch('external/getGlobalAGG', 'all/cases,deaths,new_cases,new_deaths/' + this.period + '/' + this.$moment().subtract(1, 'days').format('YYYY-MM-DD'))
 				.then(res => {
 					const items = res.map(m => {
 						m.cases = m.cases.map(n => Math.max(0, n));

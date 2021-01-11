@@ -110,6 +110,8 @@ export default {
 			const sma = ma(this.values, 7).filter((el) => {
 				return el != null;
 			});
+			// sma.push(this.values[this.values.length - 1]);
+			// sma.unshift(...Array(data.length - sma.length).fill(sma[sma.findIndex(m => m > 0)]));
 			sma.unshift(...Array(data.length - sma.length).fill(0));
 			const self = this;
 			this.chart

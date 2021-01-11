@@ -91,6 +91,10 @@ export default {
 				text: '',
 				mapLevel: null,
 				mapKey: null,
+				view: 'tests',
+				availableViews: ['tests', 'pcr', 'rapid'],
+				aggregation: 'daily',
+				availableAggregations: ['Daily', 'Cumulative'],
 				period: null,
 				lang: this.locale.code,
 				id: 'greece-tests-daily-agg-bar'
@@ -113,6 +117,13 @@ export default {
 	},
 	methods: {
 		preload () {
+			if (this.$route.query.view && this.$route.query.view !== '') {
+				this.point = this.$route.query.view;
+			}
+			if (this.$route.query.aggregation && this.$route.query.aggregation !== '') {
+				this.calc = this.$route.query.aggregation === 'daily' ? 'new' : 'sum';
+			}
+
 			if (this.posts.greece.length === 0) {
 				this.$store.dispatch('internal/getPosts')
 					.then(() => {
@@ -127,6 +138,7 @@ export default {
 			this.$store.commit('setEmbed', this.embed);
 		},
 		load () {
+			this.loading = true;
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
 			this.$store.dispatch('external/getGlobalAGG',
 				'GRC/new_tests,new_tests_rtpcr,new_tests_rapid/' +

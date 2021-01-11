@@ -313,6 +313,8 @@ export default {
 									m.properties.data.new_deaths = res.map(n => n.new_deaths).reduce(s);
 									m.properties.data.new_cases = res.map(n => n.new_cases).reduce(s);
 								}
+								m.properties.data.vIC = (m.properties.data.vC / m.properties.population) * 100000;
+								m.properties.data.vID = (m.properties.data.vD / m.properties.population) * 100000;
 
 								this.min = 0;
 								this.max = v;

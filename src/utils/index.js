@@ -20,8 +20,19 @@ const IsSafari = () => {
 	return is_safari;
 };
 
+const nonIn = (arr) => {
+	return function arrNotContains (element) {
+		return arr.indexOf(element) === -1;
+	};
+};
+
+const arrDiff = (a, b) => {
+	return a.filter(nonIn(b)).concat(b.filter(nonIn(a)));
+};
+
 export {
 	normalizeNFD,
 	getDates,
-	IsSafari
+	IsSafari,
+	arrDiff
 };

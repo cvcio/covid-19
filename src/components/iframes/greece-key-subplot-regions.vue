@@ -134,6 +134,9 @@ export default {
 				text: '',
 				mapLevel: null,
 				mapKey: null,
+				view: null,
+				aggregation: 'daily',
+				availableAggregations: ['Daily', 'Cumulative'],
 				period: null,
 				lang: this.locale.code,
 				id: 'greece-key-subplot-regions'
@@ -160,6 +163,9 @@ export default {
 	},
 	methods: {
 		preload () {
+			if (this.$route.query.aggregation && this.$route.query.aggregation !== '') {
+				this.calc = this.$route.query.aggregation === 'daily' ? '_new' : '_cum';
+			}
 			if (this.posts.greece.length === 0) {
 				this.$store.dispatch('internal/getPosts')
 					.then(() => {
@@ -174,6 +180,7 @@ export default {
 			this.$store.commit('setEmbed', this.embed);
 		},
 		load () {
+			this.loading = true;
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
 			this.$store.dispatch('external/getGreeceAGG', 'all/cases,new_cases/' + this.periodInterval[3].value)
 				.then(res => {

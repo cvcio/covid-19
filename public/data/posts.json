@@ -97,6 +97,27 @@
 				"id": "greece-tests-daily-agg-bar",
 				"embed": true
 			}
+		},
+		{
+			"title": {
+				"el": "Αναλογία θανάτων στον πληθυσμό",
+				"en": "Deaths ratio in population"
+			},
+			"body": {
+				"el": [
+					"Το διάγραμμα αποτυπώνει πώς εξελίσσεται η αναλογία νέων θανάτων ανά 100.000 κατοίκους στον χρόνο για κάθε χώρα, παρουσιάζοντας τον κυλιόμενο μέσο όρο των τελευταίων 7 ημερών για την εξομάλυνση των τιμών.",
+					"Η ημέρα όποτε παρατηρείται κορύφωση της αναλογίας για μία χώρα, επισημαίνεται στο γράφημα. Για παράδειγμα, στην περίπτωση της Ελλάδας, κορύφωση σημειώθηκε στις 3 Δεκεμβρίου. Μπορείτε να αλλάξετε τις προεπιλεγμένες χώρες, ώστε να συγκρίνετε εκείνες που σας ενδιαφέρουν, επιλέγοντας ως δέκα χώρες κάθε φορά."
+				],
+				"en": [
+					"The chart shows what is the evolution of new deaths ratio in population (per 100,000 residents) over time by country and presents the 7-day moving average of said ratio to smooth values.",
+					"Annotations stand for the peak of this ratio for each country on specific dates. For instance, Greece presents a spike on December, 3. You may change the preselected countries to see how those of your interest compare to each other by selecting up to ten countries a time."
+				]
+			},
+			"component": {
+				"id": "global-key-daily-similar",
+				"embed": true,
+				"defaults": ["U300", "U40", "U56"]
+			}
 		}
 	],
 	"global": [
