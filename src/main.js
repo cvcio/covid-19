@@ -27,6 +27,7 @@ Vue.config.devtools = process.env.NODE_ENV === 'development';
 Vue.config.debug = process.env.NODE_ENV === 'development';
 Vue.config.silent = process.env.NODE_ENV === 'production';
 
+Vue.prototype.$VERSION = process.env.VUE_APP_VERSION;
 Vue.prototype.$BASE_URL = process.env.VUE_APP_BASE_URL;
 Vue.prototype.$BASE_API = process.env.VUE_APP_BASE_API || '';
 Vue.prototype.$DISPLAY_URL = process.env.VUE_APP_DISPLAY_URL || '';

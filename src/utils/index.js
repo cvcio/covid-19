@@ -17,7 +17,12 @@ const getDates = (from, to) => {
 
 const IsSafari = () => {
 	var is_safari = navigator.userAgent.toLowerCase().indexOf('safari/') > -1;
+	console.log('issafari', is_safari);
 	return is_safari;
+};
+
+const isChrome = () => {
+	return /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
 };
 
 const nonIn = (arr) => {
@@ -34,5 +39,6 @@ export {
 	normalizeNFD,
 	getDates,
 	IsSafari,
+	isChrome,
 	arrDiff
 };

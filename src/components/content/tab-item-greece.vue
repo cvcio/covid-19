@@ -47,13 +47,14 @@
 				<v-row class="mt-1 mb-4 px-7 py-0" align="center">
 					<v-col cols="12" class="py-0 px-3">
 						<v-row class="outlined">
-							<v-col class="pa-2 primary--text" v-if="mapPeriodIDX === 0">
+							<v-col class="pa-2 primary--text" v-if="mapPeriodIDX === 0" align-self="center">
 								<h4 class="text-1-2rem text-xs-subtitle-2 font-weight-bold">
 									{{ new Intl.NumberFormat('el-GR').format(active.toFixed(2)) }}
 									<v-tooltip bottom transition="slide-y-reverse-transition">
 										<template v-slot:activator="{ on, attrs }">
-											<v-bnt
-												small
+											<v-btn
+												class="ma-0 pa-0"
+												x-small
 												icon
 												color=""
 												dark
@@ -61,7 +62,7 @@
 												v-on="on"
 											>
 												<v-icon x-small color="grey lighten-1">mdi-information</v-icon>
-											</v-bnt>
+											</v-btn>
 										</template>
 										<span class="caption">{{ $t('aggregated cases, excluding recovered patients and deaths') }}</span>
 									</v-tooltip>
@@ -86,13 +87,14 @@
 									{{ $t('Recovered') | normalizeNFD }}
 								</p>
 							</v-col>
-							<v-col class="pa-2 grey--text">
+							<v-col class="pa-2 grey--text" align-self="center">
 								<h4 class="text-1-2rem text-xs-subtitle-2 font-weight-bold">
 									{{ new Intl.NumberFormat('el-GR').format(tests.toFixed(2)) || '-' }}
 									<v-tooltip bottom transition="slide-y-reverse-transition">
 										<template v-slot:activator="{ on, attrs }">
-											<v-bnt
-												small
+											<v-btn
+												class="ma-0 pa-0"
+												x-small
 												icon
 												color=""
 												dark
@@ -100,7 +102,7 @@
 												v-on="on"
 											>
 												<v-icon x-small color="grey lighten-1">mdi-information</v-icon>
-											</v-bnt>
+											</v-btn>
 										</template>
 										<span class="caption">{{ $t('total samples analyzed (RT-PCR & Ragid Ag)') }}</span>
 									</v-tooltip>

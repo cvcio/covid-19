@@ -228,6 +228,7 @@ export default {
 			console.debug('request geo');
 			this.$store.dispatch('internal/getGeo')
 				.then(() => {
+					console.log(this.geo);
 					this.load();
 				});
 		}
