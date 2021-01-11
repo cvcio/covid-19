@@ -1,4 +1,6 @@
 {
+	"total samples analyzed (RT-PCR & Ragid Ag)": "συνολικά ελεγχθέντα δείγματα (μοριακά & Rapid Ag)",
+	"aggregated cases, excluding recovered patients and deaths": "αθροιστικά κρούσματα, μείον αναρρώσαντες και θανόντες",
 	"Aggregation": "Συσσωμάτωση",
 	"New deaths/100K": "Νέοι θάνατοι/100Κ",
 	"(7-day mov avg)": "(Κυλιόμενος μ.ο. 7 ημερών)",
