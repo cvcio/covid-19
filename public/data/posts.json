@@ -116,7 +116,7 @@
 			"component": {
 				"id": "global-key-daily-similar",
 				"embed": true,
-				"defaults": ["U300", "U40", "U56"]
+				"defaults": ["U300", "U840", "U826"]
 			}
 		}
 	],
@@ -199,7 +199,7 @@
 			"component": {
 				"id": "global-key-daily-similar",
 				"embed": true,
-				"defaults": ["U300", "U40", "U56"]
+				"defaults": ["U300", "U840", "U826"]
 			}
 		}
 	]

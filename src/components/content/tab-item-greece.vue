@@ -47,7 +47,7 @@
 				<v-row class="mt-1 mb-4 px-7 py-0" align="center">
 					<v-col cols="12" class="py-0 px-3">
 						<v-row class="outlined">
-							<v-col class="pa-2 primary--text" v-if="mapPeriodIDX === 0" align-self="center">
+							<!-- <v-col class="pa-2 primary--text" v-if="mapPeriodIDX === 0" align-self="center">
 								<h4 class="text-1-2rem text-xs-subtitle-2 font-weight-bold">
 									{{ new Intl.NumberFormat('el-GR').format(active.toFixed(2)) }}
 									<v-tooltip bottom transition="slide-y-reverse-transition">
@@ -70,7 +70,7 @@
 								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
 									{{ $t('Active Cases') | normalizeNFD }}
 								</p>
-							</v-col>
+							</v-col> -->
 							<v-col class="pa-2 orange--text" v-if="mapPeriodIDX === 0">
 								<h4 class="text-1-2rem text-xs-subtitle-2 font-weight-bold">
 									{{ new Intl.NumberFormat('el-GR').format(critical.toFixed(2)) || '-' }}
@@ -79,14 +79,14 @@
 									{{ $t('Intubated') | normalizeNFD }}
 								</p>
 							</v-col>
-							<v-col class="pa-2 success--text" v-if="mapPeriodIDX > 0">
+							<!-- <v-col class="pa-2 success--text" v-if="mapPeriodIDX > 0">
 								<h4 class="text-1-2rem text-xs-subtitle-2 font-weight-bold">
 									{{ new Intl.NumberFormat('el-GR').format(recovered.toFixed(2)) }}
 								</h4>
 								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
 									{{ $t('Recovered') | normalizeNFD }}
 								</p>
-							</v-col>
+							</v-col> -->
 							<v-col class="pa-2 grey--text" align-self="center">
 								<h4 class="text-1-2rem text-xs-subtitle-2 font-weight-bold">
 									{{ new Intl.NumberFormat('el-GR').format(tests.toFixed(2)) || '-' }}
