@@ -170,6 +170,24 @@ export default {
 				period: this.mapPeriodIDX,
 				view: null,
 				aggregation: null,
+				availablePeriods: [
+					{
+						text: { en: 'Last day', el: 'Τελευταία ημέρα' },
+						value: 0
+					},
+					{
+						text: { en: 'Last 14 days', el: 'Τελευταίες 14 ημέρες' },
+						value: 1
+					},
+					{
+						text: { en: 'Last 3 months', el: 'Τελευταίο τρίμηνο' },
+						value: 2
+					},
+					{
+						text: { en: 'Historical data', el: 'Από την αρχή' },
+						value: 3
+					}
+				],
 				lang: this.locale.code,
 				id: 'map-view'
 			};
@@ -503,6 +521,9 @@ export default {
 			if (!this.map) return;
 
 			this.map.getCanvas().style.cursor = '';
+			this.map.setFilter('covid-border',
+				['in', 'uid', '']
+			);
 			this.tooltip = false;
 			this.point = null;
 		},
