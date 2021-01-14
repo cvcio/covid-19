@@ -43,6 +43,7 @@ export default {
 	components: {
 		post: require('@/components/content/post').default,
 		'greece-key-by-region-table': require('@/components/iframes/greece-key-by-region-table').default,
+		'greece-vaccines-by-region-table': require('@/components/iframes/greece-vaccines-by-region-table').default,
 		'greece-key-daily-agg-bar': require('@/components/iframes/greece-key-daily-agg-bar').default,
 		'greece-intubated-daily-agg-bar': require('@/components/iframes/greece-intubated-daily-agg-bar').default,
 		'greece-key-subplot-regions': require('@/components/iframes/greece-key-subplot-regions').default,

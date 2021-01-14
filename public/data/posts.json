@@ -22,6 +22,26 @@
 		},
 		{
 			"title": {
+				"el": "Εμβολιασμοί ανά περιοχή στην Ελλάδα",
+				"en": "Vaccinations by region in Greece"
+			},
+			"body": {
+				"el": [
+					"Ο πίνακας ταξινομείται βάσει του αριθμού κρουσμάτων ανά 100.000 κατοίκους. Στο διάγραμμα «Ανά εβδομάδα», αποτυπώνεται χρωματικά η έξαρση κρουσμάτων ανά περιοχή της χώρας, βάσει του εβδομαδιαίου αντίστοιχου συνόλου κρουσμάτων ανά 100.000 πληθυσμού. Όσο πιο σκούρο το χρώμα, τόσα περισσότερα τα κρούσματα εκείνη την εβδομάδα, συγκριτικά με τις προηγούμενες, στην ίδια περιοχή.",
+					"Πατώντας στο πεδίο «Σύνολο» αλλάζει η ταξινόμηση βάσει του συνόλου των κρουσμάτων. Αντίστοιχα, το ίδιο συμβαίνει πατώντας στο πεδίο «Ανά 100k»."
+				],
+				"en": [
+					"The table presents subnational COVID-19 cases sorted by normalized figures per 100,000 residents. The “Weekly” chart represents the outburst of cases broken down by area, colored by the weekly total number of cases respectively, per 100,000 residents. The darker the color, the more cases are reported in each area within the week of reference, compared to previous.",
+					"The table is sorted by total numbers or by normalized figures, when the “Total” field or the “Per 100K” field is clicked."
+				]
+			},
+			"component": {
+				"id": "greece-vaccines-by-region-table",
+				"embed": true
+			}
+		},
+		{
+			"title": {
 				"el": "Η πορεία της πανδημίας στην Ελλάδα",
 				"en": "The pandemic over time in Greece"
 			},
