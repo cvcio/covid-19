@@ -66,6 +66,13 @@ const routes = [
 				component: () => import(/* webpackChunkName: "d-frame" */ '@/components/iframes/greece-key-by-region-table.vue')
 			},
 			{
+				path: 'greece-vaccines-by-region-table',
+				name: 'greece-vaccines-by-region-table',
+				props: {},
+				meta: { iframe: true },
+				component: () => import(/* webpackChunkName: "d-frame" */ '@/components/iframes/greece-vaccines-by-region-table.vue')
+			},
+			{
 				path: 'greece-key-daily-agg-bar',
 				name: 'greece-key-daily-agg-bar',
 				props: {},

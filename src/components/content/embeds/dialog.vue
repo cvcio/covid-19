@@ -162,7 +162,7 @@ export default {
 				str += '&mapLevel=' + this.embed.mapLevel;
 			}
 			if (this.embed.period !== null) {
-				str += '&period=' + this.embed.period.toString();
+				str += '&period=' + this.embed.period;
 			}
 			if (this.embed.mapKey) {
 				str += '&mapKey=' + this.embed.mapKey;
