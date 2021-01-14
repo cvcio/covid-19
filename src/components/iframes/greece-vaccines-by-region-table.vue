@@ -42,7 +42,7 @@
 									{{ new Intl.NumberFormat('el-GR').format(props.item.total_vaccinations.toFixed(2)) }}
 								</td>
 								<td class="caption">
-									{{ new Intl.NumberFormat('el-GR').format(props.item.p100p_total.toFixed(2)) }}
+									{{ new Intl.NumberFormat('el-GR').format(props.item.total_vaccinations.toFixed(2)) }}
 								</td>
 								<td class="caption">
 									{{ new Intl.NumberFormat('el-GR').format(props.item.percent.toFixed(2)) }}%
@@ -140,6 +140,7 @@ export default {
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
 			this.$store.dispatch('external/getGRVaccinesTotal', { from: '2020-12-27' })
 				.then(res => {
+					console.log(res);
 					this.items = res.map(m => {
 						m.p100p_total = (m.total_distinct_persons / m.population) * 100000;
 						m.percent = (m.total_distinct_persons / m.population) * 100;
@@ -161,40 +162,40 @@ export default {
 					align: 'start',
 					sortable: true,
 					value: 'region',
-					class: 'text-capitalize',
+					class: ' text-capitalize',
 					width: '25%'
 				},
 				{
-					text: normalizeNFD(this.$t('Total').toUpperCase()),
+					text: normalizeNFD(this.$t('Vaccinations').toUpperCase()),
+					align: 'start',
+					sortable: true,
+					value: 'total_distinct_persons',
+					class: ' text-capitalize'
+					// width: '15%'
+				},
+				{
+					text: normalizeNFD(this.$t('Vaccinated Per 100K').toUpperCase()),
 					align: 'start',
 					sortable: true,
 					value: 'total_vaccinations',
-					class: 'text-capitalize',
-					width: '15%'
+					class: ' text-capitalize'
+					// width: '15%'
 				},
 				{
-					text: normalizeNFD(this.$t('Per 100K').toUpperCase()),
-					align: 'start',
-					sortable: true,
-					value: 'p100p_total',
-					class: 'text-capitalize',
-					width: '15%'
-				},
-				{
-					text: normalizeNFD(this.$t('Percentage').toUpperCase()),
+					text: normalizeNFD(this.$t('% Population').toUpperCase()),
 					align: 'start',
 					sortable: true,
 					value: 'percent',
-					class: 'text-capitalize',
-					width: '15%'
+					class: ' text-capitalize'
+					// width: '15%'
 				},
 				{
 					text: '',
 					align: 'start',
 					sortable: false,
 					value: 'region',
-					width: '30%',
-					class: 'text-capitalize'
+					width: '25%',
+					class: ' text-capitalize'
 				}
 			];
 		}
@@ -202,7 +203,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .extra-small-text {
 	font-size: 8px !important;
 }

@@ -22,17 +22,19 @@
 		},
 		{
 			"title": {
-				"el": "Εμβολιασμοί ανά περιοχή στην Ελλάδα",
-				"en": "Vaccinations by region in Greece"
+				"el": "Ο εμβολιασμός ανά περιοχή στην Ελλάδα",
+				"en": "Vaccination in each area in Greece"
 			},
 			"body": {
 				"el": [
-					"Ο πίνακας ταξινομείται βάσει του αριθμού κρουσμάτων ανά 100.000 κατοίκους. Στο διάγραμμα «Ανά εβδομάδα», αποτυπώνεται χρωματικά η έξαρση κρουσμάτων ανά περιοχή της χώρας, βάσει του εβδομαδιαίου αντίστοιχου συνόλου κρουσμάτων ανά 100.000 πληθυσμού. Όσο πιο σκούρο το χρώμα, τόσα περισσότερα τα κρούσματα εκείνη την εβδομάδα, συγκριτικά με τις προηγούμενες, στην ίδια περιοχή.",
-					"Πατώντας στο πεδίο «Σύνολο» αλλάζει η ταξινόμηση βάσει του συνόλου των κρουσμάτων. Αντίστοιχα, το ίδιο συμβαίνει πατώντας στο πεδίο «Ανά 100k»."
+					"Ο πίνακας καταγράφει την πορεία του εμβολιασμού για την COVID-19 ανά περιφερειακή ενότητα στην Ελλάδα και ταξινομείται, από προεπιλογή, βάσει του ποσοστού του πληθυσμού που έχει εμβολιαστεί σε κάθε περιοχή. Τα δεδομένα προέρχονται από το data.gov.gr, το οποίο ενημερώνει τα στοιχεία καθημερινά.",
+					"Πατώντας στο πεδίο «Εμβολιασμένοι ανά 100 χιλ.», ο πίνακας ταξινομείται αναλόγως. Το στοιχείο αυτό μας βοηθά να δούμε τον συνολικό αριθμό εμβολιασμένων πολιτών συγκριτικά, ανά περιφερειακή ενότητα. Για παράδειγμα, 1.000 εμβολιασμένοι πολίτες ανά 100 χιλ. πληθυσμού στον Κεντρικό Τομέα Αθηνών θα σήμαινε ότι, με βάση τα παρεχόμενα δεδομένα, εάν η Αθήνα είχε 100.000 κατοίκους, οι 1.000 θα ήταν εμβολιασμένοι. Έτσι, μπορούμε να συγκρίνουμε περιοχές με διαφορετικούς πληθυσμούς.",
+					"Ο πίνακας ταξινομείται ανά συνολικό αριθμό εμβολιασμών (εμβολιαστικές δόσεις που έχουν γίνει), όταν οι χρήστες πατούν στο πεδίο «Εμβολιασμοί»."
 				],
 				"en": [
-					"The table presents subnational COVID-19 cases sorted by normalized figures per 100,000 residents. The “Weekly” chart represents the outburst of cases broken down by area, colored by the weekly total number of cases respectively, per 100,000 residents. The darker the color, the more cases are reported in each area within the week of reference, compared to previous.",
-					"The table is sorted by total numbers or by normalized figures, when the “Total” field or the “Per 100K” field is clicked."
+					"The table records the course of COVID-19 vaccination per regional unit in Greece. By default, it is sorted by the percentage of people that have been vaccinated in each area. The source of the vaccination data is data.gov.gr, and they are updated daily.",
+					"Clicking on the field “Vaccinated per 100k” sorts the table accordingly. This figure helps us compare the total number of vaccinated people across all regional units. For instance, 1,000 vaccinated people per 100k population in Central Athens would mean that, based on the provided data, if Athens had 100,000 habitants, 1,000 of them would be vaccinated. Therefore, we can compare areas with different populations.",
+					"The table is sorted by total vaccination doses received, when users click on the field “Vaccinations”."
 				]
 			},
 			"component": {

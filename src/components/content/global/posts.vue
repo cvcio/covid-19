@@ -58,3 +58,19 @@ export default {
 	}
 };
 </script>
+
+<style lang="less">
+.v-data-table__wrapper {
+	tr {
+		th {
+			// border-left: 1px solid red;
+			padding-left: 14px !important;
+			padding-right: 0 !important;
+		}
+		td {
+			padding-left: 14px !important;
+			padding-right: 14px !important;
+		}
+	}
+}
+</style>

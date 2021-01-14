@@ -283,12 +283,38 @@ export default {
 					this.sparks.new_deaths = res[0].new_deaths.length > 1 ? res[0].new_deaths : [];
 				});
 
+			this.$store.dispatch('external/getGRVaccinesTotal', { from: this.mapVaccinationsPeriodIDX > 0 ? this.mapVaccinationsPeriod : this.$moment().format('YYYY-MM-DD') })
+				.then(res => {
+					if (!res) {
+						this.getPreviousDay();
+						return;
+					}
+					this.population = sumBy(res, 'population') || 0;
+
+					this.vaccines.totalDistinctPersons = this.mapVaccinationsPeriodIDX >= 2
+						? sumBy(res, 'total_distinct_persons')
+						: sumBy(res, 'new_total_distinct_persons') || 0;
+					this.vaccines.totalVaccinations = this.mapVaccinationsPeriodIDX >= 2
+						? sumBy(res, 'total_vaccinations')
+						: sumBy(res, 'new_total_vaccinations') || 0;
+
+					this.vaccines.dayTotal = sumBy(res, 'day_total') || 0;
+					this.vaccines.dayDiff = sumBy(res, 'day_diff') || 0;
+
+					this.vaccines.perent = (this.vaccines.totalDistinctPersons / this.population) * 100;
+				});
+		},
+		getPreviousDay () {
 			this.$store.dispatch('external/getGRVaccinesTotal', { from: this.mapVaccinationsPeriodIDX > 0 ? this.mapVaccinationsPeriod : this.$moment().subtract(1, 'days').format('YYYY-MM-DD') })
 				.then(res => {
 					this.population = sumBy(res, 'population') || 0;
 
-					this.vaccines.totalDistinctPersons = this.mapVaccinationsPeriodIDX >= 2 ? sumBy(res, 'total_distinct_persons') : sumBy(res, 'day_total') || 0;
-					this.vaccines.totalVaccinations = this.mapVaccinationsPeriodIDX >= 2 ? sumBy(res, 'total_vaccinations') : sumBy(res, 'day_total') || 0;
+					this.vaccines.totalDistinctPersons = this.mapVaccinationsPeriodIDX >= 2
+						? sumBy(res, 'total_distinct_persons')
+						: sumBy(res, 'new_total_distinct_persons') || 0;
+					this.vaccines.totalVaccinations = this.mapVaccinationsPeriodIDX >= 2
+						? sumBy(res, 'total_vaccinations')
+						: sumBy(res, 'new_total_vaccinations') || 0;
 
 					this.vaccines.dayTotal = sumBy(res, 'day_total') || 0;
 					this.vaccines.dayDiff = sumBy(res, 'day_diff') || 0;
