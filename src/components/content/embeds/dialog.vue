@@ -22,6 +22,7 @@
 								value="greece"
 							></v-radio>
 							<v-radio
+								:disabled="embed.mapKey === 'vaccines'"
 								:label="$t('World')"
 								value="global"
 							></v-radio>
@@ -41,6 +42,11 @@
 							<v-radio
 								:label="$tc('deaths', 1)"
 								value="deaths"
+							></v-radio>
+							<v-radio
+								:disabled="embed.mapLevel === 'global'"
+								:label="$t('Vaccinations')"
+								value="vaccines"
 							></v-radio>
 						</v-radio-group>
 					</v-col>
@@ -155,8 +161,8 @@ export default {
 			if (this.embed.mapLevel) {
 				str += '&mapLevel=' + this.embed.mapLevel;
 			}
-			if (this.embed.period) {
-				str += '&period=' + this.embed.period;
+			if (this.embed.period !== null) {
+				str += '&period=' + this.embed.period.toString();
 			}
 			if (this.embed.mapKey) {
 				str += '&mapKey=' + this.embed.mapKey;

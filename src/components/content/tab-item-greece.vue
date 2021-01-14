@@ -4,7 +4,7 @@
 			<v-container fluid class="px-0">
 				<v-row class="px-4" align="center">
 					<v-col cols="6">
-						<switch-map-source :label="'COVID—19'" :val="'covid'" @change="switchMapSource('covid')"/>
+						<switch-map-source :label="'COVID—19'" :val="'covid'"/>
 					</v-col>
 					<v-col cols="6">
 						<autocomplete-map-period model="mapPeriod" :label="$t('label.period')" :disabled="mapSource !== 'covid'"/>
@@ -116,7 +116,7 @@
 				</v-row>
 				<v-row class="px-4" align="center">
 					<v-col cols="6">
-						<switch-map-source :label="$tc('Vaccination', 1)" :val="'vaccines'" @change="switchMapSource"/>
+						<switch-map-source :label="$tc('Vaccination', 1)" :val="'vaccines'"/>
 					</v-col>
 					<v-col cols="6">
 						<autocomplete-map-period model="mapVaccinationsPeriod" :label="$t('label.period')" :disabled="mapSource !== 'vaccines'"/>
@@ -132,7 +132,7 @@
 							class="vaccines-progress"
 							>
 							<template v-slot:default="{ value }">
-								<span class="caption font-weight-bold text-end px-2">{{ new Intl.NumberFormat('el-GR').format(value.toFixed(2)) }}%</span>
+								<span class="caption font-weight-bold text-end px-2">{{ new Intl.NumberFormat('el-GR').format(value.toFixed(2)) }}% {{ $t('of population')}}</span>
 							</template>
 							</v-progress-linear>
 					</v-col>
@@ -254,9 +254,6 @@ export default {
 		this.load();
 	},
 	methods: {
-		switchMapSource (v) {
-			console.log(v);
-		},
 		load () {
 			this.$store.dispatch('external/getGreeceTotal', { from: this.mapPeriodIDX > 0 ? this.mapPeriod : null })
 				.then(res => {
@@ -289,10 +286,9 @@ export default {
 			this.$store.dispatch('external/getGRVaccinesTotal', { from: this.mapVaccinationsPeriodIDX > 0 ? this.mapVaccinationsPeriod : this.$moment().subtract(1, 'days').format('YYYY-MM-DD') })
 				.then(res => {
 					this.population = sumBy(res, 'population') || 0;
-					console.log(res);
 
-					this.vaccines.totalDistinctPersons = this.mapVaccinationsPeriodIDX === 3 ? sumBy(res, 'total_distinct_persons') : sumBy(res, 'new_total_distinct_persons') || 0;
-					this.vaccines.totalVaccinations = this.mapVaccinationsPeriodIDX === 3 ? sumBy(res, 'total_vaccinations') : sumBy(res, 'new_total_vaccinations') || 0;
+					this.vaccines.totalDistinctPersons = this.mapVaccinationsPeriodIDX >= 2 ? sumBy(res, 'total_distinct_persons') : sumBy(res, 'day_total') || 0;
+					this.vaccines.totalVaccinations = this.mapVaccinationsPeriodIDX >= 2 ? sumBy(res, 'total_vaccinations') : sumBy(res, 'day_total') || 0;
 
 					this.vaccines.dayTotal = sumBy(res, 'day_total') || 0;
 					this.vaccines.dayDiff = sumBy(res, 'day_diff') || 0;

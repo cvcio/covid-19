@@ -223,14 +223,15 @@ export default {
 	watch: {
 		mapLevel (value, old) {
 			if (value !== old && this.map && !this.$route.meta.iframe) {
+				this.$store.commit('filters/setMapSource', 'covid');
 				// this.resetFilters();
 				this.load();
-				if (this.mapSource === 'covid') {
-					this.updatePosition(
-						this.mapLevel === 'greece' ? [23.7208298, 37.9908697] : [0, 30],
-						this.mapLevel === 'greece' ? 5.5 : 2.5
-					);
-				}
+				// if (this.mapSource === 'covid') {
+				this.updatePosition(
+					this.mapLevel === 'greece' ? [23.7208298, 37.9908697] : [0, 30],
+					this.mapLevel === 'greece' ? 5.5 : 2.5
+				);
+				// }
 			}
 		},
 		mapKey (value, old) {
@@ -274,12 +275,14 @@ export default {
 		}
 		if (this.$route.query.period && this.$route.query.period !== '') {
 			this.$store.commit('filters/setMapPeriodFromIDX', parseInt(this.$route.query.period));
-		}
-		if (this.$route.query.period && this.$route.query.period !== '') {
 			this.$store.commit('filters/setMapVaccinationsPeriodFromIDX', parseInt(this.$route.query.period));
 		}
 		if (this.$route.query.mapKey && this.$route.query.mapKey !== '') {
-			this.$store.commit('filters/setMapKey', this.$route.query.mapKey);
+			if (this.$route.query.mapKey === 'vaccines') {
+				this.$store.commit('filters/setMapSource', 'vaccines');
+			} else {
+				this.$store.commit('filters/setMapKey', this.$route.query.mapKey);
+			}
 		}
 		if (this.geo && this.geo.features) {
 			console.debug('geo loaded from storage');
@@ -288,7 +291,6 @@ export default {
 			console.debug('request geo');
 			this.$store.dispatch('internal/getGeo')
 				.then(() => {
-					console.log(this.geo);
 					this.load();
 				});
 		}
@@ -460,8 +462,6 @@ export default {
 		loadVaccines () {
 			this.$store.dispatch('external/getGRVaccinesAGG', { from: this.mapVaccinationsPeriodIDX > 0 ? this.mapVaccinationsPeriod : this.$moment().subtract(2, 'days').format('YYYY-MM-DD') })
 				.then(res => {
-					console.log(res);
-
 					const values = res.map(m => {
 						const v = sum(m.new_total_distinct_persons);
 						return m.population > 0 ? (v / m.population) * 100000 : 0;
@@ -489,11 +489,11 @@ export default {
 								let vS = [];
 								if (this.mapVaccinationsPeriodIDX === 0) {
 									if (obj.new_total_distinct_persons.length > 1 && obj.new_total_distinct_persons[0] === obj.new_total_distinct_persons[1]) {
-										vP = obj.new_total_distinct_persons[obj.new_total_distinct_persons.length - 2];
-										vS = obj.new_total_vaccinations[obj.new_total_vaccinations.length - 2];
+										vP = obj.day_total[obj.day_total.length - 2];
+										vS = obj.day_total[obj.day_total.length - 2];
 									} else {
-										vP = obj.new_total_distinct_persons[obj.new_total_distinct_persons.length - 1];
-										vS = obj.new_total_vaccinations[obj.new_total_vaccinations.length - 1];
+										vP = obj.day_total[obj.day_total.length - 1];
+										vS = obj.day_total[obj.day_total.length - 1];
 									}
 								} else {
 									vP = sum(obj.new_total_distinct_persons);
@@ -504,7 +504,7 @@ export default {
 								m.properties.data.vIP = (m.properties.data.vP / obj.population) * 100;
 								m.properties.data.vS = vS;
 								m.properties.color = obj.population > 0 ? palette((vP / obj.population) * 100000) : palette(0);
-								m.properties.opacity = vP > 0 ? 0.9 : 0.6;
+								m.properties.opacity = vP > 0 ? 0.9 : 0.4;
 							} else {
 							}
 						}
@@ -749,8 +749,7 @@ export default {
 				center: coords,
 				zoom: this.$vuetify.breakpoint.smAndDown ? 0.9 * zoom : zoom,
 				essential: true,
-				padding: { top: 0, bottom: 0, left: (this.$vuetify.breakpoint.smAndDown ? 0 : 360), right: 0 }
-				// speed: this.$vuetify.breakpoint.smAndDown ? 0 : 5
+				padding: { top: 0, bottom: 0, left: (this.$vuetify.breakpoint.smAndDown || this.$route.meta.iframe ? 0 : 360), right: 0 }
 			});
 		}
 	}
