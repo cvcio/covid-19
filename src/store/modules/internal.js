@@ -1,7 +1,7 @@
 import { storageSVC } from '@/services/storage.service';
 import { internalSVC } from '@/services/internal.service';
 import { isChrome } from '@/utils';
-
+import { parse } from 'zipson';
 export default {
 	namespaced: true,
 	state: {
@@ -16,7 +16,7 @@ export default {
 	},
 	mutations: {
 		setGeo (state, data) {
-			state.geo = data;
+			state.geo = parse(data);
 		},
 		setAnnotations (state, data) {
 			state.annotations = data;
@@ -30,6 +30,9 @@ export default {
 			try {
 				if (storageSVC.get('geo') !== null) {
 					storageSVC.remove('geo');
+				}
+				if (storageSVC.get('geo-2.1.0') !== null) {
+					storageSVC.remove('geo-2.1.0');
 				}
 				const res = await internalSVC.getGeo();
 				if (isChrome()) storageSVC.set('geo-' + process.env.VUE_APP_VERSION, res);

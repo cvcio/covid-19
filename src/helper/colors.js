@@ -58,6 +58,21 @@ const testsCS = [
 	'#F8FAFA'
 ].reverse();
 
+const vaccinesCS = [
+	'#d2fbe0',
+	'#bcf8d1',
+	'#a5f6c1',
+	'#8ff4b2',
+	'#78f2a2',
+	'#62f093',
+	'#4bed83',
+	'#34eb74',
+	'#1ee964',
+	'#1bd25a',
+	'#18ba50',
+	'#15a346'
+];
+
 const pcrCS = testsCS;
 const rapidCS = testsCS;
 
@@ -68,5 +83,6 @@ export {
 	criticalCS,
 	testsCS,
 	pcrCS,
-	rapidCS
+	rapidCS,
+	vaccinesCS
 };

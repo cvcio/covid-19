@@ -1,4 +1,10 @@
 {
+	"Vaccination": "Εμβολιασμός",
+	"Vaccinations": "Εμβολιασμοί",
+	"Vaccinated People": "Εμβολιασμένοι",
+	"Cumulative vaccination doses": "Σύνολο δόσεων εμβολίου",
+	"local population": "τοπικού πληθυσμού",
+	"doses": "δόσεις",
 	"total samples analyzed (RT-PCR & Ragid Ag)": "συνολικά ελεγχθέντα δείγματα (μοριακά & Rapid Ag)",
 	"aggregated cases, excluding recovered patients and deaths": "αθροιστικά κρούσματα, μείον αναρρώσαντες και θανόντες",
 	"Aggregation": "Συσσωμάτωση",

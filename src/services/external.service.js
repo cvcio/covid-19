@@ -62,6 +62,36 @@ const externalSVC = {
 		} catch (error) {
 			throw new APIError(error.response ? error.response.status : 'Error', error.message);
 		}
+	},
+
+	async getGRVaccines (playload) {
+		try {
+			const url = process.env.VUE_APP_BASE_API + `/vaccines/greece/${playload}`;
+			const response = await api.get(url, { crossdomain: true });
+			return response.data;
+		} catch (error) {
+			throw new APIError(error.response ? error.response.status : 'Error', error.message);
+		}
+	},
+	async getGRVaccinesAGG (playload) {
+		try {
+			let url = process.env.VUE_APP_BASE_API + '/agg/vaccines/greece/all/all';
+			url += playload.from ? `/${playload.from}` : '';
+			const response = await api.get(url, { crossdomain: true });
+			return response.data;
+		} catch (error) {
+			throw new APIError(error.response ? error.response.status : 'Error', error.message);
+		}
+	},
+	async getGRVaccinesTotal (playload) {
+		try {
+			let url = process.env.VUE_APP_BASE_API + '/total/vaccines/greece/all';
+			url += playload.from ? `/${playload.from}` : '';
+			const response = await api.get(url, { crossdomain: true });
+			return response.data;
+		} catch (error) {
+			throw new APIError(error.response ? error.response.status : 'Error', error.message);
+		}
 	}
 };
 export {

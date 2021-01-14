@@ -4,10 +4,10 @@
 			<v-container fluid class="px-0">
 				<v-row class="px-4" align="center">
 					<v-col cols="6">
-						<switch-map-source :label="'COVID—19'" :val="'covid'" disabled/>
+						<switch-map-source :label="'COVID—19'" :val="'covid'" @change="switchMapSource('covid')"/>
 					</v-col>
 					<v-col cols="6">
-						<autocomplete-map-period :label="$t('label.period')"/>
+						<autocomplete-map-period model="mapPeriod" :label="$t('label.period')" :disabled="mapSource !== 'covid'"/>
 					</v-col>
 				</v-row>
 				<v-row class="px-4" align="center" no-gutters>
@@ -114,6 +114,83 @@
 						</v-row>
 					</v-col>
 				</v-row>
+				<v-row class="px-4" align="center">
+					<v-col cols="6">
+						<switch-map-source :label="$tc('Vaccination', 1)" :val="'vaccines'" @change="switchMapSource"/>
+					</v-col>
+					<v-col cols="6">
+						<autocomplete-map-period model="mapVaccinationsPeriod" :label="$t('label.period')" :disabled="mapSource !== 'vaccines'"/>
+					</v-col>
+				</v-row>
+				<v-row class="px-4" align="center">
+					<v-col cols="12">
+						<v-progress-linear
+							:value="vaccines.perent"
+							background-color="blue-grey lighten-5"
+							color="green accent-4"
+							height="24"
+							class="vaccines-progress"
+							>
+							<template v-slot:default="{ value }">
+								<span class="caption font-weight-bold text-end px-2">{{ new Intl.NumberFormat('el-GR').format(value.toFixed(2)) }}%</span>
+							</template>
+							</v-progress-linear>
+					</v-col>
+				</v-row>
+				<v-row class="mt-1 mb-4 px-7 py-0" align="center">
+					<v-col cols="12" class="py-0 px-3">
+						<v-row class="outlined">
+							<v-col class="pa-2 grey--text">
+								<h4 class="text-1-2rem text-xs-subtitle-2 font-weight-bold">
+									{{ new Intl.NumberFormat('el-GR').format(vaccines.totalDistinctPersons.toFixed(2)) || '-' }}
+									<v-tooltip bottom transition="slide-y-reverse-transition">
+										<template v-slot:activator="{ on, attrs }">
+											<v-btn
+												class="ma-0 pa-0"
+												x-small
+												icon
+												color=""
+												dark
+												v-bind="attrs"
+												v-on="on"
+											>
+												<v-icon x-small color="grey lighten-1">mdi-information</v-icon>
+											</v-btn>
+										</template>
+										<span class="caption">{{ $t('Vaccinated People') }}</span>
+									</v-tooltip>
+								</h4>
+								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
+									{{ $t('Vaccinated People') | normalizeNFD }}
+								</p>
+							</v-col>
+							<v-col class="pa-2 grey--text" align-self="center">
+								<h4 class="text-1-2rem text-xs-subtitle-2 font-weight-bold">
+									{{ new Intl.NumberFormat('el-GR').format(vaccines.totalVaccinations.toFixed(2)) || '-' }}
+									<v-tooltip bottom transition="slide-y-reverse-transition">
+										<template v-slot:activator="{ on, attrs }">
+											<v-btn
+												class="ma-0 pa-0"
+												x-small
+												icon
+												color=""
+												dark
+												v-bind="attrs"
+												v-on="on"
+											>
+												<v-icon x-small color="grey lighten-1">mdi-information</v-icon>
+											</v-btn>
+										</template>
+										<span class="caption">{{ $t('Cumulative vaccination doses') }}</span>
+									</v-tooltip>
+								</h4>
+								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
+									{{ $t('Vaccinations') | normalizeNFD }}
+								</p>
+							</v-col>
+						</v-row>
+					</v-col>
+				</v-row>
 			</v-container>
 		</v-card>
 	</v-tab-item>
@@ -133,10 +210,15 @@ export default {
 	},
 	computed: {
 		...mapGetters(['locale']),
-		...mapGetters('filters', ['mapPeriod', 'mapPeriodIDX', 'periodInterval'])
+		...mapGetters('filters', ['mapSource', 'mapPeriod', 'mapPeriodIDX', 'mapVaccinationsPeriod', 'mapVaccinationsPeriodIDX', 'periodInterval'])
 	},
 	watch: {
 		mapPeriod (value, old) {
+			if (value !== old) {
+				this.load();
+			}
+		},
+		mapVaccinationsPeriod (value, old) {
 			if (value !== old) {
 				this.load();
 			}
@@ -157,13 +239,24 @@ export default {
 			sparks: {
 				new_cases: [],
 				new_deaths: []
-			}
+			},
+			vaccines: {
+				totalDistinctPersons: 0,
+				totalVaccinations: 0,
+				dayDiff: 0,
+				dayTotal: 0,
+				perent: 0
+			},
+			population: 0
 		};
 	},
 	mounted () {
 		this.load();
 	},
 	methods: {
+		switchMapSource (v) {
+			console.log(v);
+		},
 		load () {
 			this.$store.dispatch('external/getGreeceTotal', { from: this.mapPeriodIDX > 0 ? this.mapPeriod : null })
 				.then(res => {
@@ -191,6 +284,20 @@ export default {
 				.then(res => {
 					this.sparks.new_cases = res[0].new_cases.length > 1 ? res[0].new_cases : [];
 					this.sparks.new_deaths = res[0].new_deaths.length > 1 ? res[0].new_deaths : [];
+				});
+
+			this.$store.dispatch('external/getGRVaccinesTotal', { from: this.mapVaccinationsPeriodIDX > 0 ? this.mapVaccinationsPeriod : this.$moment().subtract(1, 'days').format('YYYY-MM-DD') })
+				.then(res => {
+					this.population = sumBy(res, 'population') || 0;
+					console.log(res);
+
+					this.vaccines.totalDistinctPersons = this.mapVaccinationsPeriodIDX === 3 ? sumBy(res, 'total_distinct_persons') : sumBy(res, 'new_total_distinct_persons') || 0;
+					this.vaccines.totalVaccinations = this.mapVaccinationsPeriodIDX === 3 ? sumBy(res, 'total_vaccinations') : sumBy(res, 'new_total_vaccinations') || 0;
+
+					this.vaccines.dayTotal = sumBy(res, 'day_total') || 0;
+					this.vaccines.dayDiff = sumBy(res, 'day_diff') || 0;
+
+					this.vaccines.perent = (this.vaccines.totalDistinctPersons / this.population) * 100;
 				});
 		}
 	}
@@ -221,5 +328,13 @@ export default {
 	top: 0;
 	right: 0;
 	z-index: 0;
+}
+.vaccines-progress {
+	.v-progress-linear__content {
+		width: 100%;
+		span {
+			width: 100%;
+		}
+	}
 }
 </style>

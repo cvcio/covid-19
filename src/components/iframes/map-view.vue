@@ -6,7 +6,7 @@
 				($route.meta.iframe ? 'frame' : ''),
 			].join(' ')
 		">
-		<v-btn-toggle class="key-toggle elevation-2" rounded mandatory dense v-model="mapKey" v-if="!$route.meta.iframe"
+		<v-btn-toggle class="key-toggle elevation-2" rounded mandatory dense v-model="mapKey" v-if="!$route.meta.iframe && mapSource === 'covid'"
 			:class="
 				[
 					($vuetify.breakpoint.smAndDown ? 'mobile' : 'desktop'),
@@ -53,56 +53,82 @@
 						</span>
 					</v-card-title>
 					<v-divider/>
-					<v-card-subtitle class="pa-2">
-						<h4 class="subtitle-2 primary--text text-capitalize primary--text">
-							{{ $tc("cases", 1) }}:
-							<span class="font-weight-bold text-lowercase">
-								{{
-									new Intl.NumberFormat('el-GR').format(point.data.vC.toFixed(2))
-								}}
-								({{
-									new Intl.NumberFormat('el-GR').format(point.data.vIC.toFixed(2)) + ' ' + $t('Per 100K')
-								}})
-							</span>
-						</h4>
-						<h4 class="subtitle-2 primary--text text-capitalize secondary--text">
-							{{ $tc("deaths", 1) }}:
-							<!-- <span class="font-weight-bold" v-if="mapPeriodIDX < 3 && mapLevel === 'greece'">
-								- ({{ $t('No Data') }})
-							</span>
-							<span class="font-weight-bold" v-else>
-								{{ new Intl.NumberFormat('el-GR').format(point.data.vD.toFixed(2)) }}
-							</span> -->
-							<span class="font-weight-bold text-lowercase">
-								{{ new Intl.NumberFormat('el-GR').format(point.data.vD.toFixed(2)) }}
-								({{
-									new Intl.NumberFormat('el-GR').format(point.data.vID.toFixed(2)) + ' ' + $t('Per 100K')
-								}})
-							</span>
-						</h4>
-					</v-card-subtitle>
-					<v-divider/>
-					<template v-if="mapPeriodIDX > 0">
+					<template v-if="mapSource === 'covid'">
 						<v-card-subtitle class="pa-2">
-							<h4 class="subtitle-2 primary--text text-capitalize">
-								{{ $t("7-Day Moving Average") }}
+							<h4 class="subtitle-2 primary--text text-capitalize primary--text">
+								{{ $tc("cases", 1) }}:
+								<span class="font-weight-bold text-lowercase">
+									{{
+										new Intl.NumberFormat('el-GR').format(point.data.vC.toFixed(2))
+									}}
+									({{
+										new Intl.NumberFormat('el-GR').format(point.data.vIC.toFixed(2)) + ' ' + $t('Per 100K')
+									}})
+								</span>
 							</h4>
-							<sparklines class="d-block" :data="point.data['new_' + mapKey]" id="sparklines" style="height: 60px;"/>
+							<h4 class="subtitle-2 primary--text text-capitalize secondary--text">
+								{{ $tc("deaths", 1) }}:
+								<!-- <span class="font-weight-bold" v-if="mapPeriodIDX < 3 && mapLevel === 'greece'">
+									- ({{ $t('No Data') }})
+								</span>
+								<span class="font-weight-bold" v-else>
+									{{ new Intl.NumberFormat('el-GR').format(point.data.vD.toFixed(2)) }}
+								</span> -->
+								<span class="font-weight-bold text-lowercase">
+									{{ new Intl.NumberFormat('el-GR').format(point.data.vD.toFixed(2)) }}
+									({{
+										new Intl.NumberFormat('el-GR').format(point.data.vID.toFixed(2)) + ' ' + $t('Per 100K')
+									}})
+								</span>
+							</h4>
 						</v-card-subtitle>
 						<v-divider/>
-					</template>
-
-					<template v-if="point.data.note">
-						<v-card-subtitle class="pa-2">
-							<template v-for="(m, i) in point.data.note">
-								<h4 :key="'unk-' + i">
-									<h4 class="caption grey--text">
-										{{ $t(m.region) }}:
-									<span class="text-uppercase font-weight-bold">
-										{{ new Intl.NumberFormat('el-GR').format(m.value.toFixed(2)) }}
-									</span></h4>
+						<template v-if="mapPeriodIDX > 0">
+							<v-card-subtitle class="pa-2">
+								<h4 class="subtitle-2 primary--text text-capitalize">
+									{{ $t("7-Day Moving Average") }}
 								</h4>
-							</template>
+								<sparklines class="d-block" :data="point.data['new_' + mapKey]" id="sparklines" style="height: 60px;"/>
+							</v-card-subtitle>
+							<v-divider/>
+						</template>
+
+						<template v-if="point.data.note">
+							<v-card-subtitle class="pa-2">
+								<template v-for="(m, i) in point.data.note">
+									<h4 :key="'unk-' + i">
+										<h4 class="caption grey--text">
+											{{ $t(m.region) }}:
+										<span class="text-uppercase font-weight-bold">
+											{{ new Intl.NumberFormat('el-GR').format(m.value.toFixed(2)) }}
+										</span></h4>
+									</h4>
+								</template>
+							</v-card-subtitle>
+							<v-divider/>
+						</template>
+					</template>
+					<template v-else-if="mapSource === 'vaccines'">
+						<v-card-subtitle class="pa-2">
+							<h4 class="subtitle-2 primary--text text-capitalize primary--text">
+								{{ $t("Vaccinated People") }}:
+								<span class="font-weight-bold text-lowercase">
+									{{
+										new Intl.NumberFormat('el-GR').format(point.data.vP.toFixed(2))
+									}}
+									({{
+										new Intl.NumberFormat('el-GR').format(point.data.vIP.toFixed(2)) + '% ' + $t('local population')
+									}})
+								</span>
+							</h4>
+							<h4 class="subtitle-2 primary--text text-capitalize primary--text">
+								{{ $t("Vaccinations") }}:
+								<span class="font-weight-bold text-lowercase">
+									{{
+										new Intl.NumberFormat('el-GR').format(point.data.vS.toFixed(2))
+									}}
+								</span>
+							</h4>
 						</v-card-subtitle>
 						<v-divider/>
 					</template>
@@ -148,15 +174,16 @@ export default {
 	computed: {
 		...mapGetters(['locale']),
 		...mapGetters('internal', ['geo']),
-		...mapGetters('filters', ['mapLevel', 'mapSource', 'mapPeriod', 'mapPeriodIDX']),
+		...mapGetters('filters', [
+			'mapLevel', 'mapSource',
+			'mapPeriod', 'mapPeriodIDX',
+			'mapVaccinationsPeriod', 'mapVaccinationsPeriodIDX'
+		]),
 		mapKey: {
 			get () {
 				return this.$store.state.filters.mapKey;
 			},
 			set (value) {
-				// if (value === 'deaths') {
-				// 	this.$store.commit('filters/setMapPeriodFromIDX', 3);
-				// }
 				this.$store.commit('filters/setMapKey', value);
 			}
 		},
@@ -198,10 +225,12 @@ export default {
 			if (value !== old && this.map && !this.$route.meta.iframe) {
 				// this.resetFilters();
 				this.load();
-				this.updatePosition(
-					this.mapLevel === 'greece' ? [23.7208298, 37.9908697] : [0, 30],
-					this.mapLevel === 'greece' ? 5.5 : 2.5
-				);
+				if (this.mapSource === 'covid') {
+					this.updatePosition(
+						this.mapLevel === 'greece' ? [23.7208298, 37.9908697] : [0, 30],
+						this.mapLevel === 'greece' ? 5.5 : 2.5
+					);
+				}
 			}
 		},
 		mapKey (value, old) {
@@ -210,6 +239,16 @@ export default {
 			}
 		},
 		mapPeriod (value, old) {
+			if (value !== old && this.map && !this.$route.meta.iframe) {
+				this.load();
+			}
+		},
+		mapVaccinationsPeriod (value, old) {
+			if (value !== old && this.map && !this.$route.meta.iframe) {
+				this.load();
+			}
+		},
+		mapSource (value, old) {
 			if (value !== old && this.map && !this.$route.meta.iframe) {
 				this.load();
 			}
@@ -236,6 +275,9 @@ export default {
 		if (this.$route.query.period && this.$route.query.period !== '') {
 			this.$store.commit('filters/setMapPeriodFromIDX', parseInt(this.$route.query.period));
 		}
+		if (this.$route.query.period && this.$route.query.period !== '') {
+			this.$store.commit('filters/setMapVaccinationsPeriodFromIDX', parseInt(this.$route.query.period));
+		}
 		if (this.$route.query.mapKey && this.$route.query.mapKey !== '') {
 			this.$store.commit('filters/setMapKey', this.$route.query.mapKey);
 		}
@@ -261,6 +303,8 @@ export default {
 			this.map.off('load', this.onLoad);
 			this.map.off('mouseenter', 'covid', this.onMouseEnter);
 			this.map.off('mouseleave', 'covid', this.onMouseLeave);
+			this.map.off('mouseenter', 'vaccines', this.onMouseEnter);
+			this.map.off('mouseleave', 'vaccines', this.onMouseLeave);
 			this.map = null;
 		},
 		resetFilters () {
@@ -271,13 +315,14 @@ export default {
 			this.$store.commit('filters/setMapKey', 'cases');
 			this.$store.commit('filters/setMapSource', 'covid');
 			this.$store.commit('filters/setMapPeriod', this.$moment().subtract(14, 'days').format('YYYY-MM-DD'));
+			this.$store.commit('filters/setMapVaccinationsPeriod', '2020-01-01');
 			if (this.mapLevel === 'global') {
 				//
 			} else {
 				//
 			}
 		},
-		load () {
+		loadCovid () {
 			this.$store.dispatch('external/getMapData', { level: this.mapLevel, keys: this.mapKey, from: this.mapPeriod })
 				.then(res => {
 					const values = res.map(m => {
@@ -304,6 +349,7 @@ export default {
 						m.properties.opacity = 0;
 						m.properties.color = '#fafafa';
 						let unk = [];
+						if (typeof m.properties.uid === 'string' && m.properties.uid.substring(0, 2) !== 'EL') return m;
 						if (this.mapKey === 'deaths' && this.mapLevel === 'greece') {
 							if (m.properties.uid === 300) {
 								m.properties.active = true;
@@ -404,11 +450,98 @@ export default {
 					});
 
 					if (this.map) {
-						this.map.getSource(this.mapSource).setData(this.geo);
+						this.map.getSource('covid').setData(this.geo);
+						this.updateLayers(this.mapSource);
 					} else {
 						this.draw();
 					}
 				});
+		},
+		loadVaccines () {
+			this.$store.dispatch('external/getGRVaccinesAGG', { from: this.mapVaccinationsPeriodIDX > 0 ? this.mapVaccinationsPeriod : this.$moment().subtract(2, 'days').format('YYYY-MM-DD') })
+				.then(res => {
+					console.log(res);
+
+					const values = res.map(m => {
+						const v = sum(m.new_total_distinct_persons);
+						return m.population > 0 ? (v / m.population) * 100000 : 0;
+					});
+
+					this.min = Math.min(...values);
+					this.max = Math.max(...values, 1);
+					this.median = mean([...values, 1]);
+					this.colors = colors.vaccinesCS;
+					const palette = this.palette(this.min, this.max, this.colors);
+					this.geo.features.map(m => {
+						m.properties.active = false;
+						m.properties.opacity = 0;
+						m.properties.color = '#fafafa';
+
+						const obj = res.find(o => o.uid === m.properties.areaid || o.uid === m.properties.uid);
+						if (m.properties.group === 'greece') {
+							if (obj) {
+								m.properties.data = obj;
+								m.properties.data.vP = 0;
+								m.properties.data.vIP = 0;
+								m.properties.data.vS = 0;
+
+								let vP = [];
+								let vS = [];
+								if (this.mapVaccinationsPeriodIDX === 0) {
+									if (obj.new_total_distinct_persons.length > 1 && obj.new_total_distinct_persons[0] === obj.new_total_distinct_persons[1]) {
+										vP = obj.new_total_distinct_persons[obj.new_total_distinct_persons.length - 2];
+										vS = obj.new_total_vaccinations[obj.new_total_vaccinations.length - 2];
+									} else {
+										vP = obj.new_total_distinct_persons[obj.new_total_distinct_persons.length - 1];
+										vS = obj.new_total_vaccinations[obj.new_total_vaccinations.length - 1];
+									}
+								} else {
+									vP = sum(obj.new_total_distinct_persons);
+									vS = sum(obj.new_total_vaccinations);
+								}
+								m.properties.active = true;
+								m.properties.data.vP = vP;
+								m.properties.data.vIP = (m.properties.data.vP / obj.population) * 100;
+								m.properties.data.vS = vS;
+								m.properties.color = obj.population > 0 ? palette((vP / obj.population) * 100000) : palette(0);
+								m.properties.opacity = vP > 0 ? 0.9 : 0.6;
+							} else {
+							}
+						}
+
+						return m;
+					});
+
+					if (this.map) {
+						this.map.getSource('covid').setData(this.geo);
+						this.updateLayers(this.mapSource);
+					} else {
+						this.draw();
+					}
+				});
+		},
+		updateLayers (n) {
+			if (!this.map) return;
+			if (n === 'vaccines') {
+				this.map.setLayoutProperty('covid', 'visibility', 'none');
+				this.map.setLayoutProperty('vaccines', 'visibility', 'visible');
+				// this.addLayerVaccines();
+				// this.map.removeLayer('covid');
+				// this.map.removeLayer('covid-border');
+			} else {
+				this.map.setLayoutProperty('covid', 'visibility', 'visible');
+				this.map.setLayoutProperty('vaccines', 'visibility', 'none');
+				// this.addLayerCovid();
+				// this.map.removeLayer('vaccines');
+				// this.map.removeLayer('vaccines-border');
+			}
+		},
+		load () {
+			if (this.mapSource === 'covid') {
+				this.loadCovid();
+			} else if (this.mapSource === 'vaccines') {
+				this.loadVaccines();
+			}
 		},
 		palette (min, max, colors) {
 			const d = (max - min) / 12;
@@ -459,11 +592,19 @@ export default {
 				type: 'geojson',
 				data: this.geo
 			});
+			this.addLayerCovid();
+			this.addLayerVaccines();
 
+			this.updatePosition();
+		},
+		addLayerCovid () {
 			this.map.addLayer({
 				id: 'covid',
 				type: 'fill',
 				source: 'covid',
+				layout: {
+					visibility: this.mapSource === 'covid' ? 'visible' : 'none'
+				},
 				paint: {
 					'fill-color': {
 						type: 'identity',
@@ -474,7 +615,8 @@ export default {
 						property: 'opacity'
 					},
 					'fill-outline-color': 'rgba(0, 0, 0, 0.2)'
-				}
+				},
+				filter: ['==', 'active', true]
 			}, this.bottomLayer);
 
 			this.map.addLayer({
@@ -486,42 +628,115 @@ export default {
 					'line-opacity': 0.9,
 					'line-width': 1
 				},
-				filter: ['in', 'uid', '']
+				filter: ['in', 'name_el', '']
 			}, this.bottomLayer);
-			this.map.on('mousemove', 'covid', this.onMouseEnter);
-			this.map.on('mouseleave', 'covid', this.onMouseLeave);
-			this.updatePosition();
+			this.map.on('mousemove', 'covid', this.onMouseEnterC);
+			this.map.on('mouseleave', 'covid', this.onMouseLeaveC);
 		},
-		onMouseEnter (e) {
+		addLayerVaccines () {
+			this.map.addLayer({
+				id: 'vaccines',
+				type: 'fill',
+				source: 'covid',
+				layout: {
+					visibility: this.mapSource === 'vaccines' ? 'visible' : 'none'
+				},
+				paint: {
+					'fill-color': {
+						type: 'identity',
+						property: 'color'
+					},
+					'fill-opacity': {
+						type: 'identity',
+						property: 'opacity'
+					},
+					'fill-outline-color': 'rgba(0, 0, 0, 0.2)'
+				},
+				filter: ['==', 'active', true]
+			}, this.bottomLayer);
+
+			this.map.addLayer({
+				id: 'vaccines-border',
+				type: 'line',
+				source: 'covid',
+				paint: {
+					'line-color': 'black',
+					'line-opacity': 0.9,
+					'line-width': 1
+				},
+				filter: ['in', 'name_el', '']
+			}, this.bottomLayer);
+			this.map.on('mousemove', 'vaccines', this.onMouseEnterV);
+			this.map.on('mouseleave', 'vaccines', this.onMouseLeaveV);
+		},
+		onMouseEnterC (e) {
 			if (!this.map) return;
 
 			this.x = e.point.x;
 			this.y = e.point.y;
 
-			const features = this.map.queryRenderedFeatures(e.point, {
+			let features = [];
+			features = this.map.queryRenderedFeatures(e.point, {
 				layers: ['covid']
 			}).filter(m => this.mapKey === 'deaths' && this.mapLevel === 'greece' ? m.properties.uid === 300 : m.properties.group === this.mapLevel);
 
-			if (features.length) {
+			if (features.length > 0) {
 				this.map.setFilter('covid-border',
-					['in', 'uid', features[0].properties.uid]
+					['in', 'name_el', features[0].properties.name_el]
 				);
 				this.point = features[0].properties;
 				this.point.data = JSON.parse(this.point.data);
 				this.map.getCanvas().style.cursor = 'pointer';
 				this.tooltip = true;
-				// console.log(this.point);
 			} else {
 				this.map.getCanvas().style.cursor = '';
 				this.tooltip = false;
 				this.point = null;
 			}
 		},
-		onMouseLeave () {
+
+		onMouseEnterV (e) {
+			if (!this.map) return;
+
+			this.x = e.point.x;
+			this.y = e.point.y;
+
+			let features = [];
+			features = this.map.queryRenderedFeatures(e.point, {
+				layers: ['vaccines']
+			}).filter(m => m.properties.group === 'greece');
+
+			if (features.length > 0) {
+				this.map.setFilter('vaccines-border',
+					['in', 'name_el', features[0].properties.name_el]
+				);
+				this.point = features[0].properties;
+
+				this.point.data = JSON.parse(this.point.data);
+				this.map.getCanvas().style.cursor = 'pointer';
+				this.tooltip = true;
+			} else {
+				this.map.getCanvas().style.cursor = '';
+				this.tooltip = false;
+				this.point = null;
+			}
+		},
+
+		onMouseLeaveC () {
 			if (!this.map) return;
 
 			this.map.getCanvas().style.cursor = '';
 			this.map.setFilter('covid-border',
+				['in', 'uid', '']
+			);
+			this.tooltip = false;
+			this.point = null;
+		},
+		onMouseLeaveV () {
+			if (!this.map) return;
+
+			this.map.getCanvas().style.cursor = '';
+			this.map.setFilter('vaccines-border',
 				['in', 'uid', '']
 			);
 			this.tooltip = false;

@@ -1,5 +1,5 @@
 <template>
-	<v-switch dense hide-details class="pt-0" v-model="mapSource" :value="val" :disabled="disabled">
+	<v-switch dense hide-details class="pt-0" v-model="mapSource" :value="val" :disabled="disabled || mapSource === val">
 		<template v-slot:label>
 			<span class="subtitle-2 font-weight-bold text-uppercase">{{ $tc(label, 1) | normalizeNFD }}</span>
 		</template>

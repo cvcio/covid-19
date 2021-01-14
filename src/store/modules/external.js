@@ -74,6 +74,34 @@ export default {
 				commit('errors/REQUEST_ERROR', error, { root: true });
 				return false;
 			}
+		},
+
+		async getGRVaccines ({ commit }, playload) {
+			try {
+				const res = await externalSVC.getGRVaccines(playload);
+				return res;
+			} catch (error) {
+				commit('errors/REQUEST_ERROR', error, { root: true });
+				return false;
+			}
+		},
+		async getGRVaccinesAGG ({ commit }, playload) {
+			try {
+				const res = await externalSVC.getGRVaccinesAGG(playload);
+				return res;
+			} catch (error) {
+				commit('errors/REQUEST_ERROR', error, { root: true });
+				return false;
+			}
+		},
+		async getGRVaccinesTotal ({ commit }, playload) {
+			try {
+				const res = await externalSVC.getGRVaccinesTotal(playload);
+				return res;
+			} catch (error) {
+				commit('errors/REQUEST_ERROR', error, { root: true });
+				return false;
+			}
 		}
 	}
 };

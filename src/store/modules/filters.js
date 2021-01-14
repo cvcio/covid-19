@@ -7,7 +7,9 @@ export default {
 		mapSource: 'covid',
 		mapKey: 'cases',
 		mapPeriodIDX: 0,
+		mapVaccinationsPeriodIDX: 3,
 		mapPeriod: moment().subtract(1, 'days').format('YYYY-MM-DD'),
+		mapVaccinationsPeriod: '2020-01-01',
 		periodInterval: [
 			{
 				text: { en: 'Last day', el: 'Τελευταία ημέρα' },
@@ -33,7 +35,9 @@ export default {
 		mapSource: state => state.mapSource,
 		mapKey: state => state.mapKey,
 		mapPeriod: state => state.mapPeriod,
+		mapVaccinationsPeriod: state => state.mapVaccinationsPeriod,
 		mapPeriodIDX: state => state.mapPeriodIDX,
+		mapVaccinationsPeriodIDX: state => state.mapVaccinationsPeriodIDX,
 		periodInterval: state => state.periodInterval,
 		timeInterval: state => state.timeInterval
 	},
@@ -51,9 +55,17 @@ export default {
 			state.mapPeriod = data;
 			state.mapPeriodIDX = state.periodInterval.findIndex(m => m.value === data);
 		},
+		setMapVaccinationsPeriod (state, data) {
+			state.mapVaccinationsPeriod = data;
+			state.mapVaccinationsPeriodIDX = state.periodInterval.findIndex(m => m.value === data);
+		},
 		setMapPeriodFromIDX (state, data) {
 			state.mapPeriodIDX = data;
 			state.mapPeriod = state.periodInterval[data].value;
+		},
+		setMapVaccinationsPeriodFromIDX (state, data) {
+			state.mapVaccinationsPeriodIDX = data;
+			state.mapVaccinationsPeriod = state.periodInterval[data].value;
 		}
 	},
 	actions: {}
