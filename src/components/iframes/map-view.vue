@@ -36,24 +36,25 @@
 		<v-scroll-y-reverse-transition>
 			<div class="tooltip elevation-4" :style="'top:'+y+'px;left:'+x+'px;'" ref="tooltipGlobal" v-if="point !== null" v-show="tooltip && point !== null">
 				<v-card class="elevation-0 white pa-0 arrow_box" min-width="180px">
-					<v-card-title class="pa-2 subtitle-2">
-						<span class="text-uppercase">
-							{{
-								mapPeriodIDX > 0 ? $moment(point.data.from).format("ll") + ' - ': ''
-							}}
-							{{
-								$moment(point.data.to).format("ll")
-							}}
-						</span>
-					</v-card-title>
-					<v-divider/>
-					<v-card-title class="pa-2 subtitle-2">
-						<span class="text-uppercase">
-							{{ point["name_" + locale.code] | normalizeNFD }}
-						</span>
-					</v-card-title>
-					<v-divider/>
+
 					<template v-if="mapSource === 'covid'">
+						<v-card-title class="pa-2 subtitle-2">
+							<span class="text-uppercase">
+								{{
+									mapPeriodIDX > 0 ? $moment(point.data.from).format("ll") + ' - ': ''
+								}}
+								{{
+									$moment(point.data.to).format("ll")
+								}}
+							</span>
+						</v-card-title>
+						<v-divider/>
+						<v-card-title class="pa-2 subtitle-2">
+							<span class="text-uppercase">
+								{{ point["name_" + locale.code] | normalizeNFD }}
+							</span>
+						</v-card-title>
+						<v-divider/>
 						<v-card-subtitle class="pa-2">
 							<h4 class="subtitle-2 primary--text text-capitalize primary--text">
 								{{ $tc("cases", 1) }}:
@@ -109,6 +110,23 @@
 						</template>
 					</template>
 					<template v-else-if="mapSource === 'vaccines'">
+						<v-card-title class="pa-2 subtitle-2">
+							<span class="text-uppercase">
+								{{
+									mapVaccinationsPeriodIDX > 0 ? $moment(point.data.from).format("ll") + ' - ': ''
+								}}
+								{{
+									$moment(point.data.to).format("ll")
+								}}
+							</span>
+						</v-card-title>
+						<v-divider/>
+						<v-card-title class="pa-2 subtitle-2">
+							<span class="text-uppercase">
+								{{ point["name_" + locale.code] | normalizeNFD }}
+							</span>
+						</v-card-title>
+						<v-divider/>
 						<v-card-subtitle class="pa-2">
 							<h4 class="subtitle-2 primary--text text-capitalize primary--text">
 								{{ $t("Vaccinated People") }}:

@@ -78,9 +78,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { sum } from 'lodash';
-import { getDates, normalizeNFD } from '@/utils';
-import { ma } from 'moving-averages';
+import { normalizeNFD } from '@/utils';
 
 export default {
 	name: 'greece-vaccines-by-region-table',
@@ -142,7 +140,6 @@ export default {
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
 			this.$store.dispatch('external/getGRVaccinesTotal', { from: '2020-12-27' })
 				.then(res => {
-					console.log(res)
 					this.items = res.map(m => {
 						m.p100p_total = (m.total_distinct_persons / m.population) * 100000;
 						m.percent = (m.total_distinct_persons / m.population) * 100;
