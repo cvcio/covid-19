@@ -34,6 +34,9 @@ export default {
 				if (storageSVC.get('geo-2.1.0') !== null) {
 					storageSVC.remove('geo-2.1.0');
 				}
+				if (storageSVC.get('geo-2.2.0') !== null) {
+					storageSVC.remove('geo-2.2.0');
+				}
 				const res = await internalSVC.getGeo();
 				if (isChrome()) storageSVC.set('geo-' + process.env.VUE_APP_VERSION, res);
 				commit('setGeo', res);
