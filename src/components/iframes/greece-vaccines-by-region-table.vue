@@ -42,7 +42,7 @@
 									{{ new Intl.NumberFormat('el-GR').format(props.item.total_vaccinations.toFixed(2)) }}
 								</td>
 								<td class="caption">
-									{{ new Intl.NumberFormat('el-GR').format(props.item.total_vaccinations.toFixed(2)) }}
+									{{ new Intl.NumberFormat('el-GR').format(props.item.p100p_total.toFixed(2)) }}
 								</td>
 								<td class="caption">
 									{{ new Intl.NumberFormat('el-GR').format(props.item.percent.toFixed(2)) }}%
@@ -50,8 +50,8 @@
 								<td class="caption">
 									<v-progress-linear
 										:value="props.item.percent"
-										background-color="blue-grey lighten-5"
-										color="green accent-4"
+										background-color="grey lighten-4"
+										color="#81B15F"
 										height="12"
 										class="vaccines-progress"
 										>
@@ -140,7 +140,6 @@ export default {
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
 			this.$store.dispatch('external/getGRVaccinesTotal', { from: '2020-12-27' })
 				.then(res => {
-					console.log(res);
 					this.items = res.map(m => {
 						m.p100p_total = (m.total_distinct_persons / m.population) * 100000;
 						m.percent = (m.total_distinct_persons / m.population) * 100;
@@ -177,7 +176,7 @@ export default {
 					text: normalizeNFD(this.$t('Vaccinated Per 100K').toUpperCase()),
 					align: 'start',
 					sortable: true,
-					value: 'total_vaccinations',
+					value: 'p100p_total',
 					class: ' text-capitalize'
 					// width: '15%'
 				},
@@ -194,7 +193,7 @@ export default {
 					align: 'start',
 					sortable: false,
 					value: 'region',
-					width: '25%',
+					width: '20%',
 					class: ' text-capitalize'
 				}
 			];

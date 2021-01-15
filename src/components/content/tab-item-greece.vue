@@ -126,8 +126,8 @@
 					<v-col cols="12">
 						<v-progress-linear
 							:value="vaccines.perent"
-							background-color="blue-grey lighten-5"
-							color="green accent-4"
+							background-color="grey lighten-4"
+							color="#81B15F"
 							height="24"
 							class="vaccines-progress"
 							>
