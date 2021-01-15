@@ -59,34 +59,19 @@ const testsCS = [
 ].reverse();
 
 const vaccinesCS = [
-	'#e0f7d0',
-	'#cbf2b1',
-	'#b6ec92',
-	'#a1e773',
-	'#8ce154',
-	'#78dc35',
-	'#65ca23',
-	'#56ab1e',
-	'#468c18',
-	'#376d13',
-	'#274e0d',
-	'#172f08'
+	'#E1EDDE',
+	'#CDE1D1',
+	'#B9D5C4',
+	'#A5C9B7',
+	'#92BDAA',
+	'#88B7A4',
+	'#7EB19D',
+	'#6AA590',
+	'#5B9D87',
+	'#52927D',
+	'#4B8874',
+	'#477E6C'
 ];
-
-// const vaccinesCS = [
-// 	'#d2fbe0',
-// 	'#bcf8d1',
-// 	'#a5f6c1',
-// 	'#8ff4b2',
-// 	'#78f2a2',
-// 	'#62f093',
-// 	'#4bed83',
-// 	'#34eb74',
-// 	'#1ee964',
-// 	'#1bd25a',
-// 	'#18ba50',
-// 	'#15a346'
-// ];
 
 const pcrCS = testsCS;
 const rapidCS = testsCS;
