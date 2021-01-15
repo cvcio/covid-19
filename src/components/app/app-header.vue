@@ -46,7 +46,7 @@
 								dark
 								class=""
 								v-bind="attrs"
-								v-on="on" href="https://github.com/iMEdD-Lab/open-data" target="_blank">
+								v-on="on" :href="locale.code === 'en' ? 'https://lab.imedd.org/en/how-application-monitoring-spread-covid19/' : 'https://lab.imedd.org/pos-ftiaxame-tin-efarmogi-gia-tin-exaplosi-tis-covid19/'" target="_blank">
 								<v-icon x-small>fa-info-circle</v-icon>
 							</v-btn>
 						</template>

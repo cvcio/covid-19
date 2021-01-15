@@ -157,7 +157,7 @@
 												<v-icon x-small color="grey lighten-1">mdi-information</v-icon>
 											</v-btn>
 										</template>
-										<span class="caption">{{ $t('Vaccinated People') }}</span>
+										<span class="caption">{{ $t('People vaccinated with at least one dose') }}</span>
 									</v-tooltip>
 								</h4>
 								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
@@ -181,7 +181,7 @@
 												<v-icon x-small color="grey lighten-1">mdi-information</v-icon>
 											</v-btn>
 										</template>
-										<span class="caption">{{ $t('Cumulative vaccination doses') }}</span>
+										<span class="caption">{{ $t('Cumulative vaccine doses received') }}</span>
 									</v-tooltip>
 								</h4>
 								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
