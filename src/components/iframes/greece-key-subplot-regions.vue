@@ -98,7 +98,7 @@
 		</v-container>
 		<v-divider class="mx-4"/>
 		<v-footer class="white caption small-caption pa-4 pt-2">
-			<a href="https://lab.imedd.org/" v-if="$route.meta.iframe">
+			<a href="https://lab.imedd.org/covid19/" target="_blank" v-if="$route.meta.iframe">
 				<v-icon x-small class="mr-2" color="primary">fa-link</v-icon><span class="font-weight-bold">iMΕdD LAB</span>: {{ title[locale.code] }}
 			</a>
 			<span v-else>
@@ -182,7 +182,7 @@ export default {
 		load () {
 			this.loading = true;
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
-			this.$store.dispatch('external/getGreeceAGG', 'all/cases,new_cases/' + this.periodInterval[3].value)
+			this.$store.dispatch('external/getGreeceAGG', 'all/cases,new_cases/' + '2020-01-01')
 				.then(res => {
 					const items = res.map(m => {
 						m.cases = m.cases.map(n => Math.max(0, n));

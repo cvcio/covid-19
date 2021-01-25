@@ -21,12 +21,25 @@
 			</v-btn>
 		</v-btn-toggle>
 
-		<v-btn v-if="$route.meta.iframe" small class="font-weight-bold link-to-map mt-5 text-inherit white" rounded target="_blank" href="https://lab.imedd.org/" >
+		<v-btn v-if="$route.meta.iframe" small class="font-weight-bold link-to-map mt-5 text-inherit white" rounded target="_blank" href="https://lab.imedd.org/covid19/" >
 			<v-icon x-small class="mr-2" color="primary">fa-link</v-icon>
 			<span class="font-weight-bold">IMΕdD LAB</span>:
 			<span class="text-capitalize">{{$t(mapLevel)}}</span>,
-			<span class="text-capitalize">{{$tc(mapKey, 1)}}</span>,
-			<span class="text-capitalize">{{mapPeriodIDX > 0 ? $moment(mapPeriod).format('ll') + ' - ' + $moment().format('ll'): $moment().format('ll')}}</span>
+			<span class="text-capitalize">{{$tc($route.query.mapKey !== 'vaccines' ? mapKey : 'Vaccination')}}</span>,
+			<span class="text-capitalize" v-if="$route.query.mapKey !== 'vaccines'">
+				{{mapPeriodIDX > 0 ? $moment(mapPeriod).format('ll') + ' - ' + $moment().format('ll'): $moment().format('ll')}}
+			</span>
+			<span class="text-capitalize" v-else>
+
+				{{
+
+					mapVaccinationsPeriodIDX > 0
+						? (
+							$moment(mapVaccinationsPeriod).diff($moment('2020-12-27'), 'days') > 0 ? $moment(mapVaccinationsPeriod).format('ll') : $moment('2020-12-27').format('ll')
+						) + ' - ' + $moment().format('ll')
+						: $moment().format('ll')
+					}}
+			</span>
 		</v-btn>
 
 		<v-btn v-if="!$route.meta.iframe" small class="font-weight-bold embed-map text-inherit primary" fab @click="setEmbed">
@@ -349,7 +362,7 @@ export default {
 						let v = 0;
 						if (this.mapPeriodIDX === 0) {
 							if (m.cases.length > 1 && m.cases[0] === m.cases[1]) {
-								v = m['new_' + this.mapKey][m['new_' + this.mapKey].length - 2];
+								v = m['new_' + this.mapKey][m['new_' + this.mapKey].length - 1];
 							} else {
 								v = m['new_' + this.mapKey][m['new_' + this.mapKey].length - 1];
 							}
@@ -438,9 +451,9 @@ export default {
 									let v = [];
 									if (this.mapPeriodIDX === 0) {
 										if (obj.cases.length > 1 && obj.cases[0] === obj.cases[1]) {
-											m.properties.data.vD = obj.new_deaths[obj.new_deaths.length - 2];
-											m.properties.data.vC = obj.new_cases[obj.new_cases.length - 2];
-											v = obj['new_' + this.mapKey][obj['new_' + this.mapKey].length - 2];
+											m.properties.data.vD = obj.new_deaths[obj.new_deaths.length - 1];
+											m.properties.data.vC = obj.new_cases[obj.new_cases.length - 1];
+											v = obj['new_' + this.mapKey][obj['new_' + this.mapKey].length - 1];
 										} else {
 											m.properties.data.vD = obj.new_deaths[obj.new_deaths.length - 1];
 											m.properties.data.vC = obj.new_cases[obj.new_cases.length - 1];

@@ -92,7 +92,7 @@ const routes = [
 				name: 'greece-key-subplot-regions',
 				props: {},
 				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-key-subplot-regions.vue')
+				component: () => import(/* webpackChunkName: "d7-subplot" */ '@/components/iframes/greece-key-subplot-regions.vue')
 			},
 			{
 				path: 'greece-tests-daily-agg-bar',
@@ -121,7 +121,7 @@ const routes = [
 				name: 'global-key-subplot-countries',
 				props: {},
 				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/global-key-subplot-countries.vue')
+				component: () => import(/* webpackChunkName: "d7-subplot" */ '@/components/iframes/global-key-subplot-countries.vue')
 			},
 			{
 				path: 'global-key-daily-similar',

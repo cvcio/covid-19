@@ -103,16 +103,11 @@ export default {
 
 			const l = line()
 				.x((d, i) => x(i))
-				.y(d => {
-					return y(d);
+				.y((d, i, a) => {
+					return y(d) || y((data[i].value + a.find(s => ![undefined, null].includes(s))) / 2);
 				});
 
-			const sma = ma(this.values, 7).filter((el) => {
-				return el != null;
-			});
-			// sma.push(this.values[this.values.length - 1]);
-			// sma.unshift(...Array(data.length - sma.length).fill(sma[sma.findIndex(m => m > 0)]));
-			sma.unshift(...Array(data.length - sma.length).fill(0));
+			const sma = ma(this.values, 7);
 			const self = this;
 			this.chart
 				.append('g')

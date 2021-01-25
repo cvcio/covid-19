@@ -93,10 +93,14 @@ export default {
 				const sma = ma(m[this.point], 7).filter((el) => {
 					return el != null;
 				});
-				// sma.push(m[this.point][m[this.point].length - 1]);
-				// sma.unshift(...Array(m.dates.length - sma.length).fill(sma[sma.findIndex(m => m > 0)]));
-				sma.unshift(...Array(m.dates.length - sma.length).fill(0));
+
+				sma.unshift(...Array(m.dates.length - sma.length).fill(-1));
+				if (m.dates.length < sma.length) {
+					m.dates.unshift(this.$moment(m.dates[0]).subtract(1, 'd'));
+				}
+
 				m.sma = sma;
+				m.sma = m.sma.map((n, i, a) => n === -1 ? (m[this.point][i] + a.find(s => ![undefined, null, -1].includes(s))) / 2 : n);
 				m.maxIdx = sma.indexOf(Math.max(...sma));
 				return m;
 			});
@@ -130,8 +134,8 @@ export default {
 				.x((d, i) => {
 					return x(i);
 				})
-				.y(d => {
-					return y(d);
+				.y((d, i, a) => {
+					return y(d) || y((a.find(s => ![undefined, null].includes(s))));
 				});
 
 			this.chart

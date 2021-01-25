@@ -7,7 +7,7 @@
 						<switch-map-source :label="'COVID—19'" :val="'covid'" disabled/>
 					</v-col>
 					<v-col cols="6">
-						<autocomplete-map-period :label="$t('label.period')"/>
+						<autocomplete-map-period model="mapPeriod" :label="$t('label.period')"/>
 					</v-col>
 				</v-row>
 				<v-row class="px-4" align="center" no-gutters>

@@ -55,7 +55,7 @@
 		</v-container>
 		<v-divider class="mx-4"/>
 		<v-footer class="white caption small-caption pa-4 pt-2">
-			<a href="https://lab.imedd.org/" v-if="$route.meta.iframe">
+			<a href="https://lab.imedd.org/covid19/" target="_blank" v-if="$route.meta.iframe">
 				<v-icon x-small class="mr-2" color="primary">fa-link</v-icon><span class="font-weight-bold">iMΕdD LAB</span>: {{ title[locale.code] }}
 			</a>
 			<span v-else>
