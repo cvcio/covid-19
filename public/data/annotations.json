@@ -82,5 +82,23 @@
     "name_el": "Κλείνουν όλες οι εκπαιδευτικές δομές της χώρας, πλην ειδικών σχολείων όλων των βαθμίδων.",
 	"name_en": "All education and training institutions are closing except for special schools of any level.",
 	"importance": 10
+  },
+  {
+    "date": "11/01/2021",
+    "name_el": "Επαναλειτουργία νηπιαγωγείων και δημοτικών -περιορισμοί κυκλοφορίας σε ισχύ.",
+	"name_en": "Kindergardens and primary schools operate again -circulation restrictions still in effect.",
+	"importance": 10
+  },
+  {
+    "date": "18/01/2021",
+    "name_el": "Άνοιγμα λιανεμπορίου -περιορισμοί κυκλοφορίας σε ισχύ.",
+	"name_en": "Reopening of retail -circulation restrictions still in effect.",
+	"importance": 1
+  },
+  {
+    "date": "11/02/2021",
+    "name_el": "Nέο lockdown στην Αττική",
+	"name_en": "Another lockdown in Attica",
+	"importance": 100
   }
 ]
