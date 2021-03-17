@@ -123,6 +123,9 @@
 			</v-card-text>
 			<v-divider></v-divider>
 
+			<v-card-text class="mt-4 caption" v-html="$t('embed.incognito')">
+			</v-card-text>
+
 			<v-card-actions class="pa-6">
 				<v-spacer></v-spacer>
 				<v-btn
