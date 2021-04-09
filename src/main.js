@@ -12,6 +12,7 @@ import vuetify from '@/plugins/vuetify';
 import filters from '@/filters';
 
 import VueObserveVisibility from 'vue-observe-visibility';
+import VueSocialSharing from 'vue-social-sharing';
 
 import App from '@/App.vue';
 
@@ -36,6 +37,8 @@ Vue.prototype.$APP_MAPBOX_STYLE = process.env.VUE_APP_MAPBOX_STYLE || 'mapbox://
 
 Vue.use(filters);
 Vue.use(VueObserveVisibility);
+Vue.use(VueSocialSharing);
+
 sync(store, router);
 
 // Create Application

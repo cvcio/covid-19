@@ -1,10 +1,12 @@
 <template>
 	<v-card color="white" :class="$route.meta.iframe ? 'elevation-0' : ''" :tile="$route.meta.iframe">
-		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'">
+		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'"
+			:height="$route.meta.iframe ? 60 : ($vuetify.breakpoint.smAndDown ? 80 : 60)">
 			<v-container class="pa-0 ma-0" fluid>
-				<v-row class="pa-0 ma-0" justify="space-between">
-					<v-col class="pa-0" align-self="center">
+				<v-row class="pa-0 ma-0" justify="start">
+					<v-col class="pa-0 pr-2" align-self="center" cols="6" xs="6" md="6">
 						<v-autocomplete
+							height="40"
 							dense
 							multiple
 							outlined
@@ -18,14 +20,14 @@
 							v-model="search"
 							@change="doSimilar">
 							<template v-slot:selection="{ item, index }">
-								<span v-if="index < 6" class="caption small-caption mr-1">
+								<span v-if="index < ($route.meta.iframe ? 2 : 6)" class="caption small-caption mr-1">
 									<span class="">{{ item.region + (search.length - 1 > index ? ', ' : '')}}</span>
 								</span>
 								<span
-									v-if="index === 6"
-									class="grey--text caption small-caption ml-1"
+									v-if="index === ($route.meta.iframe ? 2 : 6)"
+									class="grey--text caption small-caption"
 								>
-									<span class="">(+{{ search.length - 6 }})</span>
+									<span class="">(+{{ search.length - ($route.meta.iframe ? 2 : 6) }})</span>
 								</span>
 							</template>
 							<template v-slot:prepend>
@@ -35,8 +37,9 @@
 							</template>
 						</v-autocomplete>
 					</v-col>
-					<v-col class="pa-0 ml-3" align-self="center" cols="3">
+					<v-col class="pa-0 pl-2" align-self="center" cols="4" xs="4" md="4">
 						<v-select
+							height="40"
 							dense
 							outlined
 							color="primary"
@@ -51,11 +54,11 @@
 							</template>
 						</v-select>
 					</v-col>
-					<v-col class="pa-0 text-end ml-2 shrink" align-self="center" v-if="!$route.meta.iframe" cols="2">
-						<v-btn x-small fab color="grey" dark class="elevation-0" @click="update">
+					<v-col class="pa-0 text-end shrink" align-self="center" v-if="!$route.meta.iframe" cols="2">
+						<v-btn x-small fab color="grey" dark class="elevation-0 mb-1" @click="update">
 							<v-icon x-small>fa-redo</v-icon>
 						</v-btn>
-						<v-btn x-small fab color="primary" dark class="ml-1 elevation-0" @click="setEmbed">
+						<v-btn x-small fab color="primary" dark class="ml-1 mb-1 elevation-0" @click="setEmbed">
 							<v-icon x-small>fa-code</v-icon>
 						</v-btn>
 					</v-col>

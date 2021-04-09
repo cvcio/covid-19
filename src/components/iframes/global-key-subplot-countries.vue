@@ -1,10 +1,10 @@
 <template>
 	<v-card color="white" :class="$route.meta.iframe ? 'elevation-0' : ''" :tile="$route.meta.iframe">
 		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'"
-			:height="$vuetify.breakpoint.smAndDown ? 180 : 136">
-			<v-container class="pa-0 ma-0 mb-4" fluid>
+			:height="$vuetify.breakpoint.smAndDown ? 140 : 120">
+			<v-container class="pa-0 ma-0 mb-2" fluid>
 				<v-row class="pa-0 ma-0" justify="start">
-					<v-col class="pa-0 shrink" align-self="center">
+					<v-col class="pa-0 shrink" align-self="center" cols="12" md="">
 						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory @change="doSimilar">
 							<v-btn x-small class="primary--text" value="cases">
 								{{($tc('cases', 1)) | normalizeNFD }}
@@ -14,7 +14,7 @@
 							</v-btn>
 						</v-btn-toggle>
 					</v-col>
-					<v-col class="pa-0 shrink" align-self="center" >
+					<v-col class="pa-0 shrink" align-self="center" cols="12" md="">
 						<v-btn-toggle dense class="mr-2" rounded v-model="calc" mandatory @change="doSimilar">
 							<v-btn x-small class="primary--text" value="_cum">
 								{{($tc('Cumulative Per 100K', 1)) | normalizeNFD }}
@@ -24,7 +24,7 @@
 							</v-btn>
 						</v-btn-toggle>
 					</v-col>
-					<v-col class="pa-0 text-end ml-2 align-end" align-self="center" v-if="!$route.meta.iframe">
+					<v-col class="pa-0 text-end align-end" align-self="center" v-if="!$route.meta.iframe && !$vuetify.breakpoint.smAndDown" cols="12" md="">
 						<v-btn x-small
 							fab color="grey" dark class="mb-1 elevation-0"
 							@click="update">
@@ -37,8 +37,8 @@
 						</v-btn>
 					</v-col>
 				</v-row>
-				<v-row class="pa-0 ma-0 mt-4" justify="center">
-					<v-col class="pa-0 pr-2" cols="12" md="6">
+				<v-row class="pa-0 ma-0 mt-2" justify="center">
+					<v-col class="pa-0 pr-2" align-self="center" cols="5" xs="5" md="5">
 						<v-autocomplete
 							dense
 							outlined
@@ -58,7 +58,7 @@
 							</template>
 						</v-autocomplete>
 					</v-col>
-					<v-col class="pa-0 pl-2" cols="12" md="6">
+					<v-col class="pa-0 pl-2" align-self="center" cols="5" xs="5" md="5">
 						<v-select
 							dense
 							outlined
@@ -73,6 +73,18 @@
 								</v-icon>
 							</template>
 						</v-select>
+					</v-col>
+					<v-col class="pa-0 text-end align-end" align-self="center" v-if="!$route.meta.iframe && $vuetify.breakpoint.smAndDown" cols="2">
+						<v-btn x-small
+							fab color="grey" dark class="mb-1 elevation-0"
+							@click="update">
+							<v-icon x-small>fa-redo</v-icon>
+						</v-btn>
+						<v-btn x-small
+							fab color="primary" dark class="ml-1 mb-1 elevation-0"
+							@click="setEmbed">
+							<v-icon x-small>fa-code</v-icon>
+						</v-btn>
 					</v-col>
 				</v-row>
 			</v-container>

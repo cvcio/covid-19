@@ -31,6 +31,7 @@
 			</v-btn>
 		</v-bottom-navigation>
 		<embed-dialog/>
+		<app-social/>
 	</div>
 </template>
 
@@ -44,6 +45,7 @@ export default {
 		'app-footer': require('@/components/app/app-footer').default,
 		tabs: require('@/components/content/tabs').default,
 		'eody-disclaimer': require('@/components/shared/eody-disclaimer').default,
+		'app-social': require('@/components/app/app-social').default,
 		'embed-dialog': require('@/components/content/embeds/dialog').default
 	},
 	computed: {
@@ -55,9 +57,9 @@ export default {
 		};
 	},
 	mounted () {
-		const addthis = document.createElement('script');
-		addthis.setAttribute('src', '//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5e6e40408bf2d5f7');
-		document.head.appendChild(addthis);
+		// const addthis = document.createElement('script');
+		// addthis.setAttribute('src', '//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5e6e40408bf2d5f7');
+		// document.head.appendChild(addthis);
 	},
 	methods: {}
 };
@@ -65,6 +67,6 @@ export default {
 
 <style lang="less" scoped>
 .bottom-navigation {
-	margin-bottom: 32px !important;
+	// margin-bottom: 0 !important;
 }
 </style>

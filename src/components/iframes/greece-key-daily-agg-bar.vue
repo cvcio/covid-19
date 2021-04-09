@@ -1,7 +1,7 @@
 <template>
 	<v-card color="white" :class="$route.meta.iframe ? 'elevation-0' : ''" :tile="$route.meta.iframe">
 		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'"
-		:height="$vuetify.breakpoint.smAndDown ? 180 : 136">
+		:height="$route.meta.iframe ? 120 : ($vuetify.breakpoint.smAndDown ? 120 : 120)">
 			<v-container class="pa-0 ma-0" fluid>
 				<v-row class="pa-0 ma-0" justify="space-between">
 					<v-col class="pa-0 shrink" align-self="center">
@@ -24,7 +24,7 @@
 							</v-btn>
 						</v-btn-toggle>
 					</v-col>
-					<v-col class="pa-0 grow text-end ml-2" align-self="center" v-if="!$route.meta.iframe">
+					<v-col class="pa-0 grow text-end" align-self="center" v-if="!$route.meta.iframe">
 						<!-- <v-btn x-small :fab="!$vuetify.breakpoint.smAndDown" color="grey" dark class="mx-2 elevation-0" @click="update">
 							<v-icon x-small>fa-redo</v-icon>
 						</v-btn> -->
