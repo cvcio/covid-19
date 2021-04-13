@@ -6,11 +6,11 @@
 					<v-card-title class="pa-2 subtitle-2">
 						<span class="text-uppercase">
 							{{
-								$moment().week(d.week).isoWeekday(1).format("ll")
+								$moment(d.date).isoWeekday(1).format("ll")
 							}}
 							-
 							{{
-								$moment().week(d.week).isoWeekday(7).format("ll")
+								$moment(d.date).isoWeekday(7).format("ll")
 							}}
 						</span>
 					</v-card-title>
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { select, scaleBand, scaleThreshold, groups } from 'd3';
+import { select, scaleBand, scaleThreshold } from 'd3';
 import { sumBy } from 'lodash';
 
 import * as colors from '@/helper/colors';
@@ -77,6 +77,17 @@ export default {
 	},
 
 	methods: {
+		groupBy (array, f) {
+			var groups = {};
+			array.forEach((o) => {
+				var group = f(o);
+				groups[group] = groups[group] || [];
+				groups[group].push(o);
+			});
+			return Object.keys(groups).map((group) => {
+				return groups[group];
+			});
+		},
 		palette (min, max, colors) {
 			const d = (max - min) / 12;
 			return scaleThreshold()
@@ -96,17 +107,31 @@ export default {
 			const data = this.dates.map((m, i) => {
 				return {
 					week: this.$moment(m).week(),
+					year: this.$moment(m).year(),
 					date: m,
 					value: this.values[i] ? Math.max(0, this.values[i]) : 0
 				};
 			});
 
-			let entries = groups(data, (d) => d.week).map((m, i) => {
+			let entries = this.groupBy(data, (d) => {
+				return [d.year, d.week];
+			}).map((m) => {
 				return {
-					week: m[0],
-					value: sumBy(m[1], 'value')
+					year: m[0].year,
+					week: m[0].week,
+					date: m[0].date,
+					value: sumBy(m, 'value')
 				};
 			});
+
+			// let entries = groups(data, (d) => d.week).map((m, i) => {
+			// 	return {
+			// 		week: m[0],
+			// 		value: sumBy(m[1], 'value')
+			// 	};
+			// });
+
+			// console.log(entries)
 
 			entries = entries.map((m, i) => {
 				m.diff = i < 1 ? 0 : m.value - entries[i - 1].value;
@@ -156,6 +181,7 @@ export default {
 					this.px = e.clientX;
 					this.py = e.clientY;
 					this.d = d;
+					console.log(d);
 				})
 				.on('mouseout', (e, d) => {
 					this.tooltip = false;
