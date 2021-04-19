@@ -24,6 +24,8 @@ export default {
 			if (d) {
 				d.parentNode.removeChild(d);
 			};
+		} else {
+			this.$cookiebot.consentBanner();
 		}
 	},
 	methods: {}

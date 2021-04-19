@@ -260,7 +260,7 @@ export default {
 				// if (this.mapSource === 'covid') {
 				this.updatePosition(
 					this.mapLevel === 'greece' ? [23.7208298, 37.9908697] : [0, 30],
-					this.mapLevel === 'greece' ? 5.5 : 2.5
+					this.mapLevel === 'greece' ? 5.5 : 2
 				);
 				// }
 			}
@@ -582,7 +582,7 @@ export default {
 		},
 		draw () {
 			mapboxgl.accessToken = this.$APP_MAPBOX;
-			const zoom = this.mapLevel === 'greece' ? 5.5 : 2.5;
+			const zoom = this.mapLevel === 'greece' ? 5.5 : 2;
 			this.map = new mapboxgl.Map({
 				container: 'map',
 				style: this.$APP_MAPBOX_STYLE,
@@ -775,6 +775,8 @@ export default {
 		},
 		updatePosition (coords = [23.7208298, 37.9908697], zoom = 5.5) {
 			if (!this.map) return;
+
+			zoom = this.mapLevel === 'greece' ? 5.5 : 2;
 
 			this.map.flyTo({
 				center: coords,

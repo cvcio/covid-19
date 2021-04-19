@@ -13,6 +13,7 @@ import filters from '@/filters';
 
 import VueObserveVisibility from 'vue-observe-visibility';
 import VueSocialSharing from 'vue-social-sharing';
+import VueCookieBot from '@ambitiondev/vue-cookiebot-plugin';
 
 import App from '@/App.vue';
 
@@ -38,6 +39,9 @@ Vue.prototype.$APP_MAPBOX_STYLE = process.env.VUE_APP_MAPBOX_STYLE || 'mapbox://
 Vue.use(filters);
 Vue.use(VueObserveVisibility);
 Vue.use(VueSocialSharing);
+Vue.use(VueCookieBot, {
+	cookieBotID: 'f5f84b33-c06b-4b63-b6d3-ca71ab5275a0'
+});
 
 sync(store, router);
 

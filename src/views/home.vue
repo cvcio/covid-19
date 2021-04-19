@@ -4,8 +4,8 @@
 			<v-row no-gutters class="no-events">
 				<div id="map-container" class="d-block blue-grey lighten-4" :class="$vuetify.breakpoint.smAndDown ? 'mobile' : 'desktop'">
 					<map-view class="events"/>
-					<app-header class="bellow-map no-events"/>
-					<tabs class="bellow-map  no-events" v-if="!$vuetify.breakpoint.smAndDown"/>
+					<app-header class="bellow-map no-events" v-if="$vuetify.breakpoint.smAndDown"/>
+					<tabs class="bellow-map no-events" v-if="!$vuetify.breakpoint.smAndDown"/>
 				</div>
 			</v-row>
 		</v-container>

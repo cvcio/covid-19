@@ -36,7 +36,7 @@
 					</v-menu>
 				</v-card-title>
 				<v-divider class="white ml-4" />
-				<v-card-title class=" white--text py-2" :class="$vuetify.breakpoint.smAndDown ? 'caption' : 'body-1'">
+				<v-card-title class="white--text py-2" :class="$vuetify.breakpoint.smAndDown ? 'caption' : 'body-1'">
 					<span class="text-start shrink">{{ $t("app.subtitle") }}</span>
 					<v-spacer/>
 					<v-tooltip bottom>
