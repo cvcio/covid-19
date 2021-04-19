@@ -95,6 +95,14 @@ export default {
 	},
 	computed: {
 		...mapGetters(['locale', 'sidebar'])
+	},
+	methods: {
+		changeLang (lang) {
+			this.$store.dispatch('setLocale', lang)
+				.then(() => {
+					this.$router.replace({ query: { lang } });
+				});
+		}
 	}
 };
 </script>
