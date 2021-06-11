@@ -16,6 +16,7 @@ const externalSVC = {
 		try {
 			let url = process.env.VUE_APP_BASE_API + '/total/greece/all';
 			url += playload.from ? `/${playload.from}` : '';
+			url += playload.to ? `/${playload.to}` : '';
 			const response = await api.get(url, { crossdomain: true });
 			return response.data;
 		} catch (error) {

@@ -1,5 +1,5 @@
 <template>
-	<v-img :src="$BASE_URL + 'img/iMEdD logo@3x.png'" :aspect-ratio="860/165" contain height="64" position="center left" class=""/>
+	<v-img :src="$BASE_URL + 'img/iMEdD logo@3x.png'" :aspect-ratio="860/165" contain height="50" position="center left" class=""/>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-	<v-row class="mb-0 app-header" :class="$vuetify.breakpoint.smAndDown ? 'elevation-0 mt-14' : 'top-offset px-3'" no-gutters>
+	<v-row class="mb-0 app-header" :class="$vuetify.breakpoint.smAndDown ? 'elevation-0 mt-12' : 'top-offset px-3'" no-gutters>
 		<v-col cols="12" sm="12" md="5" lg="4" xl="3" class="events">
 			<v-card class="elevation-0" dark :tile="$vuetify.breakpoint.smAndDown" style="background-color:rgba(237, 32, 56,0.85);">
 				<v-card-title class="text-h5 py-2">

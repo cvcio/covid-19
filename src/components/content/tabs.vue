@@ -1,5 +1,5 @@
 <template>
-	<v-row class="tabs" no-gutters :class="$vuetify.breakpoint.smAndDown ? 'elevation-0' : 'px-3 mt-16'">
+	<v-row class="tabs" no-gutters :class="$vuetify.breakpoint.smAndDown ? 'elevation-0' : 'px-3 mt-14'">
 		<v-col cols="12" sm="6" md="5" lg="4" xl="3" class="events" :class="$vuetify.breakpoint.smAndDown ? 'mt-0' : 'mt-6'">
 			<h6 class="caption text-end" v-if="!$vuetify.breakpoint.smAndDown">{{ $t('lastupdate') }} {{ $moment.utc(lastUpdatedAt).format('LLL') }}</h6>
 			<v-card class="transparent" :class="$vuetify.breakpoint.smAndDown ? 'elevation-0' : ''" light>

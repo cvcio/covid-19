@@ -198,7 +198,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { sumBy } from 'lodash';
+import { sumBy, sum, reduce } from 'lodash';
 
 export default {
 	name: 'tab-item-greece',
@@ -258,7 +258,7 @@ export default {
 			this.$store.dispatch('external/getGreeceTotal', { from: this.mapPeriodIDX > 0 ? this.mapPeriod : null })
 				.then(res => {
 					this.cases = sumBy(res, 'cases') || 0;
-					this.deaths = sumBy(res, 'deaths') || 0;
+					// this.deaths = sumBy(res, 'deaths') || 0;
 				});
 
 			// this.$store.dispatch('external/getGreeceTotal', { from: this.periodInterval[3].value })
@@ -277,10 +277,38 @@ export default {
 					this.tests = sumBy(res, 'tests') || 0;
 				});
 
-			this.$store.dispatch('external/getGlobalAGG', 'GRC/new_cases,new_deaths' + (this.mapPeriodIDX > 0 ? '/' + this.mapPeriod : ''))
+			this.$store.dispatch('external/getGlobalAGG', 'GRC/new_cases,deaths,new_deaths' + '/' + this.mapPeriod)
 				.then(res => {
 					this.sparks.new_cases = res[0].new_cases.length > 1 ? res[0].new_cases : [];
 					this.sparks.new_deaths = res[0].new_deaths.length > 1 ? res[0].new_deaths : [];
+					const d = res[0];
+
+					if (this.mapPeriodIDX === 0) {
+						const last2_deaths = d.deaths.slice((d.deaths.length - 2), d.deaths.length);
+						const last2_new_deaths = d.new_deaths.slice((d.new_deaths.length - 2), d.new_deaths.length);
+
+						if (d.new_deaths[d.new_deaths.length - 1] > 0) {
+							this.deaths = d.new_deaths[d.new_deaths.length - 1];
+							return;
+						}
+
+						if (reduce(last2_deaths, (s, n) => s - n) === 0 && reduce(last2_new_deaths, (s, n) => s - n) === 0) {
+							this.deaths = d.new_deaths[d.new_deaths.length - 1];
+							return;
+						}
+
+						if (reduce(last2_deaths, (s, n) => s - n) === 0 && reduce(last2_new_deaths, (s, n) => s - n) > 0) {
+							this.deaths = d.new_deaths[d.new_deaths.length - 2];
+							return;
+						}
+
+						if (d.new_deaths[d.new_deaths.length - 1] === 0) {
+							this.deaths = d.new_deaths[d.new_deaths.length - 2];
+						}
+					} else {
+						this.deaths = sum(d.new_deaths);
+					}
+					// this.deaths = this.mapPeriodIDX === 0 ? (res[0].new_deaths[res[0].new_deaths.length - 1] != 0 ? res[0].new_deaths[res[0].new_deaths.length - 1] : sum(res[0].new_deaths)) : sum(res[0].new_deaths);
 				});
 
 			this.$store.dispatch('external/getGRVaccinesTotal', { from: this.mapVaccinationsPeriodIDX > 0 ? this.mapVaccinationsPeriod : this.$moment().format('YYYY-MM-DD') })
