@@ -8,8 +8,8 @@ const getDates = (from, to) => {
 	const dates = [];
 	let startDate = moment(from);
 	const endDate = moment(to);
-	while (startDate <= endDate) {
-		dates.push(moment(startDate));
+	while (startDate.isSameOrBefore(endDate)) {
+		dates.push(moment(startDate.format()));
 		startDate = moment(startDate).add(1, 'days');
 	}
 	return dates;
@@ -17,7 +17,6 @@ const getDates = (from, to) => {
 
 const IsSafari = () => {
 	var is_safari = navigator.userAgent.toLowerCase().indexOf('safari/') > -1;
-	console.log('issafari', is_safari);
 	return is_safari;
 };
 

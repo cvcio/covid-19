@@ -86,6 +86,27 @@ const routes = [
 				meta: { iframe: true },
 				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-intubated-daily-agg-bar.vue')
 			},
+			{
+				path: 'greece-add-dis-bar',
+				name: 'greece-add-dis-bar',
+				props: {},
+				meta: { iframe: true },
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-add-dis-bar.vue')
+			},
+			{
+				path: 'greece-vac-doses-stacked',
+				name: 'greece-vac-doses-stacked',
+				props: {},
+				meta: { iframe: true },
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-vac-doses-stacked.vue')
+			},
+			{
+				path: 'greece-vac-unvac-stacked',
+				name: 'greece-vac-unvac-stacked',
+				props: {},
+				meta: { iframe: true },
+				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-vac-unvac-stacked.vue')
+			},
 
 			{
 				path: 'greece-key-subplot-regions',

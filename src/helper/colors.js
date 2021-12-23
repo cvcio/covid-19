@@ -75,6 +75,64 @@ const vaccinesCS = [
 
 const pcrCS = testsCS;
 const rapidCS = testsCS;
+const hospital_admissions = deathsCS;
+const hospital_discharges = casesCS;
+
+const getFill = (key) => {
+	switch (key) {
+	case 'new_hospital_admissions':
+	case 'hospital_admissions':
+		return hospital_admissions[2];
+	case 'new_hospital_discharges':
+	case 'hospital_discharges':
+		return hospital_discharges[4];
+	case 'icu_occupancy':
+		return '';
+	case 'beds_occupancy':
+		return '';
+	case 'total_dose_1':
+		return vaccinesCS[2];
+	case 'total_dose_2':
+	case 'vac_p':
+	case 'vac_pp':
+		return vaccinesCS[4];
+	case 'total_dose_3':
+		return vaccinesCS[6];
+	case 'unvac_p':
+	case 'unvac_pp':
+		return criticalCS[4];
+	default:
+		return '#ddd';
+	}
+};
+
+const getStroke = (key) => {
+	switch (key) {
+	case 'new_hospital_admissions':
+	case 'hospital_admissions':
+		return hospital_admissions[9];
+	case 'new_hospital_discharges':
+	case 'hospital_discharges':
+		return hospital_discharges[9];
+	case 'icu_occupancy':
+		return '';
+	case 'beds_occupancy':
+		return '';
+	case 'total_dose_1':
+		return vaccinesCS[5];
+	case 'total_dose_2':
+	case 'vac_p':
+	case 'vac_pp':
+		return vaccinesCS[7];
+	case 'total_dose_3':
+		return vaccinesCS[9];
+	case 'unvac_p':
+	case 'unvac_pp':
+		return criticalCS[7];
+	default:
+		return '#aaa';
+	}
+};
 
 export {
 	casesCS,
@@ -84,5 +142,9 @@ export {
 	testsCS,
 	pcrCS,
 	rapidCS,
-	vaccinesCS
+	vaccinesCS,
+	hospital_admissions,
+	hospital_discharges,
+	getFill,
+	getStroke
 };

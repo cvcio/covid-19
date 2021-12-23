@@ -46,6 +46,9 @@ export default {
 		'greece-vaccines-by-region-table': require('@/components/iframes/greece-vaccines-by-region-table').default,
 		'greece-key-daily-agg-bar': require('@/components/iframes/greece-key-daily-agg-bar').default,
 		'greece-intubated-daily-agg-bar': require('@/components/iframes/greece-intubated-daily-agg-bar').default,
+		'greece-add-dis-bar': require('@/components/iframes/greece-add-dis-bar').default,
+		'greece-vac-doses-stacked': require('@/components/iframes/greece-vac-doses-stacked').default,
+		'greece-vac-unvac-stacked': require('@/components/iframes/greece-vac-unvac-stacked').default,
 		'greece-key-subplot-regions': require('@/components/iframes/greece-key-subplot-regions').default,
 		'greece-tests-daily-agg-bar': require('@/components/iframes/greece-tests-daily-agg-bar').default,
 		'global-key-daily-similar': require('@/components/iframes/global-key-daily-similar').default

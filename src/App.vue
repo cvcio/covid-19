@@ -9,14 +9,10 @@
 <script>
 export default {
 	name: 'covid-19',
-	components: {},
 	computed: {
 		iframe () {
 			return !!this.$route.path.includes('iframe');
 		}
-	},
-	data () {
-		return {};
 	},
 	mounted () {
 		if (this.iframe) {

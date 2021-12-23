@@ -2,6 +2,64 @@
 	"greece": [
 		{
 			"title": {
+				"el": "Εμβολιασμένοι και ανεμβολίαστοι διασωληνωμένοι ασθενείς",
+				"en": "Vaccinated and unvaccinated intubated patients"
+			},
+			"body": {
+				"el": [
+					"Το γράφημα από προεπιλογή παρουσιάζει την ποσοστιαία κατανομή των διασωληνωμένων ασθενών σε εμβολιασμένους και μη. Δηλαδή, αποτυπώνει πόσο τοις εκατό επί των διασωληνωμένων είναι εμβολιασμένοι και πόσο ανεμβολίαστοι.",
+					"Αντίθετα, το γράφημα % ΕΜΒΟΛ/ΜΕΝΩΝ & ΜΗ δείχνει ποιο ποσοστό των ανεμβολίαστων πολιτών είναι διασωληνωμένο και ποιο ποσοστό των εμβολιασμένων πολιτών νοσηλεύονται διασωληνωμένοι. Ενώ το πρώτο γράφημα μελετά τη σχέση εμβολιασμένων - ανεμβολίαστων μεταξύ των διασωληνωμένων ασθενών, η δεύτερη προβολή εξετάζει πόσοι από τους εμβολιασμένους και πόσοι από τους ανεμβολίαστους διασωληνώνονται."
+				],
+				"en": [
+					"The graph, by default, shows the distribution of intubated patients into vaccinated and unvaccinated patients (%). It shows what percentage of the intubated patients are vaccinated and what percentage are unvaccinated.",
+					"In contrast, the \"% VACCINATED & NON-VACCINATED\" chart depicts the percentage of unvaccinated and vaccinated citizens who are intubated. While the first graph studies the ratio of vaccinated and unvaccinated among intubated patients, the second projection zooms in the two populations separately; how many of the vaccinated people and how many of the unvaccinated citizens are intubated."
+				]
+			},
+			"component": {
+				"id": "greece-vac-unvac-stacked",
+				"embed": true
+			}
+		},
+		{
+			"title": {
+				"el": "Εξέλιξη εμβολιασμών ανά δόση εμβολίου",
+				"en": "Evolution of vaccinations by vaccine dose"
+			},
+			"body": {
+				"el": [
+					"Με ανοιχτό πράσινο χρώμα αποτυπώνεται ο αριθμός των πολιτών που έχουν εμβολιαστεί με μία δόση. Με πιο σκούρο πράσινο χρώμα αναπαρίσταται ο αριθμός των πλήρως εμβολιασμένων (περιλαμβάνονται οι εμβολιασμοί με Johnson & Johnson). Με βαθύ πράσινο χρώμα εμβολιασμοί με τρίτη δόση."
+				],
+				"en": [
+					"The number of citizens vaccinated with one dose is shown in light green. Darker green represents the number of fully vaccinated (including Johnson & Johnson vaccinations). In deep green, third-dose vaccinations."
+				]
+			},
+			"component": {
+				"id": "greece-vac-doses-stacked",
+				"embed": true
+			}
+		},
+		{
+			"title": {
+				"el": "Εισαγωγές και εξιτήρια λόγω ίασης",
+				"en": "Admissions and discharges"
+			},
+			"body": {
+				"el": [
+					"Το γράφημα αποτυπώνει σε απόλυτα νούμερα τις ημερήσιες εισαγωγές ασθενών με COVID-19 σε νοσοκομεία και τα ημερήσια εξιτήρια λόγω ίασης. Με κόκκινο χρώμα οπτικοποιούνται οι εισαγωγές στα νοσοκομεία και με μπλε τα εξιτήρια.",
+					"Πηγή των δεδομένων είναι η σελίδα covid19.gov.gr. Κάποιες ημέρες το Υπουργείο Υγείας και ο ΕΟΔΥ επιλέγουν να μην ανακοινώσουν στοιχεία εισαγωγών και εξιτηρίων. Τις αντίστοιχες ημερομηνίες οι γραμμές του γραφήματος βρίσκονται στην τιμή μηδέν."
+				],
+				"en": [
+					"The graph shows the daily hospital admissions of patients with COVID-19 and daily discharges of cured patients in absolute numbers. Admissions to hospitals are visualized in red and discharges in blue.",
+					"The data source is covid19.gov.gr. Some days the Ministry of Health and the EODY choose not to release data on admissions and discharges. On the corresponding dates, the graph lines are at zero."
+				]
+			},
+			"component": {
+				"id": "greece-add-dis-bar",
+				"embed": true
+			}
+		},
+		{
+			"title": {
 				"el": "Κρούσματα ανά περιοχή στην Ελλάδα",
 				"en": "Cases by area in Greece"
 			},

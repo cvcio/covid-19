@@ -76,7 +76,8 @@ const externalSVC = {
 	},
 	async getGRVaccinesAGG (playload) {
 		try {
-			let url = process.env.VUE_APP_BASE_API + '/agg/vaccines/greece/all/all';
+			let url = process.env.VUE_APP_BASE_API + '/agg/vaccines/greece/all';
+			url += playload.keys ? `/${playload.keys}` : '/all';
 			url += playload.from ? `/${playload.from}` : '';
 			const response = await api.get(url, { crossdomain: true });
 			return response.data;

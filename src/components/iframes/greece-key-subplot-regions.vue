@@ -206,7 +206,6 @@ export default {
 							max_cases_index_cum: max_cases_cum
 						};
 					});
-
 					this.items = items;
 					this.numberOfPages = Math.ceil(this.items.length / this.itemsPerPage);
 
