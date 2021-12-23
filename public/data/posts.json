@@ -45,12 +45,12 @@
 			},
 			"body": {
 				"el": [
-					"Το γράφημα από προεπιλογή παρουσιάζει την ποσοστιαία κατανομή των διασωληνωμένων ασθενών σε εμβολιασμένους και μη. Δηλαδή, αποτυπώνει πόσο τοις εκατό επί των διασωληνωμένων είναι εμβολιασμένοι και πόσο ανεμβολίαστοι.",
-					"Αντίθετα, το γράφημα % ΕΜΒΟΛ/ΜΕΝΩΝ & ΜΗ δείχνει ποιο ποσοστό των ανεμβολίαστων πολιτών είναι διασωληνωμένο και ποιο ποσοστό των εμβολιασμένων πολιτών νοσηλεύονται διασωληνωμένοι. Ενώ το πρώτο γράφημα μελετά τη σχέση εμβολιασμένων - ανεμβολίαστων μεταξύ των διασωληνωμένων ασθενών, η δεύτερη προβολή εξετάζει πόσοι από τους εμβολιασμένους και πόσοι από τους ανεμβολίαστους διασωληνώνονται."
+					"Το γράφημα από προεπιλογή παρουσιάζει την ποσοστιαία κατανομή των διασωληνωμένων ασθενών σε εμβολιασμένους και μη. Δηλαδή, αποτυπώνει πόσο τοις εκατό επί των διασωληνωμένων είναι εμβολιασμένοι (με πράσινο χρώμα) και πόσο ανεμβολίαστοι (με πορτοκαλί χρώμα).",
+					"Αντίθετα, η δεύτερη προβολή, «% ΕΜΒΟΛ/ΜΕΝΩΝ & ΜΗ», δείχνει ποιο ποσοστό των ανεμβολίαστων πολιτών (με πορτοκαλί χρώμα) είναι διασωληνωμένο και ποιο ποσοστό των εμβολιασμένων πολιτών νοσηλεύονται διασωληνωμένοι. Ενώ το πρώτο γράφημα μελετά τη σχέση εμβολιασμένων - ανεμβολίαστων μεταξύ των διασωληνωμένων ασθενών, η δεύτερη προβολή εξετάζει πόσοι από τους εμβολιασμένους και πόσοι από τους ανεμβολίαστους διασωληνώνονται."
 				],
 				"en": [
-					"The graph, by default, shows the distribution of intubated patients into vaccinated and unvaccinated patients (%). It shows what percentage of the intubated patients are vaccinated and what percentage are unvaccinated.",
-					"In contrast, the \"% VACCINATED & NON-VACCINATED\" chart depicts the percentage of unvaccinated and vaccinated citizens who are intubated. While the first graph studies the ratio of vaccinated and unvaccinated among intubated patients, the second projection zooms in the two populations separately; how many of the vaccinated people and how many of the unvaccinated citizens are intubated."
+					"The graph, by default, shows the distribution of intubated patients into vaccinated and unvaccinated patients (%). It shows what percentage of the intubated patients are vaccinated (in green color) and what percentage are unvaccinated (in orange color).",
+					"In contrast, when selecting the second view, \"% VACCINATED & NON-VACCINATED\", the chart depicts the percentage of unvaccinated and vaccinated citizens who are intubated. While the first graph studies the ratio of vaccinated and unvaccinated among intubated patients, the second projection zooms in the two populations separately; how many of the vaccinated people and how many of the unvaccinated citizens are intubated."
 				]
 			},
 			"component": {
