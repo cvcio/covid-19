@@ -338,7 +338,7 @@ export default {
 					this.vaccines.perent = (this.vaccines.totalDistinctPersons / this.population) * 100;
 				});
 
-			this.$store.dispatch('external/getGlobalAGG', 'GRC/date,icu_occupancy,beds_occupancy' + '/' + this.$moment().subtract(14, 'days').format('YYYY-MM-DD'))
+			this.$store.dispatch('external/getGlobalAGG', 'GRC/date,icu_occupancy,beds_occupancy' + '/' + this.$moment().subtract(3, 'months').format('YYYY-MM-DD'))
 				.then(res => {
 					const d = res[0];
 					const b_non_0_idx = d.beds_occupancy.reduce((a, e, i) => e > 0 ? a.concat(i) : a, []);
