@@ -21,7 +21,7 @@
     "d3-svg-annotation": "^2.5.1",
     "lodash": "^4.17.21",
     "mapbox-gl": "^1.12.0",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "moving-averages": "^4.0.5",
     "register-service-worker": "^1.7.1",
     "simple-statistics": "^7.3.0",
