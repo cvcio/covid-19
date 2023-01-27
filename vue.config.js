@@ -39,6 +39,10 @@ module.exports = {
 		}
 	},
 	chainWebpack: (config) => {
+		config.plugin("copy").tap(([options]) => {
+			options[0].ignore.push("shared/decoded/**");
+			return [options];
+		});
 		config.plugins.delete('prefetch');
 		config.plugin('CompressionPlugin').use(CompressionPlugin);
 	}

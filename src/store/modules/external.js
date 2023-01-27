@@ -14,22 +14,62 @@ export default {
 		}
 	},
 	actions: {
-		async getMapData ({ commit }, playload) {
+		async getRegionalUnitsDataByYear ({ commit }, payload) {
 			try {
-				const res = await externalSVC.getMapData(playload);
-				commit('setMapData', res);
-
+				const res = await externalSVC.getRegionalUnitsDataByYear(payload);
 				return res;
 			} catch (error) {
 				commit('errors/REQUEST_ERROR', error, { root: true });
 				return false;
 			}
 		},
-		async getGreeceTotal ({ state, commit }, playload) {
+
+		async getVaccinationsDataByYear ({ commit }, payload) {
 			try {
-				const res = await externalSVC.getGreeceTotal(playload);
-				if (res[0].last_updated_at && !state.lastUpdateAt) {
-					commit('setLastUpdatedAt', res[0].last_updated_at, { root: true });
+				const res = await externalSVC.getVaccinationsDataByYear(payload);
+				return res;
+			} catch (error) {
+				commit('errors/REQUEST_ERROR', error, { root: true });
+				return false;
+			}
+		},
+
+		async getRegionalUnitsData ({ commit }, payload) {
+			try {
+				const res = await externalSVC.getRegionalUnitsData(payload);
+				return res;
+			} catch (error) {
+				commit('errors/REQUEST_ERROR', error, { root: true });
+				return false;
+			}
+		},
+
+		async getMunicipalitiesData () {
+			try {
+				const res = await externalSVC.getMunicipalitiesData();
+				return res;
+			} catch (error) {
+				commit('errors/REQUEST_ERROR', error, { root: true });
+				return false;
+			}
+		},
+
+		async getDemographicsData ({ commit }, payload) {
+			try {
+				const res = await externalSVC.getDemographicsData(payload);
+				return res;
+			} catch (error) {
+				commit('errors/REQUEST_ERROR', error, { root: true });
+				return false;
+			}
+		},
+
+		async getTimelineData ({ state, commit }, payload) {
+			try {
+				const res = await externalSVC.getTimelineData(payload);
+
+				if (res[res.length - 1].date && !state.lastUpdateAt) {
+					commit('setLastUpdatedAt', res[res.length - 1].date, { root: true });
 				}
 				return res;
 			} catch (error) {
@@ -37,18 +77,10 @@ export default {
 				return false;
 			}
 		},
-		async getGlobalTotal ({ commit }, playload) {
+
+		async getVaccinationsDataGroupByRegionalUnit ({ commit }, payload) {
 			try {
-				const res = await externalSVC.getGlobalTotal(playload);
-				return res;
-			} catch (error) {
-				commit('errors/REQUEST_ERROR', error, { root: true });
-				return false;
-			}
-		},
-		async getGlobal ({ commit }, playload) {
-			try {
-				const res = await externalSVC.getGlobal(playload);
+				const res = await externalSVC.getVaccinationsDataGroupByRegionalUnit(payload);
 				return res;
 			} catch (error) {
 				commit('errors/REQUEST_ERROR', error, { root: true });
@@ -56,47 +88,9 @@ export default {
 			}
 		},
 
-		async getGreeceAGG ({ commit }, playload) {
+		async getVaccinationsDataGroupByDate ({ commit }, payload) {
 			try {
-				const res = await externalSVC.getGreeceAGG(playload);
-				return res;
-			} catch (error) {
-				commit('errors/REQUEST_ERROR', error, { root: true });
-				return false;
-			}
-		},
-
-		async getGlobalAGG ({ commit }, playload) {
-			try {
-				const res = await externalSVC.getGlobalAGG(playload);
-				return res;
-			} catch (error) {
-				commit('errors/REQUEST_ERROR', error, { root: true });
-				return false;
-			}
-		},
-
-		async getGRVaccines ({ commit }, playload) {
-			try {
-				const res = await externalSVC.getGRVaccines(playload);
-				return res;
-			} catch (error) {
-				commit('errors/REQUEST_ERROR', error, { root: true });
-				return false;
-			}
-		},
-		async getGRVaccinesAGG ({ commit }, playload) {
-			try {
-				const res = await externalSVC.getGRVaccinesAGG(playload);
-				return res;
-			} catch (error) {
-				commit('errors/REQUEST_ERROR', error, { root: true });
-				return false;
-			}
-		},
-		async getGRVaccinesTotal ({ commit }, playload) {
-			try {
-				const res = await externalSVC.getGRVaccinesTotal(playload);
+				const res = await externalSVC.getVaccinationsDataGroupByDate(payload);
 				return res;
 			} catch (error) {
 				commit('errors/REQUEST_ERROR', error, { root: true });

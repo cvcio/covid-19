@@ -124,15 +124,6 @@ export default {
 				};
 			});
 
-			// let entries = groups(data, (d) => d.week).map((m, i) => {
-			// 	return {
-			// 		week: m[0],
-			// 		value: sumBy(m[1], 'value')
-			// 	};
-			// });
-
-			// console.log(entries)
-
 			entries = entries.map((m, i) => {
 				m.diff = i < 1 ? 0 : m.value - entries[i - 1].value;
 				m.growthRate = i < 1 ? 0 : 100 * (m.diff / entries[i - 1].value);
@@ -181,7 +172,6 @@ export default {
 					this.px = e.clientX;
 					this.py = e.clientY;
 					this.d = d;
-					console.log(d);
 				})
 				.on('mouseout', (e, d) => {
 					this.tooltip = false;

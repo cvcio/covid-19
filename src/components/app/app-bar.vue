@@ -1,22 +1,22 @@
 <template>
 	<v-app-bar app class="elevation-0 top-app-bar" height="50" :color="$vuetify.breakpoint.smAndDown ? 'white' : 'rgba(237, 32, 56,0.85)'">
 		<template v-if="$vuetify.breakpoint.smAndDown">
-			<v-app-bar-nav-icon @click="$store.commit('setSidebar', !sidebar)" v-if="$vuetify.breakpoint.smAndDown" class="mx-0">
+			<!-- <v-app-bar-nav-icon @click="$store.commit('setSidebar', !sidebar)" v-if="$vuetify.breakpoint.smAndDown" class="mx-0">
 				<v-icon small color="primary">fa-sliders-h</v-icon>
-			</v-app-bar-nav-icon>
-			<a href="https://lab.imedd.org/" target="_blank" style="width: 178px;" class="">
+			</v-app-bar-nav-icon>-->
+			<a href="https://lab.imedd.org/" target="_blank" style="width: 178px;" class="px-2">
 				<logo-imedd-lab/>
-			</a>
+			</a> 
 		</template>
 		<template v-else>
 			<v-col align-self="center" class="ma-0 py-0 white shrink d-flex">
-				<v-app-bar-nav-icon @click="$store.commit('setSidebar', !sidebar)" v-if="$vuetify.breakpoint.smAndDown" class="mt-0">
+			<!-- 	<v-app-bar-nav-icon @click="$store.commit('setSidebar', !sidebar)" v-if="$vuetify.breakpoint.smAndDown" class="mt-0">
 					<v-icon small color="primary">fa-sliders-h</v-icon>
-				</v-app-bar-nav-icon>
+				</v-app-bar-nav-icon>-->
 				<a href="https://lab.imedd.org/" target="_blank" style="width: 178px;" class="px-2">
 					<logo-imedd-lab/>
 				</a>
-			</v-col>
+			</v-col> 
 			<v-col align-self="center" class="ma-0 py-0 white--text" sm="auto">
 				<v-row align="center">
 					<v-col class="" align-self="center" sm="auto">

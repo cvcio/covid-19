@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 class APIError extends Error {
-	constructor (status, message) {
+	constructor(status, message) {
 		super(message);
 		this.name = this.constructor.name;
 		this.message = message;
@@ -10,15 +10,23 @@ class APIError extends Error {
 }
 
 const api = {
-	init (baseURL) {
+	init(baseURL) {
 		// axios.defaults.baseURL = baseURL;
 	},
 
-	get (resource, data) {
+	get(resource, data) {
 		return axios.get(resource, data);
 	},
 
-	post (resource, data) {
+	getExternal(resource) {
+		return axios.get(resource, {
+			headers: {
+				Authorization: `Token ${process.env.VUE_APP_GOV_API_KEY}`
+			}
+		});
+	},
+
+	post(resource, data) {
 		return axios.post(resource, data);
 	}
 };

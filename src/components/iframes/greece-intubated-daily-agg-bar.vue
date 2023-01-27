@@ -1,16 +1,17 @@
+<!--
+	"el": "(11) - Διασωληνωμένοι ασθενείς",
+	"en": "(11) - Intubated patients"
+-->
+
 <template>
 	<v-card color="white" :class="$route.meta.iframe ? 'elevation-0' : ''" :tile="$route.meta.iframe">
 		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'">
 			<v-container class="pa-0 ma-0" fluid>
 				<v-row class="pa-0 ma-0" justify="space-between">
 					<v-col class="pa-0" align-self="center">
-						<v-select
-							dense
-							outlined
-							color="primary"
-							hide-details prepend-icon="" class="caption" :label="$t('Time Period')"
-							:items="[periodInterval[2], periodInterval[3]]"
-							:item-text="'text.'+locale.code" item-value="value" v-model="period" auto-select-first
+						<v-select dense outlined color="primary" hide-details prepend-icon="" class="caption"
+							:label="$t('Time Period')" :items="[...periodInterval.slice(1)]"
+							:item-text="'text.' + locale.code" item-value="value" v-model="period" auto-select-first
 							@change="load">
 							<template v-slot:prepend>
 								<v-icon small class="mt-1" color="primary">
@@ -27,7 +28,7 @@
 				</v-row>
 			</v-container>
 		</v-app-bar>
-		<v-divider v-if="!$route.meta.iframe"/>
+		<v-divider v-if="!$route.meta.iframe" />
 		<v-container class="px-4" fluid>
 			<v-row class="px-0" v-if="loading">
 				<v-col align="center">
@@ -35,21 +36,20 @@
 				</v-col>
 			</v-row>
 			<v-row class="px-0" v-else>
-				<v-col
-					cols="12"
-					class="px-4"
-				>
-					<d7-line-bar-events
-						:key="'gidagb-' + item.uid + '-' + point + '-' + period" :id="'gidagb-uid-' + item.uid + '-' + point + '-' + period"
-						:point="point" :values="item[point]"
-						:dates="item.dates" :annotations="annotations" :sources="item.sources"/>
+				<v-col cols="12" class="px-4">
+					<d7-line-bar-events :key="'gidagb-' + item.uid + '-' + point + '-' + period"
+						:id="'gidagb-uid-' + item.uid + '-' + point + '-' + period" :point="point" :values="item[point]"
+						:dates="item.dates" :sources="item.sources" />
 				</v-col>
 			</v-row>
 		</v-container>
-		<v-divider class="mx-4"/>
+		<v-divider class="mx-4" />
 		<v-footer class="white caption small-caption pa-4 pt-2">
 			<a href="https://lab.imedd.org/covid19/" target="_blank" v-if="$route.meta.iframe">
-				<v-icon x-small class="mr-2" color="primary">fa-link</v-icon><span class="font-weight-bold">iMΕdD LAB</span>: {{ title[locale.code] }}
+				<v-icon x-small class="mr-2" color="primary">fa-link</v-icon><span class="font-weight-bold">iMΕdD
+					LAB</span>: {{
+		title[locale.code]
+					}}
 			</a>
 			<span v-else>
 				<span class="font-weight-bold">iMΕdD LAB</span>: {{ title[locale.code] }}
@@ -60,7 +60,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { getDates } from '@/utils';
+import { groupDatesByWeek } from '@/utils';
+import { sumBy, mean } from 'lodash';
 
 export default {
 	name: 'greece-intubated-daily-agg-bar',
@@ -74,53 +75,44 @@ export default {
 	},
 	computed: {
 		...mapGetters(['locale']),
-		...mapGetters('filters', ['periodInterval']),
-		...mapGetters('internal', ['annotations']),
+		...mapGetters('filters', ['periodInterval', 'periodIntervalIDX']),
 		...mapGetters('internal', ['posts']),
-		embed () {
+		embed() {
 			return {
 				title: '',
 				subtitle: '',
 				text: '',
 				mapLevel: null,
 				mapKey: null,
+				mapYear: null,
 				view: null,
 				aggregation: null,
-				period: 3,
-				availablePeriods: [
-					{
-						text: { en: 'Last 3 months', el: 'Τελευταίο τρίμηνο' },
-						value: 2
-					},
-					{
-						text: { en: 'Historical data', el: 'Από την αρχή' },
-						value: 3
-					}
-				],
+				period: this.periodIntervalIDX.length - 1,
+				availablePeriods: [...this.periodIntervalIDX.slice(1)],
 				lang: this.locale.code,
 				id: 'greece-intubated-daily-agg-bar'
 			};
 		}
 	},
-	data () {
+	data() {
 		return {
 			loading: true,
 			point: 'critical',
 			item: null,
-			period: '2020-01-01',
+			period: {
+				from: '2020-01-01',
+				to: this.$moment().format('YYYY-MM-DD')
+			},
 			title: { en: '', el: '' }
 		};
 	},
-	mounted () {
+	mounted() {
 		setTimeout(() => {
 			this.preload();
 		}, this.delay);
 	},
 	methods: {
-		preload () {
-			if (this.annotations.length === 0) {
-				this.$store.dispatch('internal/getAnnotations');
-			}
+		preload() {
 			if (this.$route.query.period && this.$route.query.period !== '') {
 				this.period = this.periodInterval[parseInt(this.$route.query.period)].value;
 			}
@@ -133,35 +125,46 @@ export default {
 				this.load();
 			}
 		},
-		setEmbed () {
+		setEmbed() {
 			this.$store.commit('setEmbedDialog', true);
 			this.$store.commit('setEmbed', this.embed);
 		},
-		load () {
+		load() {
 			this.loading = true;
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
-			this.$store.dispatch('external/getGlobalAGG', 'GRC/critical/' + this.period)
+			this.$store.dispatch('external/getTimelineData', { from: this.period.from, to: this.period.to, fields: ['intubated'] })
 				.then(res => {
-					this.item = res.map(m => {
-						m.critical = m.critical.map(m => Math.max(0, m));
-						if (getDates(m.from, m.to).length - m.critical.length > 0) {
-							m.critical.unshift(...Array(getDates(m.from, m.to).length - m.critical.length).fill(0));
-						}
 
+					const data = res.map((m, i) => {
 						return {
-							uid: m.uid,
-							region: m.country,
-							dates: getDates(m.from, m.to),
-							critical: m.critical,
-							sources: ['imedd'] // m.sources.sort()
+							week: this.$moment(m.date).week(),
+							year: this.$moment(m.date).year(),
+							date: m.date,
+							value: m.intubated ? Math.max(0, m.intubated) : 0
 						};
 					});
 
-					this.item = this.item[0];
+					const entries = groupDatesByWeek(data).map((m) => {
+						return {
+							year: m[0].year,
+							week: m[0].week,
+							date: this.$moment(m[0].date).startOf('week').add(3, 'days'),
+							value: m[0].value // sumBy(m, 'value')
+						};
+					});
+					const dates = ([...new Set(entries.map(item => item.date))]);
+					const intubated = entries.map(obj => obj.value);
+
+					this.item = {
+						dates: dates,
+						critical: intubated,
+						sources: ['imedd']
+					};
+
 					this.loading = false;
 				});
 		},
-		update () {
+		update() {
 			this.load();
 		}
 	}
@@ -172,6 +175,7 @@ export default {
 .extra-small-text {
 	font-size: 8px !important;
 }
+
 .v-data-iterator {
 	width: 100%;
 }

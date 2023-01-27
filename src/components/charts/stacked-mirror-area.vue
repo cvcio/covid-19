@@ -1,93 +1,318 @@
 <template>
 	<div v-resize="draw" style="position:relative;">
 		<v-scroll-y-reverse-transition>
-			<div class="area-tooltip elevation-4" :class="tooltip_pos" :style="'top:'+py+'px;left:'+px+'px;'" v-if="d" v-show="tooltip">
+			<div class="area-tooltip elevation-4" :class="tooltip_pos" :style="'top:' + py + 'px;left:' + px + 'px;'" v-if="d"
+				v-show="tooltip">
 				<v-card class="elevation-0 white pa-0 arrow_box" min-width="180px" max-width="240px">
 					<v-card-title class="pa-2 subtitle-2">
 						<span class="text-uppercase">
 							{{
-								$moment(d.date).locale(locale.code).format("ll")
+									$moment(d.date).isoWeekday(1).format("ll")
+							}}
+							-
+							{{
+									($moment(d.date).isoWeekday(7) > $moment(to))
+										? $moment(to).format("ll") : ($moment(d.date).isoWeekday(7)).format("ll")
 							}}
 						</span>
 					</v-card-title>
-					<v-divider/>
+					<v-divider />
 
 					<template v-if="d.total_dose_1">
-					<v-card-subtitle class="pa-2">
-						<h4 class="subtitle-2 primary--text  primary--text">
-							<span class="text-capitalize mr-1">{{$t('1 Dose')}}:</span>
-							{{ new Intl.NumberFormat('el-GR').format(d.total_dose_1.toFixed(0)) }}
-							({{ new Intl.NumberFormat('el-GR', { style: 'percent', maximumFractionDigits: 2, minimumFractionDigits: 2 }).format((d.total_dose_1 / values.population)) }})
-						</h4>
-					</v-card-subtitle>
-					<v-divider/>
+						<v-card-subtitle class="pa-2">
+							<h4 class="subtitle-2 primary--text primary--text">
+								<span class="text-capitalize mr-1">{{ $t('1 Dose') }}:</span>
+								{{ new Intl.NumberFormat('el-GR').format(d.total_dose_1.toFixed(0)) }}
+								({{ new Intl.NumberFormat('el-GR', {
+										style: 'percent', maximumFractionDigits: 2, minimumFractionDigits:
+											2
+									}).format((d.total_dose_1 / values.population))
+								}})
+							</h4>
+						</v-card-subtitle>
+						<v-divider />
 					</template>
 
 					<template v-if="d.total_dose_2">
-					<v-card-subtitle class="pa-2">
-						<h4 class="subtitle-2 primary--text  primary--text">
-							<span class="text-capitalize mr-1">{{$t('2 Doses')}}:</span>
-							{{ new Intl.NumberFormat('el-GR').format(d.total_dose_2.toFixed(0)) }}
-							({{ new Intl.NumberFormat('el-GR', { style: 'percent', maximumFractionDigits: 2, minimumFractionDigits: 2 }).format((d.total_dose_2 / values.population)) }})
-						</h4>
-					</v-card-subtitle>
-					<v-divider/>
+						<v-card-subtitle class="pa-2">
+							<h4 class="subtitle-2 primary--text primary--text">
+								<span class="text-capitalize mr-1">{{ $t('2 Doses') }}:</span>
+								{{ new Intl.NumberFormat('el-GR').format(d.total_dose_2.toFixed(0)) }}
+								({{ new Intl.NumberFormat('el-GR', {
+										style: 'percent', maximumFractionDigits: 2, minimumFractionDigits:
+											2
+									}).format((d.total_dose_2 / values.population))
+								}})
+							</h4>
+						</v-card-subtitle>
+						<v-divider />
 					</template>
 
 					<template v-if="d.total_dose_3">
-					<v-card-subtitle class="pa-2">
-						<h4 class="subtitle-2 primary--text  primary--text">
-							<span class="text-capitalize mr-1">{{$t('3 Doses')}}:</span>
-							{{ new Intl.NumberFormat('el-GR').format(d.total_dose_3.toFixed(0)) }}
-							({{ new Intl.NumberFormat('el-GR', { style: 'percent', maximumFractionDigits: 2, minimumFractionDigits: 2 }).format((d.total_dose_3 / values.population)) }})
-						</h4>
-					</v-card-subtitle>
-					<v-divider/>
+						<v-card-subtitle class="pa-2">
+							<h4 class="subtitle-2 primary--text primary--text">
+								<span class="text-capitalize mr-1">{{ $t('3 Doses') }}:</span>
+								{{ new Intl.NumberFormat('el-GR').format(d.total_dose_3.toFixed(0)) }}
+								({{ new Intl.NumberFormat('el-GR', {
+										style: 'percent', maximumFractionDigits: 2, minimumFractionDigits:
+											2
+									}).format((d.total_dose_3 / values.population))
+								}})
+							</h4>
+						</v-card-subtitle>
+						<v-divider />
 					</template>
 
-					<template v-if="d.hospital_admissions">
-					<v-card-subtitle class="pa-2">
-						<h4 class="subtitle-2 primary--text  primary--text">
-							<span class="text-capitalize mr-1">{{$t('Admissions')}}:</span>
-							{{ new Intl.NumberFormat('el-GR').format(d.hospital_admissions.toFixed(0)) }}
-						</h4>
-					</v-card-subtitle>
-					<v-divider/>
+					<template v-if="d.per_age_cases_1">
+						<v-card-subtitle class="pa-2">
+							<h4 class="subtitle-2 primary--text primary--text">
+								<span class="text-capitalize mr-1">{{ $t('0-17') }}:</span>
+								{{ new Intl.NumberFormat('el-GR').format(d.per_age_cases_1.toFixed(0)) }}
+								({{ new Intl.NumberFormat('el-GR', {
+										style: 'percent', maximumFractionDigits: 2, minimumFractionDigits:
+											2
+									}).format((d.per_age_cases_1 / (d.per_age_cases_1 + d.per_age_cases_2 + d.per_age_cases_3
+										+ d.per_age_cases_4)))
+								}})
+							</h4>
+						</v-card-subtitle>
+						<v-divider />
 					</template>
-					<template v-if="d.hospital_discharges">
-					<v-card-subtitle class="pa-2">
-						<h4 class="subtitle-2 primary--text  primary--text">
-							<span class="text-capitalize mr-1">{{$t('Discharges')}}:</span>
-							{{ new Intl.NumberFormat('el-GR').format(Math.abs(d.hospital_discharges).toFixed(0)) }}
-						</h4>
-					</v-card-subtitle>
-					<v-divider/>
+
+					<template v-if="d.per_age_cases_2">
+						<v-card-subtitle class="pa-2">
+							<h4 class="subtitle-2 primary--text primary--text">
+								<span class="text-capitalize mr-1">{{ $t('18-39') }}:</span>
+								{{ new Intl.NumberFormat('el-GR').format(d.per_age_cases_2.toFixed(0)) }}
+								({{ new Intl.NumberFormat('el-GR', {
+										style: 'percent', maximumFractionDigits: 2, minimumFractionDigits:
+											2
+									}).format((d.per_age_cases_2 / (d.per_age_cases_1 + d.per_age_cases_2 + d.per_age_cases_3
+										+ d.per_age_cases_4)))
+								}})
+							</h4>
+						</v-card-subtitle>
+						<v-divider />
 					</template>
+
+					<template v-if="d.per_age_cases_3">
+						<v-card-subtitle class="pa-2">
+							<h4 class="subtitle-2 primary--text primary--text">
+								<span class="text-capitalize mr-1">{{ $t('40-65') }}:</span>
+								{{ new Intl.NumberFormat('el-GR').format(d.per_age_cases_3.toFixed(0)) }}
+								({{ new Intl.NumberFormat('el-GR', {
+										style: 'percent', maximumFractionDigits: 2, minimumFractionDigits:
+											2
+									}).format((d.per_age_cases_3 / (d.per_age_cases_1 + d.per_age_cases_2 + d.per_age_cases_3
+										+ d.per_age_cases_4)))
+								}})
+							</h4>
+						</v-card-subtitle>
+						<v-divider />
+					</template>
+
+					<template v-if="d.per_age_cases_4">
+						<v-card-subtitle class="pa-2">
+							<h4 class="subtitle-2 primary--text primary--text">
+								<span class="text-capitalize mr-1">{{ $t('65+') }}:</span>
+								{{ new Intl.NumberFormat('el-GR').format(d.per_age_cases_4.toFixed(0)) }}
+								({{ new Intl.NumberFormat('el-GR', {
+										style: 'percent', maximumFractionDigits: 2, minimumFractionDigits:
+											2
+									}).format((d.per_age_cases_4 / (d.per_age_cases_1 + d.per_age_cases_2 + d.per_age_cases_3
+										+ d.per_age_cases_4)))
+								}})
+							</h4>
+						</v-card-subtitle>
+						<v-divider />
+					</template>
+
+					<template v-if="d.per_age_deaths_1">
+						<v-card-subtitle class="pa-2">
+							<h4 class="subtitle-2 primary--text primary--text">
+								<span class="text-capitalize mr-1">{{ $t('0-17') }}:</span>
+								{{ new Intl.NumberFormat('el-GR').format(d.per_age_deaths_1.toFixed(0)) }}
+								({{ new Intl.NumberFormat('el-GR', {
+										style: 'percent', maximumFractionDigits: 2, minimumFractionDigits:
+											2
+									}).format((d.per_age_deaths_1 / (d.per_age_deaths_1 + d.per_age_deaths_2 + d.per_age_deaths_3
+										+ d.per_age_deaths_4)))
+								}})
+							</h4>
+						</v-card-subtitle>
+						<v-divider />
+					</template>
+
+					<template v-if="d.per_age_deaths_2">
+						<v-card-subtitle class="pa-2">
+							<h4 class="subtitle-2 primary--text primary--text">
+								<span class="text-capitalize mr-1">{{ $t('18-39') }}:</span>
+								{{ new Intl.NumberFormat('el-GR').format(d.per_age_deaths_2.toFixed(0)) }}
+								({{ new Intl.NumberFormat('el-GR', {
+										style: 'percent', maximumFractionDigits: 2, minimumFractionDigits:
+											2
+									}).format((d.per_age_deaths_2 / (d.per_age_deaths_1 + d.per_age_deaths_2 + d.per_age_deaths_3
+										+ d.per_age_deaths_4)))
+								}})
+							</h4>
+						</v-card-subtitle>
+						<v-divider />
+					</template>
+
+					<template v-if="d.per_age_deaths_3">
+						<v-card-subtitle class="pa-2">
+							<h4 class="subtitle-2 primary--text primary--text">
+								<span class="text-capitalize mr-1">{{ $t('40-65') }}:</span>
+								{{ new Intl.NumberFormat('el-GR').format(d.per_age_deaths_3.toFixed(0)) }}
+								({{ new Intl.NumberFormat('el-GR', {
+										style: 'percent', maximumFractionDigits: 2, minimumFractionDigits:
+											2
+									}).format((d.per_age_deaths_3 / (d.per_age_deaths_1 + d.per_age_deaths_2 + d.per_age_deaths_3
+										+ d.per_age_deaths_4)))
+								}})
+							</h4>
+						</v-card-subtitle>
+						<v-divider />
+					</template>
+
+					<template v-if="d.per_age_deaths_4">
+						<v-card-subtitle class="pa-2">
+							<h4 class="subtitle-2 primary--text primary--text">
+								<span class="text-capitalize mr-1">{{ $t('65+') }}:</span>
+								{{ new Intl.NumberFormat('el-GR').format(d.per_age_deaths_4.toFixed(0)) }}
+								({{ new Intl.NumberFormat('el-GR', {
+										style: 'percent', maximumFractionDigits: 2, minimumFractionDigits:
+											2
+									}).format((d.per_age_deaths_4 / (d.per_age_deaths_1 + d.per_age_deaths_2 + d.per_age_deaths_3
+										+ d.per_age_deaths_4)))
+								}})
+							</h4>
+						</v-card-subtitle>
+						<v-divider />
+					</template>
+
+					<template v-if="d.per_age_hospitalized_in_icu_1">
+						<v-card-subtitle class="pa-2">
+							<h4 class="subtitle-2 primary--text primary--text">
+								<span class="text-capitalize mr-1">{{ $t('0-17') }}:</span>
+								{{ new Intl.NumberFormat('el-GR').format(d.per_age_hospitalized_in_icu_1.toFixed(0)) }}
+								({{ new Intl.NumberFormat('el-GR', {
+										style: 'percent', maximumFractionDigits: 2, minimumFractionDigits:
+											2
+									}).format((d.per_age_hospitalized_in_icu_1 / (d.per_age_hospitalized_in_icu_1 +
+										d.per_age_hospitalized_in_icu_2 + d.per_age_hospitalized_in_icu_3 + d.per_age_hospitalized_in_icu_4)))
+								}})
+							</h4>
+						</v-card-subtitle>
+						<v-divider />
+					</template>
+
+					<template v-if="d.per_age_hospitalized_in_icu_2">
+						<v-card-subtitle class="pa-2">
+							<h4 class="subtitle-2 primary--text primary--text">
+								<span class="text-capitalize mr-1">{{ $t('18-39') }}:</span>
+								{{ new Intl.NumberFormat('el-GR').format(d.per_age_hospitalized_in_icu_2.toFixed(0)) }}
+								({{ new Intl.NumberFormat('el-GR', {
+										style: 'percent', maximumFractionDigits: 2, minimumFractionDigits:
+											2
+									}).format((d.per_age_hospitalized_in_icu_2 / (d.per_age_hospitalized_in_icu_1 +
+										d.per_age_hospitalized_in_icu_2 + d.per_age_hospitalized_in_icu_3 + d.per_age_hospitalized_in_icu_4)))
+								}})
+							</h4>
+						</v-card-subtitle>
+						<v-divider />
+					</template>
+
+					<template v-if="d.per_age_hospitalized_in_icu_3">
+						<v-card-subtitle class="pa-2">
+							<h4 class="subtitle-2 primary--text primary--text">
+								<span class="text-capitalize mr-1">{{ $t('40-65') }}:</span>
+								{{ new Intl.NumberFormat('el-GR').format(d.per_age_hospitalized_in_icu_3.toFixed(0)) }}
+								({{ new Intl.NumberFormat('el-GR', {
+										style: 'percent', maximumFractionDigits: 2, minimumFractionDigits:
+											2
+									}).format((d.per_age_hospitalized_in_icu_3 / (d.per_age_hospitalized_in_icu_1 +
+										d.per_age_hospitalized_in_icu_2 + d.per_age_hospitalized_in_icu_3 + d.per_age_hospitalized_in_icu_4)))
+								}})
+							</h4>
+						</v-card-subtitle>
+						<v-divider />
+					</template>
+
+					<template v-if="d.per_age_hospitalized_in_icu_4">
+						<v-card-subtitle class="pa-2">
+							<h4 class="subtitle-2 primary--text  primary--text">
+								<span class="text-capitalize mr-1">{{ $t('65+') }}:</span>
+								{{ new Intl.NumberFormat('el-GR').format(d.per_age_hospitalized_in_icu_4.toFixed(0)) }}
+								({{ new Intl.NumberFormat('el-GR', {
+										style: 'percent', maximumFractionDigits: 2, minimumFractionDigits:
+											2
+									}).format((d.per_age_hospitalized_in_icu_4 / (d.per_age_hospitalized_in_icu_1 +
+										d.per_age_hospitalized_in_icu_2 + d.per_age_hospitalized_in_icu_3 + d.per_age_hospitalized_in_icu_4)))
+								}})
+							</h4>
+						</v-card-subtitle>
+						<v-divider />
+					</template>
+
+					<template v-if="d.hospital_1">
+						<v-card-subtitle class="pa-2">
+							<h4 class="subtitle-2 primary--text  primary--text">
+								<span class="text-capitalize mr-1">{{ $t('Admissions') }}:</span>
+								{{ new Intl.NumberFormat('el-GR').format(d.hospital_1.toFixed(0)) }}
+							</h4>
+						</v-card-subtitle>
+						<v-divider />
+					</template>
+
+					<template v-if="d.hospital_2">
+						<v-card-subtitle class="pa-2">
+							<h4 class="subtitle-2 primary--text  primary--text">
+								<span class="text-capitalize mr-1">{{ $t('Discharges') }}:</span>
+								{{ new Intl.NumberFormat('el-GR').format(Math.abs(d.hospital_2).toFixed(0)) }}
+							</h4>
+						</v-card-subtitle>
+						<v-divider />
+					</template>
+<!-- 
 					<template v-if="values['icu_occupancy']">
 						<v-card-subtitle class="pa-2">
 							<h4 class="subtitle-2 primary--text  primary--text">
-								<span class="text-capitalize mr-1">{{$t('ICU Occupancy')}}:</span>
-								{{ new Intl.NumberFormat('el-GR', {style: 'percent', maximumFractionDigits: 2, minimumFractionDigits: 2}).format(values['icu_occupancy'][index] / 100) }}
+								<span class="text-capitalize mr-1">{{ $t('ICU Occupancy') }}:</span>
+								{{ new Intl.NumberFormat('el-GR', {
+										style: 'percent', maximumFractionDigits: 2, minimumFractionDigits:
+											2
+									}).format(values['icu_occupancy'][index] / 100)
+								}}
 							</h4>
 						</v-card-subtitle>
-						<v-divider/>
+						<v-divider />
 					</template>
+
 					<template v-if="values['beds_occupancy']">
 						<v-card-subtitle class="pa-2">
-							<h4 class="subtitle-2 primary--text  primary--text">
-								<span class="text-capitalize mr-1">{{$t('Simple Beds Occupancy')}}:</span>
-								{{ new Intl.NumberFormat('el-GR', {style: 'percent', maximumFractionDigits: 2, minimumFractionDigits: 2}).format(values['beds_occupancy'][index] / 100) }}
+							<h4 class="subtitle-2 primary--text primary--text">
+								<span class="text-capitalize mr-1">{{ $t('Simple Beds Occupancy') }}:</span>
+								{{ new Intl.NumberFormat('el-GR', {
+										style: 'percent', maximumFractionDigits: 2, minimumFractionDigits:
+											2
+									}).format(values['beds_occupancy'][index] / 100)
+								}}
 							</h4>
 						</v-card-subtitle>
-						<v-divider/>
-					</template>
+						<v-divider />
+					</template> -->
+
 					<v-card-subtitle class="pa-2">
-						<h4 class="caption grey--text">{{ $t("Source") }}: <span class="font-weight-bold">{{ sources.map(m => m.toUpperCase().replace('IMEDD', 'iMEdD LAB')).join(', ') }}</span></h4>
+						<h4 class="caption grey--text"> {{ $t("Source") }}: <span class="font-weight-bold">{{ sources.map(m =>
+								m.toUpperCase().replace('IMEDD', 'iMEdD LAB')).join(', ')
+						}}</span></h4>
 					</v-card-subtitle>
 				</v-card>
 			</div>
 		</v-scroll-y-reverse-transition>
 		<div :id="id" class="stacked-mirror-area"></div>
+		<!-- <div id="legend" style="background-color: #1ea6ea; width: 200px; height:100px"></div> -->
 	</div>
 </template>
 
@@ -103,7 +328,7 @@ export default {
 	computed: {
 		...mapGetters(['locale'])
 	},
-	data () {
+	data() {
 		return {
 			chart: null,
 			px: 100,
@@ -111,29 +336,51 @@ export default {
 			tooltip: false,
 			tooltip_pos: 'left',
 			d: null,
-			index: 0
+			index: 0,
+			from: null,
+			to: null
 		};
 	},
 	watch: {
-		point (value, old) {
+		point(value, old) {
 			if (value !== old) {
 				this.draw();
 			}
 		},
-		'locale.code' (value, old) {
+		'locale.code'(value, old) {
 			if (value !== old) {
 				this.draw();
 			}
 		}
 	},
-	mounted () {
+	mounted() {
 		this.draw();
 	},
 	methods: {
-		draw () {
+		draw() {
 			if (this.chart) {
 				this.chart.selectAll('*').remove();
 			}
+
+			const legends = [
+				{ type: 'per_age_cases', key: 'per_age_cases_1', name: this.$t('0-17') },
+				{ type: 'per_age_cases', key: 'per_age_cases_2', name: this.$t('18-39') },
+				{ type: 'per_age_cases', key: 'per_age_cases_3', name: this.$t('40-64') },
+				{ type: 'per_age_cases', key: 'per_age_cases_4', name: this.$t('65+') },
+				{ type: 'per_age_deaths', key: 'per_age_deaths_1', name: this.$t('0-17') },
+				{ type: 'per_age_deaths', key: 'per_age_deaths_2', name: this.$t('18-39') },
+				{ type: 'per_age_deaths', key: 'per_age_deaths_3', name: this.$t('40-64') },
+				{ type: 'per_age_deaths', key: 'per_age_deaths_4', name: this.$t('65+') },
+				{ type: 'per_age_hospitalized_in_icu', key: 'per_age_hospitalized_in_icu_1', name: this.$t('0-17') },
+				{ type: 'per_age_hospitalized_in_icu', key: 'per_age_hospitalized_in_icu_2', name: this.$t('18-39') },
+				{ type: 'per_age_hospitalized_in_icu', key: 'per_age_hospitalized_in_icu_3', name: this.$t('40-64') },
+				{ type: 'per_age_hospitalized_in_icu', key: 'per_age_hospitalized_in_icu_4', name: this.$t('65+') },
+				{ type: 'hospital', key: 'hospital_1', name: this.$t('Admissions') },
+				{ type: 'hospital', key: 'hospital_2', name: this.$t('Discharges') },
+				{ type: 'total_dose', key: 'total_dose_1', name: this.$t('1 Dose') },
+				{ type: 'total_dose', key: 'total_dose_2', name: this.$t('2 Doses') },
+				{ type: 'total_dose', key: 'total_dose_3', name: this.$t('3 Doses') }
+			];
 
 			const data = this.dates.map((m, i) => {
 				const d = { date: m };
@@ -142,6 +389,9 @@ export default {
 				}
 				return d;
 			});
+
+			this.from = data[0].date;
+			this.to = data[data.length - 1].date;
 
 			const div = document.getElementById(this.id);
 			while (div.firstChild) {
@@ -185,7 +435,9 @@ export default {
 
 			for (let i = 0; i < this.keys.length; i++) {
 				this.chart.select('g').append('path').datum(data)
+					.attr('id', `${this.keys[i]}_1`)
 					.attr('fill', colors.getFill(this.keys[i]))
+					// .attr('fill', '#43ff6433')
 					.attr('stroke-linejoin', 'round')
 					.attr('stroke-width', 2)
 					.attr('d',
@@ -237,6 +489,7 @@ export default {
 					});
 
 				this.chart.select('g').append('path').datum(data)
+					.attr('id', `${this.keys[i]}_2`)
 					.attr('fill', 'none')
 					.attr('pointer-events', 'none')
 					.attr('stroke', colors.getStroke(this.keys[i]))
@@ -249,10 +502,10 @@ export default {
 
 				this.chart.selectAll('.points').data(data).enter()
 					.append('circle')
-					.attr('class', (d, i) => 'point point-' + this.keys[i] + ' point-index-' + i)
+					.attr('class', (d, x) => 'point point-' + this.keys[i] + ' point-index-' + x)
 					.attr('pointer-events', 'none')
 					.attr('opacity', 0)
-					.attr('fill', 'white')
+					.attr('fill', colors.getFill(this.keys[i]))
 					.attr('stroke', colors.getStroke(this.keys[i]))
 					.attr('stroke-width', 2)
 					.attr('cx', d => x(d.date))
@@ -272,6 +525,70 @@ export default {
 						})
 				)
 				.call(g => g.select('.domain').remove());
+
+			//	Initialize legend
+			var legendItemSize = 14;
+			var legendSpacing = 80;
+			var xOffset = 10;
+			var yOffset = 366;
+			var legend = select(div).select('svg')
+				.selectAll('.legendItem')
+				.data(legends.filter((o) => this.keys.includes(o.key)));
+
+			// Create legend items
+			legend
+				.enter()
+				.append('rect')
+				.attr('class', 'legendItem')
+				.attr('id', d => { return d.key; })
+				.attr('width', legendItemSize)
+				.attr('height', legendItemSize)
+				.style('fill', d => { return colors.getFill(d.key); })
+				.attr('transform',
+					(d, i) => {
+						// var x = xOffset;
+						// var y = yOffset + (legendItemSize + legendSpacing) * i;
+						var x = xOffset + (legendItemSize + legendSpacing) * i;
+						var y = yOffset;
+						return `translate(${x}, ${y})`;
+					});
+
+			// Create legend labels
+			legend
+				.enter()
+				.append('text')
+				.attr('class', 'legendItem')
+				.attr('id', d => { return d.key; })
+				// .attr('x', xOffset + legendItemSize + 5)
+				// .attr('y', (d, i) => yOffset + (legendItemSize + legendSpacing) * i + 12)
+				.attr('x', (d, i) => xOffset + (legendItemSize + legendSpacing) * i + 17)
+				.attr('y', (d, i) => yOffset + 12)
+				.text(d => { return d.name; });
+
+			this.chart.selectAll('.legendItem')
+				.on('mouseover', (e, d, i) => {
+					e.preventDefault();
+					var _array = legends.filter(o => o.type === d.type);
+					for (let i = 0; i < _array.length; i++) {
+						if (_array[i].key !== d.key) {
+							this.chart.selectAll(`path#${_array[i].type}_${i + 1}_1`).attr('fill', 'none');
+							this.chart.selectAll(`path#${_array[i].type}_${i + 1}_2`).attr('stroke', 'none');
+						} else {
+							this.chart.selectAll(`rect#${_array[i].type}_${i + 1}`).attr('width', legendItemSize + 2).attr('height', legendItemSize + 2);
+							this.chart.selectAll(`text#${_array[i].type}_${i + 1}`).attr('class', 'legendItem__text--hover');
+						}
+					}
+				})
+				.on('mouseout', (e, d, i) => {
+					e.preventDefault();
+					var _array = legends.filter(o => o.type === d.type);
+					for (let i = 0; i < _array.length; i++) {
+						this.chart.selectAll(`path#${_array[i].type}_${i + 1}_1`).attr('fill', colors.getFill(this.keys[i]));
+						this.chart.selectAll(`path#${_array[i].type}_${i + 1}_2`).attr('stroke', colors.getStroke(this.keys[i]));
+						this.chart.selectAll(`rect#${_array[i].type}_${i + 1}`).attr('width', legendItemSize).attr('height', legendItemSize);
+						this.chart.selectAll(`text#${_array[i].type}_${i + 1}`).classed('legendItem', true).classed('legendItem__text--hover', false);
+					}
+				});
 		}
 	}
 };
@@ -283,6 +600,21 @@ export default {
 	// width: 140px;
 	max-height: 360px;
 	width: 100%;
+
+	#legend svg {
+		height: 300px;
+	}
+
+	.legendItem {
+		cursor: pointer;
+		font-size: 12px;
+	}
+
+	.legendItem__text--hover {
+		cursor: pointer;
+		font-size: 14px;
+	}
+
 	svg {
 		.axis {
 			&.x {
@@ -290,6 +622,7 @@ export default {
 					stroke: rgba(200, 200, 200, 1);
 					stroke-width: 1px;
 				}
+
 				.tick {
 					&:first-of-type {
 						line {
@@ -305,16 +638,16 @@ export default {
 					stroke: rgba(200, 200, 200, 1);
 					stroke-width: 1px;
 				}
-				.tick {
-					line {
 
-					}
+				.tick {
+					line {}
 				}
 			}
 		}
 
 		text {
-			fill: rgba(180, 180, 180, 1);;
+			fill: rgba(180, 180, 180, 1);
+			;
 			text-anchor: start;
 			font: normal 9px 'Roboto';
 		}
@@ -344,6 +677,7 @@ export default {
 		margin-left: -16px;
 		margin-top: -8px;
 	}
+
 	&.right .arrow_box:after {
 		top: 50%;
 		left: 100%;

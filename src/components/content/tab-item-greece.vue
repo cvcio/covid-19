@@ -2,194 +2,103 @@
 	<v-tab-item>
 		<v-card flat>
 			<v-container fluid class="px-0">
+
 				<v-row class="px-4" align="center">
-					<v-col cols="6">
-						<switch-map-source :label="'COVID—19'" :val="'covid'"/>
-					</v-col>
-					<v-col cols="6">
-						<autocomplete-map-period model="mapPeriod" :label="$t('label.period')" :disabled="mapSource !== 'covid'"/>
+					<!-- <v-col cols="6">
+						<switch-map-source :label="'COVID—19'" :val="'covid'" />
+					</v-col> -->
+					<v-col cols="12">
+						<autocomplete-map-period model="mapCasesPeriod" :label="$t('label.period')"
+							:disabled="mapSource !== 'covid'" />
 					</v-col>
 				</v-row>
+
 				<v-row class="px-4" align="center" no-gutters>
 					<v-col cols="12" class="primary--opac pa-2 mb-1" style="position:relative;">
-						<h4 class="text-2rem text-xs-h5 font-weight-bold grey--text"  style="z-index:1;">
-							<span class="primary--text" v-if="mapPeriodIDX < 3">{{ new Intl.NumberFormat('el-GR').format(cases.toFixed(2)) }}</span>
-							<span class="primary--text" v-if="mapPeriodIDX === 3">{{ new Intl.NumberFormat('el-GR').format(totalCases.toFixed(2)) }}</span>
-							<span class="" v-if="mapPeriodIDX < 3"> / {{ new Intl.NumberFormat('el-GR').format(totalCases.toFixed(2)) }}</span>
+						<h4 class="text-2rem text-xs-h5 font-weight-bold grey--text" style="z-index:1;">
+							<span class="primary--text" v-if="mapCasesPeriodIDX < 6">{{
+								new
+															Intl.NumberFormat('el-GR').format(cases.toFixed(2))
+							}}</span>
+							<span class="primary--text" v-if="mapCasesPeriodIDX === 6">
+								{{ new Intl.NumberFormat('el-GR').format(totalCases.toFixed(2)) }}
+							</span>
+							<span class="" v-if="mapCasesPeriodIDX < 6"> / {{
+								new
+															Intl.NumberFormat('el-GR').format(totalCases.toFixed(2))
+							}}</span>
 						</h4>
 						<p class="caption small-caption text-uppercase primary--text mb-0" style="z-index:1;">
-							<span v-if="mapPeriodIDX < 3">{{ $tc('cases', 1) | normalizeNFD }} / </span>{{ $t('total cases') | normalizeNFD }}
+							<span v-if="mapCasesPeriodIDX < 6">{{ $tc('cases', 1) | normalizeNFD }} / </span>
+							{{ $t('total cases') | normalizeNFD }}
 						</p>
-						<sparklines
-							:key="'gr-sparks-new_cases-'+mapPeriodIDX"
-							v-if="sparks.new_cases.length > 7"
-							class="d-block mt-3 totals-sparklines"
-							:data="sparks.new_cases"
-							id="totals-g-cases-sparklines" style="height: 60px;z-index:1;"/>
+						<sparklines :key="'gr-sparks-new_cases-' + mapCasesPeriodIDX" v-if="sparks.new_cases.length > 8"
+							class="d-block mt-3 totals-sparklines" :data="sparks.new_cases"
+							id="totals-g-cases-sparklines" style="height: 60px;z-index:1;" />
 					</v-col>
-					<v-col cols="12" class="secondary--opac pa-2" style="position:relative">
+
+					<v-col cols="12" class="secondary--opac pa-2 mb-1" style="position:relative">
 						<h4 class="text-2rem text-xs-h5 font-weight-bold grey--text" style="z-index:1;">
-							<span class="secondary--text" v-if="mapPeriodIDX < 3">{{ new Intl.NumberFormat('el-GR').format(deaths.toFixed(2)) }}</span>
-							<span class="secondary--text" v-if="mapPeriodIDX === 3">{{ new Intl.NumberFormat('el-GR').format(totalDeaths.toFixed(2)) }}</span>
-							<span class="" v-if="mapPeriodIDX < 3"> / {{ new Intl.NumberFormat('el-GR').format(totalDeaths.toFixed(2)) }}</span>
+							<span class="secondary--text" v-if="mapCasesPeriodIDX < 6">{{
+								new
+															Intl.NumberFormat('el-GR').format(deaths.toFixed(2))
+							}}</span>
+							<span class="secondary--text" v-if="mapCasesPeriodIDX === 6">{{
+								new
+															Intl.NumberFormat('el-GR').format(totalDeaths.toFixed(2))
+							}}</span>
+							<span class="" v-if="mapCasesPeriodIDX < 6"> / {{
+								new
+															Intl.NumberFormat('el-GR').format(totalDeaths.toFixed(2))
+							}}</span>
 						</h4>
 						<p class="caption small-caption text-uppercase secondary--text mb-0" style="z-index:1;">
-							<span v-if="mapPeriodIDX < 3">{{ $tc('deaths', 1) | normalizeNFD }} / </span>{{ $t('total deaths') | normalizeNFD }}
+							<span v-if="mapCasesPeriodIDX < 6">{{ $tc('deaths', 1) | normalizeNFD }} / </span>
+							{{ $t('total deaths') | normalizeNFD }}
 						</p>
-						<sparklines
-							:key="'gr-sparks-new_deaths-'+mapPeriodIDX"
-							v-if="sparks.new_deaths.length > 7"
-							class="d-block mt-3 totals-sparklines"
-							:data="sparks.new_deaths"
-							id="totals-g-deaths-sparklines" style="height: 60px;z-index:1;"/>
+						<sparklines :key="'gr-sparks-new_deaths-' + mapCasesPeriodIDX"
+							v-if="sparks.new_deaths.length > 8" class="d-block mt-3 totals-sparklines"
+							:data="sparks.new_deaths" id="totals-g-deaths-sparklines" style="height: 60px;z-index:1;" />
 					</v-col>
+
 				</v-row>
-				<v-row class="mt-1 mb-4 px-7 py-0" align="center">
-					<v-col cols="12" class="py-0 px-3">
-						<v-row class="outlined">
-							<v-col class="pa-2 orange--text" v-if="mapPeriodIDX === 0">
-								<h4 class="text-1-2rem text-xs-subtitle-2 font-weight-bold">
-									{{ new Intl.NumberFormat('el-GR').format(critical.toFixed(2)) || '-' }} / {{ new Intl.NumberFormat('el-GR', { style: 'percent' }).format((intubated_unvac / critical)) || '-' }}
-								</h4>
-								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
-									{{ $t('Intubated') | normalizeNFD }} / {{ $t('unvaccinated') | normalizeNFD }}
-								</p>
-							</v-col>
-							<v-col class="pa-2 grey--text" align-self="center">
-								<h4 class="text-1-2rem text-xs-subtitle-2 font-weight-bold">
-									{{ new Intl.NumberFormat('el-GR').format(tests.toFixed(2)) || '-' }}
-									<v-tooltip bottom transition="slide-y-reverse-transition">
-										<template v-slot:activator="{ on, attrs }">
-											<v-btn
-												class="ma-0 pa-0"
-												x-small
-												icon
-												color=""
-												dark
-												v-bind="attrs"
-												v-on="on"
-											>
-												<v-icon x-small color="grey lighten-1">mdi-information</v-icon>
-											</v-btn>
-										</template>
-										<span class="caption">{{ $t('total samples analyzed (RT-PCR & Ragid Ag)') }}</span>
-									</v-tooltip>
-								</h4>
-								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
-									{{ $t('Tests') | normalizeNFD }}
-								</p>
-							</v-col>
-						</v-row>
-					</v-col>
-				</v-row>
-				<v-row class="px-4" align="center">
-					<v-col cols="6">
-						<switch-map-source :label="$tc('Vaccination', 1)" :val="'vaccines'"/>
-					</v-col>
-					<v-col cols="6">
-						<autocomplete-map-period model="mapVaccinationsPeriod" :label="$t('label.period')" :disabled="mapSource !== 'vaccines'"/>
-					</v-col>
-				</v-row>
+
+				<br>
+				<v-divider />
+				<v-divider />
+
+				<br>
 				<v-row class="px-4" align="center">
 					<v-col cols="12">
-						<v-progress-linear
-							:value="vaccines.perent"
-							background-color="grey lighten-4"
-							color="#81B15F"
-							height="24"
-							class="vaccines-progress"
-							>
-							<template v-slot:default="{ value }">
-								<span class="caption font-weight-bold text-end px-2">{{ new Intl.NumberFormat('el-GR').format(value.toFixed(2)) }}% {{ $t('of population')}}</span>
-							</template>
-							</v-progress-linear>
+						<h5 class="grey--text s-subtitle-2 subtitle-2">{{ $t('week') }}
+							{{ $moment(waste.date).subtract(7, 'days').format('ll') }} - {{
+								$moment(waste.date).format('ll')
+							}}
+						</h5>
+						<p class="s-caption caption blue-grey--text mb-0">
+							<strong>{{ waste[`place_${locale.code}`] }}</strong>:
+							{{ $t('increase') }} <span class="red--text"> {{ waste.percent }}% </span> {{
+								$t('in_the_average')
+							}}
+						</p>
 					</v-col>
 				</v-row>
-				<v-row class="mt-1 mb-4 px-7 py-0" align="center">
-					<v-col cols="12" class="py-0 px-3">
-						<v-row class="outlined">
-							<v-col class="pa-2 grey--text">
-								<h4 class="text-1-2rem text-xs-subtitle-2 font-weight-bold">
-									{{ new Intl.NumberFormat('el-GR').format(vaccines.totalDistinctPersons.toFixed(2)) || '-' }}
-									<v-tooltip bottom transition="slide-y-reverse-transition">
-										<template v-slot:activator="{ on, attrs }">
-											<v-btn
-												class="ma-0 pa-0"
-												x-small
-												icon
-												color=""
-												dark
-												v-bind="attrs"
-												v-on="on"
-											>
-												<v-icon x-small color="grey lighten-1">mdi-information</v-icon>
-											</v-btn>
-										</template>
-										<span class="caption">{{ $t('People vaccinated with at least one dose') }}</span>
-									</v-tooltip>
-								</h4>
-								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
-									{{ $t('Vaccinated People') | normalizeNFD }}
-								</p>
-							</v-col>
-							<v-col class="pa-2 grey--text" align-self="center">
-								<h4 class="text-1-2rem text-xs-subtitle-2 font-weight-bold">
-									{{ new Intl.NumberFormat('el-GR').format(vaccines.totalVaccinations.toFixed(2)) || '-' }}
-									<v-tooltip bottom transition="slide-y-reverse-transition">
-										<template v-slot:activator="{ on, attrs }">
-											<v-btn
-												class="ma-0 pa-0"
-												x-small
-												icon
-												color=""
-												dark
-												v-bind="attrs"
-												v-on="on"
-											>
-												<v-icon x-small color="grey lighten-1">mdi-information</v-icon>
-											</v-btn>
-										</template>
-										<span class="caption">{{ $t('Cumulative vaccine doses received') }}</span>
-									</v-tooltip>
-								</h4>
-								<p class="caption small-caption text-uppercase blue-grey--text mb-0">
-									{{ $t('Vaccinations') | normalizeNFD }}
-								</p>
-							</v-col>
-						</v-row>
-					</v-col>
-				</v-row>
+
 				<v-row class="px-4" align="center">
 					<v-col cols="12">
-						<h5 class="grey--text subtitle-2">{{ $t('Beds Occupancy') }} ({{$t('reference date')}}: {{ref_day}})</h5>
-					</v-col>
-				</v-row>
-				<v-row class="px-4" align="center">
-					<v-col cols="12">
-						<v-progress-linear
-							:value="icu_occupancy"
-							background-color="grey lighten-4"
-							:color="getIterpolation(icu_occupancy / 100)"
-							height="24"
-							class="vaccines-progress"
-							>
-							<template v-slot:default="{ value }">
-								<span class="caption font-weight-bold text-end px-2">{{ new Intl.NumberFormat('el-GR').format(value.toFixed(2)) }}% {{ $t('ICU')}}</span>
-							</template>
-							</v-progress-linear>
-					</v-col>
-					<v-col cols="12">
-						<v-progress-linear
-							:value="beds_occupancy"
-							background-color="grey lighten-4"
-							:color="getIterpolation(beds_occupancy / 100)"
-							height="24"
-							class="vaccines-progress"
-							>
-							<template v-slot:default="{ value }">
-								<span class="caption font-weight-bold text-end px-2">{{ new Intl.NumberFormat('el-GR').format(value.toFixed(2)) }}% {{ $t('Simple Beds')}}</span>
-							</template>
-							</v-progress-linear>
+						<h5 class="grey--text s-subtitle-2 subtitle-2">{{ $t('week') }}
+							{{ $moment(hospital.date).subtract(7, 'days').format('ll') }} - {{
+								$moment(hospital.date).format('ll')
+							}}
+						</h5>
+						<p class="s-caption caption blue-grey--text mb-0">
+							<strong>{{ $t('Admissions') }}</strong>:
+							{{ hospital.hospital_admissions }}
+						</p>
+						<p class="s-caption caption blue-grey--text mb-0">
+							<strong>{{ $t('Intubated') }}</strong>:
+							{{ hospital.intubated }}
+						</p>
 					</v-col>
 				</v-row>
 			</v-container>
@@ -199,8 +108,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { sumBy, sum, reduce } from 'lodash';
-import { interpolateRgb } from 'd3';
 
 export default {
 	name: 'tab-item-greece',
@@ -212,33 +119,27 @@ export default {
 	},
 	computed: {
 		...mapGetters(['locale']),
-		...mapGetters('filters', ['mapSource', 'mapPeriod', 'mapPeriodIDX', 'mapVaccinationsPeriod', 'mapVaccinationsPeriodIDX', 'periodInterval'])
+		...mapGetters('filters', ['mapSource', 'mapCasesPeriod', 'mapCasesPeriodIDX', 'mapVaccinationsPeriod', 'mapVaccinationsPeriodIDX', 'periodInterval'])
 	},
 	watch: {
-		mapPeriod (value, old) {
+		mapCasesPeriod(value, old) {
 			if (value !== old) {
 				this.load();
 			}
 		},
-		mapVaccinationsPeriod (value, old) {
+		mapVaccinationsPeriod(value, old) {
 			if (value !== old) {
 				this.load();
 			}
 		}
 	},
-	data () {
+	data() {
 		return {
 			totalCases: 0,
 			totalDeaths: 0,
 			cases: 0,
 			deaths: 0,
-			// active: 0,
-			critical: 0,
-			// recovered: 0,
-			intubated_unvac: 0,
 			tests: 0,
-			new_cases: [],
-			new_deaths: [],
 			sparks: {
 				new_cases: [],
 				new_deaths: []
@@ -246,128 +147,153 @@ export default {
 			vaccines: {
 				totalDistinctPersons: 0,
 				totalVaccinations: 0,
-				dayDiff: 0,
-				dayTotal: 0,
-				perent: 0
+				percent: 0
 			},
-			icu_occupancy: 0,
-			beds_occupancy: 0,
-			ref_day: null,
-			population: 0
+			waste: {
+				date: null,
+				place: null,
+				percent: 0
+			},
+			hospital: {
+				date: null,
+				intubated: null,
+				hospital_admissions: 0
+			},
+			population: 10747828
 		};
 	},
-	mounted () {
+	mounted() {
 		this.load();
 	},
 	methods: {
-		load () {
-			this.$store.dispatch('external/getGreeceTotal', { from: this.mapPeriodIDX > 0 ? this.mapPeriod : null })
+		load() {
+			var from;
+			const isTotal_covid = (this.mapCasesPeriodIDX == 6);
+			const isLastWeek_covid = (this.mapCasesPeriodIDX == 0);
+
+			if (isLastWeek_covid || isTotal_covid) from = this.$moment().subtract(100, 'days').format('YYYY-MM-DD');
+			else from = this.mapCasesPeriod.from;
+
+			this.$store.dispatch('external/getTimelineData', { from: from, to: this.mapCasesPeriod.to, fields: ['daily_cases', 'cases_cum', 'deaths', 'deaths_cum'] })
 				.then(res => {
-					this.cases = sumBy(res, 'cases') || 0;
-					// this.deaths = sumBy(res, 'deaths') || 0;
+
+					const cases = res.map(obj => obj['daily_cases']);
+					const cases_cum = res.map(obj => obj.cases_cum);
+					const deaths = res.map(obj => obj['deaths']);
+					const deaths_cum = res.map(obj => obj.deaths_cum);
+
+					if (isTotal_covid) {
+						this.cases = Math.max(...cases_cum);
+						this.deaths = Math.max(...deaths_cum);
+					} else if (isLastWeek_covid) {
+						for (let i = cases.length - 1; i >= 0; i--) {
+							if (cases[i] > 0) {
+								this.cases = cases[i];
+								break;
+							}
+						}
+						for (let i = deaths.length - 1; i >= 0; i--) {
+							if (deaths[i] > 0) {
+								this.deaths = deaths[i];
+								break;
+							}
+						}
+						// this.cases = Math.max(...cases);   // cases.reduce((a, b) => { return a + b; }, 0);
+						// this.deaths = Math.max(...deaths); // deaths.reduce((a, b) => { return a + b; }, 0);
+					}
+					else {
+						const max_c = Math.max(...cases_cum);
+						const min_c = cases_cum.filter(i => i > 0).length > 0 ? Math.min(...cases_cum.filter(i => i > 0)) : Math.min(...cases_cum);
+						this.cases = max_c - min_c;
+
+						const max_d = Math.max(...deaths_cum);
+						const min_d = deaths_cum.filter(i => i > 0).length > 0 ? Math.min(...deaths_cum.filter(i => i > 0)) : Math.min(...deaths_cum);
+						this.deaths = max_d - min_d;
+					}
 				});
 
-			// this.$store.dispatch('external/getGreeceTotal', { from: this.periodInterval[3].value })
-			// 	.then(res => {
-			// 		this.totalCases = sumBy(res, 'cases') - this.cases || 0;
-			// 		this.totalDeaths = sumBy(res, 'deaths') - this.deaths || 0;
-			// 	});
-
-			this.$store.dispatch('external/getGlobal', 'GRC' + (this.mapPeriodIDX > 0 ? `/${this.mapPeriod}` : ''))
+			this.$store.dispatch('external/getTimelineData', { from: this.mapCasesPeriod.from, to: this.mapCasesPeriod.to, fields: ['daily_cases', 'deaths', 'estimated_new_total_tests'] })
 				.then(res => {
-					this.totalCases = sumBy(res, 'total_cases') || 0;
-					this.totalDeaths = sumBy(res, 'total_deaths') || 0;
-					this.intubated_unvac = sumBy(res, 'total_intubated_unvac') || 0;
-					// this.active = sumBy(res, 'total_active') || 0;
-					this.critical = sumBy(res, 'total_critical') || 0;
+					this.sparks.new_cases = res.map(obj => obj.daily_cases);
+					this.sparks.new_deaths = res.map(obj => obj.deaths);
 
-					// this.recovered = sumBy(res, 'recovered') || 0;
-					this.tests = sumBy(res, 'tests') || 0;
+					const estimated_new_total_tests = res.map(obj => obj.estimated_new_total_tests);
+
+					this.tests = estimated_new_total_tests.reduce((a, b) => { return a + b; }, 0);
 				});
 
-			this.$store.dispatch('external/getGlobalAGG', 'GRC/new_cases,deaths,new_deaths' + '/' + this.mapPeriod)
+			const isTotal_sum = true;
+			this.$store.dispatch('external/getTimelineData', { from: (isTotal_sum) ? this.$moment().subtract(100, 'days').format('YYYY-MM-DD') : this.mapCasesPeriod.from, to: this.$moment().format('YYYY-MM-DD'), fields: ['cases_cum', 'deaths_cum'] })
 				.then(res => {
-					this.sparks.new_cases = res[0].new_cases.length > 1 ? res[0].new_cases : [];
-					this.sparks.new_deaths = res[0].new_deaths.length > 1 ? res[0].new_deaths : [];
-					const d = res[0];
-					if (this.mapPeriodIDX === 0) {
-						const last2_deaths = d.deaths.slice((d.deaths.length - 2), d.deaths.length);
-						const last2_new_deaths = d.new_deaths.slice((d.new_deaths.length - 2), d.new_deaths.length);
+					const cases_cum = res.map(obj => obj.cases_cum);
+					const deaths_cum = res.map(obj => obj.deaths_cum);
 
-						if (d.new_deaths[d.new_deaths.length - 1] > 0) {
-							this.deaths = d.new_deaths[d.new_deaths.length - 1];
-							return;
-						}
+					this.totalCases = Math.max(...cases_cum);
+					this.totalDeaths = Math.max(...deaths_cum);
+				});
 
-						if (reduce(last2_deaths, (s, n) => s - n) === 0 && reduce(last2_new_deaths, (s, n) => s - n) === 0) {
-							this.deaths = d.new_deaths[d.new_deaths.length - 1];
-							return;
-						}
+			const isTotal_vaccinations = (this.mapCasesPeriodIDX == 6);
+			this.$store.dispatch('external/getVaccinationsDataGroupByDate', { from: (isTotal_vaccinations) ? this.$moment().subtract(100, 'days').format('YYYY-MM-DD') : this.mapCasesPeriod.from, to: this.mapCasesPeriod.to })
+				.then(res => {
+					this.population = 10747828;
 
-						if (reduce(last2_deaths, (s, n) => s - n) === 0 && reduce(last2_new_deaths, (s, n) => s - n) > 0) {
-							this.deaths = d.new_deaths[d.new_deaths.length - 2];
-							return;
-						}
+					if (isTotal_vaccinations) {
+						const totaldistinctpersons = res.map(obj => obj.totaldistinctpersons);
+						const totalVaccinations = res.map(obj => obj.totalvaccinations);
 
-						if (d.new_deaths[d.new_deaths.length - 1] === 0) {
-							this.deaths = d.new_deaths[d.new_deaths.length - 2];
-						}
+						this.vaccines.totalVaccinations = Math.max(...totalVaccinations);
+						this.vaccines.totalDistinctPersons = Math.max(...totaldistinctpersons);
+						this.vaccines.percent = (this.vaccines.totalDistinctPersons / this.population) * 100;
 					} else {
-						this.deaths = sum(d.new_deaths);
+						const weeklydose1 = res.map(obj => obj.weeklydose1);
+						const weektotal = res.map(obj => obj.weektotal);
+						const totalweeklydose1 = weeklydose1.reduce((a, b) => { return a + b; }, 0);
+						const totalweektotal = weektotal.reduce((a, b) => { return a + b; }, 0);
+
+						this.vaccines.totalVaccinations = totalweektotal;
+						this.vaccines.totalDistinctPersons = totalweeklydose1;
+						this.vaccines.percent = (this.vaccines.totalDistinctPersons / this.population) * 100;
 					}
 				});
 
-			this.$store.dispatch('external/getGRVaccinesTotal', { from: this.mapVaccinationsPeriodIDX > 0 ? this.mapVaccinationsPeriod : this.$moment().format('YYYY-MM-DD') })
+			const isTotal_waste = true;
+			this.$store.dispatch('external/getTimelineData', { from: (isTotal_waste) ? this.$moment().subtract(365, 'days').format('YYYY-MM-DD') : this.mapCasesPeriod.from, to: this.$moment().format('YYYY-MM-DD'), fields: ['waste_highest_percent', 'waste_highest_place', 'waste_highest_place_en'] })
 				.then(res => {
-					if (!res) {
-						this.getPreviousDay();
-						return;
+					const waste_highest_percent = res.map(o => o.waste_highest_percent);
+					for (let i = waste_highest_percent.length - 1; i >= 0; i--) {
+						if (waste_highest_percent[i] > 0) {
+							this.waste = {
+								place_el: res[i].waste_highest_place,
+								place_en: res[i].waste_highest_place_en,
+								percent: res[i].waste_highest_percent,
+								date: res[i].date
+							};
+							break;
+						}
 					}
-					this.population = sumBy(res, 'population') || 0;
-
-					this.vaccines.totalDistinctPersons = this.mapVaccinationsPeriodIDX >= 2
-						? sumBy(res, 'total_distinct_persons')
-						: sumBy(res, 'new_total_distinct_persons') || 0;
-					this.vaccines.totalVaccinations = this.mapVaccinationsPeriodIDX >= 2
-						? sumBy(res, 'total_vaccinations')
-						: sumBy(res, 'new_total_vaccinations') || 0;
-
-					this.vaccines.dayTotal = sumBy(res, 'day_total') || 0;
-					this.vaccines.dayDiff = sumBy(res, 'day_diff') || 0;
-
-					this.vaccines.perent = (this.vaccines.totalDistinctPersons / this.population) * 100;
 				});
 
-			this.$store.dispatch('external/getGlobalAGG', 'GRC/date,icu_occupancy,beds_occupancy' + '/' + this.$moment().subtract(3, 'months').format('YYYY-MM-DD'))
+			const isTotal_hospital = true;
+			this.$store.dispatch('external/getTimelineData', { from: (isTotal_hospital) ? this.$moment().subtract(365, 'days').format('YYYY-MM-DD') : this.mapCasesPeriod.from, to: this.$moment().format('YYYY-MM-DD'), fields: ['recovered', 'beds_occupancy', 'icu_occupancy', 'intubated', 'hospital_admissions', 'hospital_discharges'] })
 				.then(res => {
-					const d = res[0];
-					const b_non_0_idx = d.beds_occupancy.reduce((a, e, i) => e > 0 ? a.concat(i) : a, []);
-					const i_non_0_idx = d.icu_occupancy.reduce((a, e, i) => e > 0 ? a.concat(i) : a, []);
+					// var array2020 = (response_2.data.filter(x => x.regional_unit_id == item.id && x.cases != 0));
 
-					this.beds_occupancy = d.beds_occupancy[b_non_0_idx[b_non_0_idx.length - 1]];
-					this.icu_occupancy = d.icu_occupancy[i_non_0_idx[i_non_0_idx.length - 1]];
-					this.ref_day = this.$moment(d.date[i_non_0_idx[i_non_0_idx.length - 1]]).format('YYYY-MM-DD');
+					for (let i = res.length - 1; i >= 0; i--) {
+						if (res[i].intubated > 0 && res[i].hospital_admissions > 0) {
+							this.hospital = res[i]
+							break;
+						}
+					}
+					// const d = res[0];
+					// const b_non_0_idx = d.beds_occupancy.reduce((a, e, i) => e > 0 ? a.concat(i) : a, []);
+					// const i_non_0_idx = d.icu_occupancy.reduce((a, e, i) => e > 0 ? a.concat(i) : a, []);
+					// this.beds_occupancy = d.beds_occupancy[b_non_0_idx[b_non_0_idx.length - 1]];
+					// this.icu_occupancy = d.icu_occupancy[i_non_0_idx[i_non_0_idx.length - 1]];
+					// this.ref_day = this.$moment(d.date[i_non_0_idx[i_non_0_idx.length - 1]]).format('YYYY-MM-DD');
 				});
+
 		},
-		getPreviousDay () {
-			this.$store.dispatch('external/getGRVaccinesTotal', { from: this.mapVaccinationsPeriodIDX > 0 ? this.mapVaccinationsPeriod : this.$moment().subtract(1, 'days').format('YYYY-MM-DD') })
-				.then(res => {
-					this.population = sumBy(res, 'population') || 0;
-
-					this.vaccines.totalDistinctPersons = this.mapVaccinationsPeriodIDX >= 2
-						? sumBy(res, 'total_distinct_persons')
-						: sumBy(res, 'new_total_distinct_persons') || 0;
-					this.vaccines.totalVaccinations = this.mapVaccinationsPeriodIDX >= 2
-						? sumBy(res, 'total_vaccinations')
-						: sumBy(res, 'new_total_vaccinations') || 0;
-
-					this.vaccines.dayTotal = sumBy(res, 'day_total') || 0;
-					this.vaccines.dayDiff = sumBy(res, 'day_diff') || 0;
-
-					this.vaccines.perent = (this.vaccines.totalDistinctPersons / this.population) * 100;
-				});
-		},
-		getIterpolation (value) {
+		getIterpolation(value) {
 			return interpolateRgb('rgb(108,99,255)', 'red')(value);
 		}
 	}
@@ -375,18 +301,30 @@ export default {
 </script>
 
 <style lang="less" scoped>
+h5.s-subtitle-2 {
+	font-size: 0.95rem !important;
+}
+
+p.s-caption {
+	font-size: 0.90rem !important;
+}
+
 .events {
 	pointer-events: all;
 }
+
 .primary--opac {
 	background: #f2f7f7;
 }
+
 .accent--opac {
-	background: rgba(255,0,0,0.1);
+	background: rgba(255, 0, 0, 0.1);
 }
+
 .secondary--opac {
 	background: #f7f2f2;
 }
+
 .row.outlined {
 	border: 1px solid #f2f7f7;
 }
@@ -398,10 +336,16 @@ export default {
 	top: 0;
 	right: 0;
 	z-index: 0;
+
+	@media only screen and (max-width: 1530px) {
+		position: relative;
+	}
 }
+
 .vaccines-progress {
 	.v-progress-linear__content {
 		width: 100%;
+
 		span {
 			width: 100%;
 		}

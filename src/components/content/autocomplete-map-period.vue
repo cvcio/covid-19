@@ -1,6 +1,9 @@
 <template>
-	<v-select hide-details hide-selected prepend-icon="" class="pt-0" :label="$tc(label, 1)" color="primary" :disabled="disabled"
-		:items="periodInterval" :item-text="'text.'+locale.code" item-value="value" v-model="vals" auto-select-first>
+	<v-select hide-details hide-selected prepend-icon="" class="pt-0" :label="$tc(label, 1)" color="primary"
+		:disabled="disabled"
+		:items="[...periodInterval]"
+		:item-text="'text.'+locale.code" item-value="value" v-model="vals"
+		auto-select-first>
 		<template v-slot:prepend>
 			<v-icon small class="mt-1" color="primary">
 				fa-clock
@@ -20,22 +23,22 @@ export default {
 		...mapGetters('filters', ['periodInterval', 'mapLevel', 'mapKey']),
 		vals: {
 			get () {
-				return this.model === 'mapPeriod' ? this.$store.state.filters.mapPeriod : this.mapVaccinationsPeriod;
+				return this.model === 'mapCasesPeriod' ? this.$store.state.filters.mapCasesPeriod : this.mapVaccinationsPeriod;
 			},
 			set (value) {
-				if (this.model === 'mapPeriod') {
-					this.$store.commit('filters/setMapPeriod', value);
+				if (this.model === 'mapCasesPeriod') {
+					this.$store.commit('filters/setmapCasesPeriod', value);
 				} else {
 					this.$store.commit('filters/setMapVaccinationsPeriod', value);
 				}
 			}
 		},
-		mapPeriod: {
+		mapCasesPeriod: {
 			get () {
-				return this.$store.state.filters.mapPeriod;
+				return this.$store.state.filters.mapCasesPeriod;
 			},
 			set (value) {
-				this.$store.commit('filters/setMapPeriod', value);
+				this.$store.commit('filters/setmapCasesPeriod', value);
 			}
 		},
 		mapVaccinationsPeriod: {
@@ -56,4 +59,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
 </style>

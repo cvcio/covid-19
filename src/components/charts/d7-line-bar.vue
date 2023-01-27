@@ -6,7 +6,12 @@
 					<v-card-title class="pa-2 subtitle-2">
 						<span class="text-uppercase">
 							{{
-								$moment(d.date).locale(locale.code).format("ll")
+									$moment(d.date).isoWeekday(1).format("ll")
+							}}
+							-
+							{{
+									($moment(d.date).isoWeekday(7) > $moment(to))
+										? $moment(to).format("ll") : ($moment(d.date).isoWeekday(7)).format("ll")
 							}}
 						</span>
 					</v-card-title>
@@ -32,7 +37,6 @@
 import { mapGetters } from 'vuex';
 
 import { line, select, scaleLinear, axisBottom, axisRight, max } from 'd3';
-import { ma } from 'moving-averages';
 import * as colors from '@/helper/colors';
 
 export default {
@@ -47,7 +51,9 @@ export default {
 			px: 100,
 			py: 100,
 			tooltip: false,
-			d: null
+			d: null,
+			from: null,
+			to: null
 		};
 	},
 	watch: {
@@ -70,12 +76,16 @@ export default {
 			if (this.chart) {
 				this.chart.selectAll('*').remove();
 			}
+
 			const data = this.dates.map((m, i) => {
 				return {
 					date: m,
 					value: Math.max(0, this.values[i])
 				};
 			});
+
+			this.from = data[0].date;
+			this.to = data[data.length - 1].date;
 
 			const div = document.getElementById(this.id);
 			while (div.firstChild) {
@@ -98,7 +108,6 @@ export default {
 			const barW = Math.floor(width / data.length) - 0.5;
 
 			const x = scaleLinear().range([0, innerWidth]).domain([0, data.length]);
-			// const y = scaleLinear().range([innerHeight, 0]).domain([0, max(this.values)]).nice(10);
 			const y = scaleLinear().range([innerHeight, 0]).domain([0, this.max ? Math.ceil(this.max) : Math.max(max(this.values), 1)]).nice(10);
 
 			const l = line()
@@ -107,7 +116,7 @@ export default {
 					return y(d) || y((data[i].value + a.find(s => ![undefined, null].includes(s))) / 2);
 				});
 
-			const sma = ma(this.values, 7);
+			const sma = this.values;
 			const self = this;
 			this.chart
 				.append('g')

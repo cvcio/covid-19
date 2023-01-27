@@ -1,3 +1,23 @@
+
+function convertHex (hexCode, opacity = 20) {
+	var hex = hexCode.replace('#', '');
+
+	if (hex.length === 3) {
+		hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+	}
+
+	var r = parseInt(hex.substring(0, 2), 16);
+	var g = parseInt(hex.substring(2, 4), 16);
+	var b = parseInt(hex.substring(4, 6), 16);
+
+	/* Backward compatibility for whole number based opacity values. */
+	if (opacity > 1 && opacity <= 100) {
+		opacity = opacity / 100;
+	}
+
+	return 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
+}
+
 const casesCS = [
 	'#23333C',
 	'#163441',
@@ -58,6 +78,10 @@ const testsCS = [
 	'#F8FAFA'
 ].reverse();
 
+const casesCSOpacity20 = '#20759133';
+const testsCSOpacity20 = '#b9c0c033';
+const deathsCSOpacity20 = '#e6442633';
+
 const vaccinesCS = [
 	'#CEFA93',
 	'#BBE886',
@@ -80,11 +104,36 @@ const hospital_discharges = casesCS;
 
 const getFill = (key) => {
 	switch (key) {
+	case 'per_age_cases_1':
+		return convertHex(casesCS[0], 40);
+	case 'per_age_cases_2':
+		return convertHex(casesCS[2], 40);
+	case 'per_age_cases_3':
+		return convertHex(casesCS[4], 40);
+	case 'per_age_cases_4':
+		return convertHex(casesCS[6], 40);
+	case 'per_age_deaths_1':
+		return convertHex(deathsCS[0], 40);
+	case 'per_age_deaths_2':
+		return convertHex(deathsCS[2], 40);
+	case 'per_age_deaths_3':
+		return convertHex(deathsCS[4], 40);
+	case 'per_age_deaths_4':
+		return convertHex(deathsCS[6], 40);
+	case 'per_age_hospitalized_in_icu_1':
+		return convertHex(activeCS[0], 40);
+	case 'per_age_hospitalized_in_icu_2':
+		return convertHex(activeCS[2], 40);
+	case 'per_age_hospitalized_in_icu_3':
+		return convertHex(activeCS[4], 40);
+	case 'per_age_hospitalized_in_icu_4':
+		return convertHex(activeCS[6], 40);
+
 	case 'new_hospital_admissions':
-	case 'hospital_admissions':
+	case 'hospital_1':
 		return hospital_admissions[2];
 	case 'new_hospital_discharges':
-	case 'hospital_discharges':
+	case 'hospital_2':
 		return hospital_discharges[4];
 	case 'icu_occupancy':
 		return '';
@@ -108,11 +157,36 @@ const getFill = (key) => {
 
 const getStroke = (key) => {
 	switch (key) {
+	case 'per_age_cases_1':
+		return casesCS[5];
+	case 'per_age_cases_2':
+		return casesCS[7];
+	case 'per_age_cases_3':
+		return casesCS[9];
+	case 'per_age_cases_4':
+		return casesCS[11];
+	case 'per_age_deaths_1':
+		return deathsCS[5];
+	case 'per_age_deaths_2':
+		return deathsCS[7];
+	case 'per_age_deaths_3':
+		return deathsCS[9];
+	case 'per_age_deaths_4':
+		return deathsCS[11];
+	case 'per_age_hospitalized_in_icu_1':
+		return activeCS[5];
+	case 'per_age_hospitalized_in_icu_2':
+		return activeCS[7];
+	case 'per_age_hospitalized_in_icu_3':
+		return activeCS[9];
+	case 'per_age_hospitalized_in_icu_4':
+		return activeCS[11];
+
 	case 'new_hospital_admissions':
-	case 'hospital_admissions':
+	case 'hospital_1':
 		return hospital_admissions[9];
 	case 'new_hospital_discharges':
-	case 'hospital_discharges':
+	case 'hospital_2':
 		return hospital_discharges[9];
 	case 'icu_occupancy':
 		return '';

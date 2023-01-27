@@ -12,7 +12,7 @@ Vue.use(VueRouter);
 
 SUPPORTED_LOCALES.forEach((locale) => {
 	api.get(process.env.VUE_APP_BASE_URL + locale.translation).then((res) => {
-		console.debug('Merge Locale:', locale.code);
+		// console.debug('Merge Locale:', locale.code);
 		i18n.mergeLocaleMessage(locale.code, res.data || {});
 	}).catch(err => console.error(err));
 
@@ -44,20 +44,12 @@ const routes = [
 		component: () => import(/* webpackChunkName: "greece" */ '@/components/content/greece/posts.vue')
 	},
 	{
-		path: '/global/',
-		name: 'global',
-		props: { isNav: true, lang: '' },
-		meta: { layout: layoutAPP },
-		component: () => import(/* webpackChunkName: "global" */ '@/components/content/global/posts.vue')
-	},
-	{
 		path: '/iframe/',
 		name: 'frame',
 		props: { isNav: true, lang: '' },
 		meta: { layout: layoutIframe },
 		component: () => import(/* webpackChunkName: "frame" */ '@/views/frame.vue'),
 		children: [
-			// Greece
 			{
 				path: 'greece-key-by-region-table',
 				name: 'greece-key-by-region-table',
@@ -71,6 +63,13 @@ const routes = [
 				props: {},
 				meta: { iframe: true },
 				component: () => import(/* webpackChunkName: "d-frame" */ '@/components/iframes/greece-vaccines-by-region-table.vue')
+			},
+			{
+				path: 'greece-key-by-municipality-table',
+				name: 'greece-key-by-municipality-table',
+				props: {},
+				meta: { iframe: true },
+				component: () => import(/* webpackChunkName: "d-frame" */ '@/components/iframes/greece-key-by-municipality-table.vue')
 			},
 			{
 				path: 'greece-key-daily-agg-bar',
@@ -101,13 +100,12 @@ const routes = [
 				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-vac-doses-stacked.vue')
 			},
 			{
-				path: 'greece-vac-unvac-stacked',
-				name: 'greece-vac-unvac-stacked',
+				path: 'greece-pandemic-per-age-stacked',
+				name: 'greece-pandemic-per-age-stacked',
 				props: {},
 				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-vac-unvac-stacked.vue')
+				component: () => import(/* webpackChunkName: "d7-subplot" */ '@/components/iframes/greece-pandemic-per-age-stacked.vue')
 			},
-
 			{
 				path: 'greece-key-subplot-regions',
 				name: 'greece-key-subplot-regions',
@@ -122,43 +120,28 @@ const routes = [
 				meta: { iframe: true },
 				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/greece-tests-daily-agg-bar.vue')
 			},
-			// Global
 			{
-				path: 'global-key-by-country-table',
-				name: 'global-key-by-country-table',
-				props: {},
-				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "d-frame" */ '@/components/iframes/global-key-by-country-table.vue')
-			},
-			{
-				path: 'global-key-daily-agg-bar',
-				name: 'global-key-daily-agg-bar',
-				props: {},
-				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/global-key-daily-agg-bar.vue')
-			},
-			{
-				path: 'global-key-subplot-countries',
-				name: 'global-key-subplot-countries',
-				props: {},
-				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "d7-subplot" */ '@/components/iframes/global-key-subplot-countries.vue')
-			},
-			{
-				path: 'global-key-daily-similar',
-				name: 'global-key-daily-similar',
-				props: {},
-				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "d7-line" */ '@/components/iframes/global-key-daily-similar.vue')
-			},
-
-			{
-				path: 'map-view',
-				name: 'map-view',
+				path: 'map-view-municipalities',
+				name: 'map-view-municipalities',
 				props: { lang: '' },
 				meta: { iframe: true },
-				component: () => import(/* webpackChunkName: "map-view" */ '@/components/iframes/map-view.vue')
+				component: () => import(/* webpackChunkName: "map-view-municipalities" */ '@/components/iframes/map-view-municipalities.vue')
+			},
+			{
+				path: 'map-view-cases',
+				name: 'map-view-cases',
+				props: { lang: '' },
+				meta: { iframe: true },
+				component: () => import(/* webpackChunkName: "map-view-cases" */ '@/components/iframes/map-view-cases.vue')
+			},
+			{
+				path: 'map-view-vaccinations',
+				name: 'map-view-vaccinations',
+				props: { lang: '' },
+				meta: { iframe: true },
+				component: () => import(/* webpackChunkName: "map-view-vaccinations" */ '@/components/iframes/map-view-vaccinations.vue')
 			}
+
 		]
 	},
 	{

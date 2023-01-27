@@ -2,6 +2,114 @@
 	"greece": [
 		{
 			"title": {
+				"el": "Τα τελευταία δεδομένα",
+				"en": "The latest data"
+			},
+			"body": {
+				"el": [
+					"Στον διπλανό πίνακα παρουσιάζουμε τα τελευταία στοιχεία που αφορούν στην εξάπλωση της COVID-19, όπως δημοσιεύονται  στην εβδομαδιαία έκθεσή του ΕΟΔΥ για την πανδημία. Από τον Δεκέμβριο του 2022, δεν δημοσιεύεται αριθμός κρουσμάτων και τεστ."
+				],
+				"en": [
+					"In the table opposite, we present the latest data on the spread of COVID-19, as published by the WHO in its weekly pandemic report. As of December 2022, no case numbers are published."
+				]
+			},
+			"component": {
+				"id": "dashboard",
+				"embed": true
+			}
+		},
+		{
+			"title": {
+				"el": "Χάρτης Κρουσμάτων ανά Περιφερειακή Ενότητα",
+				"en": "COVID-19 cases by Regional Unit of Greece"
+			},
+			"body": {
+				"el": [
+					"Ο χάρτης οπτικοποιεί τα ιστορικά στοιχεία κρουσμάτων COVID-19 το διάστημα από 26 Φεβρουαρίου 2020 έως και τις 20 Δεκεμβρίου 2022, οπότε σταμάτησε η αντίστοιχη ενημέρωση από τον ΕΟΔΥ. Με όσο πιο σκούρο μπλε χρώμα χρώμα εμφανίζεται μία περιοχή, τόσο περισσότερα κρούσματα ανά 100.000 πληθυσμού έχουν καταγραφεί σε αυτήν."
+				],
+				"en": [
+					"The map visualizes the historical COVID-19 case data from 26 February 2020 to 20 December 2022, when the corresponding information from the EODY stopped. The darker the blue color of a region is shown, the more cases per 100,000 population have been recorded in that region."
+				]
+			},
+			"component": {
+				"id": "greece-map-cases",
+				"embed": true
+			}
+		},
+		{
+			"title": {
+				"el": "Χάρτης Θανάτων άνα Δήμο",
+				"en": "Map of Deaths per Municipality"
+			},
+			"body": {
+				"el": [
+					"Στον χάρτη οπτικοποιούνται τα μόνα επισήμως διαθέσιμα στοιχεία που καταγράφουν τους θανάτους λόγω COVID-19 στην Ελλάδα. Τα δεδομένα <a href=\"https://www.naftemporiki.gr/politics/1304204/covid-19-sti-vouli-ta-stoicheia-gia-tous-thanatous-ana-dimo-ti-dietia-2020-2021/\">διαβιβάστηκαν</a> στη Βουλή τον Μάρτιο του 2022, από τον υπουργό Εσωτερικών, Μάκη Βορίδη και έχουν αντληθεί από το Υποσύστημα Ληξιαρχείου του Πληροφοριακού Συστήματος «Μητρώο Πολιτών». Όσο πιο σκούρο κόκκινο το χρώμα κάθε δήμου, τόσοι περισσότεροι οι θάνατοι ανά 100.000 κατοίκους του συγκεκριμένου δήμου. Διαβάστε τα θέματα που <a href=\"https://lab.imedd.org/?cpt%5B%5D=search-all&s=%CE%B8%CE%AC%CE%BD%CE%B1%CF%84%CE%BF%CE%B9\">έχει δημοσιεύσει στο παρελθόν</a> το iMEdD Lab για τους θανάτους από την πανδημία στην Ελλάδα."
+				],
+				"en": [
+					"The map visualizes the only officially available data recording deaths due to COVID-19 in Greece. The data were <a href=\"https://www.naftemporiki.gr/politics/1304204/covid-19-sti-vouli-ta-stoicheia-gia-tous-thanatous-ana-dimo-ti-dietia-2020-2021/\">submitted</a> to the Greek Parliament in March 2022, by the Minister of Interior, Makis Voridis, and have been extracted from the Civil Registry Subsystem of the Information System \"Citizen Registry.\" The darker the red color of each municipality, the more deaths per 100,000 inhabitants of that municipality. Read the stories previously <a href=\"https://lab.imedd.org/?cpt%5B%5D=search-all&s=%CE%B8%CE%AC%CE%BD%CE%B1%CF%84%CE%BF%CE%B9\">published by iMEdD Lab</a> regarding the deaths from the pandemic in Greece."
+				]
+			},
+			"component": {
+				"id": "greece-map-municipalities",
+				"embed": true
+			}
+		},
+		{
+			"title": {
+				"el": "Γεωγραφική κατανομή εμβολιασμού για την COVID-19",
+				"en": "Geographical distribution of vaccination against COVID-19"
+			},
+			"body": {
+				"el": [
+					"Ο χάρτης παρουσιάζει ανά περιφερειακή ενότητα το ποσοστό εμβολιασμού για την COVID-19 ανά 100.000 πληθυσμού. Όσο πιο σκούρο το χρώμα, τόσο μεγαλύτερη εμβολιαστική κάλυψη στη συγκεκριμένη περιοχή. Τα δεδομένα λαμβάνονται σε πραγματικό χρόνο από το <a href=\"data.gov.gr/\">data.gov.gr</a>"
+				],
+				"en": [
+					"The map shows the vaccination rate for COVID-19 per 100,000 population by regional unit. The darker the color, the higher the vaccination coverage in that region. The data are taken in real-time from <a href=\"data.gov.gr/\">data.gov.gr</a>"
+				]
+			},
+			"component": {
+				"id": "greece-map-vaccinations",
+				"embed": true
+			}
+		},
+				{
+			"title": {
+				"el": "Πίνακας Θανάτων άνα δήμο και έτος",
+				"en": "Table of deaths by municipality and year"
+			},
+			"body": {
+				"el": [
+					"Στον διπλανό πίνακα μπορείτε να ψάξετε στη γραμμή αναζήτησης τον δήμο που επιθυμείτε προκειμένου να δείτε τους θανάτους από COVID-19 το 2020 και 2021."
+				],
+				"en": [
+					"In the adjacent table, you can search in the search bar for the desired municipality to see the deaths from COVID-19 in 2020 and 2021."
+				]
+			},
+			"component": {
+				"id": "greece-key-by-municipality-table",
+				"embed": true
+			}
+		},
+		{
+			"title": {
+				"el": "Επίπτωση της COVID-19 ανά ηλικιακή ομάδα",
+				"en": "Incidence of COVID-19 by age group"
+			},
+			"body": {
+				"el": [
+					"Το γράφημα αναπαριστά σε απόλυτους αριθμούς τα κρούσματα, τους θανάτους και τις διασωληνώσεις από την COVID-19 ανά ηλικιακή ομάδα. Κλικάροντας πάνω σε κάθε ηλικιακή ομάδα, απομονώνεται το γράφημα που την αφορά. Οι ποσοστιαίες τιμές που εμφανίζονται στο παράθυρο, όταν κλικάρεις πάνω στο γράφημα, αποτελούν υπολογισμό επί του συνόλου των κρουσμάτων/ θανάτων/ διασωληνώσεων και όχι επί του συνόλου του πληθυσμού που ανήκουν σε αυτή την ηλικιακή ομάδα."
+				],
+				"en": [
+					"The graph shows the absolute numbers of cases, deaths, and intubations from COVID-19 by age group. Clicking on each age group isolates the chart for that age group. The percentage values displayed in the tooltip are calculated on the total number of cases/ deaths/ intubations and not on the entire population belonging to that age group."
+				]
+			},
+			"component": {
+				"id": "greece-pandemic-per-age-stacked",
+				"embed": true
+			}
+		},
+		{
+			"title": {
 				"el": "Εξέλιξη εμβολιασμών ανά δόση εμβολίου",
 				"en": "Evolution of vaccinations by vaccine dose"
 			},
@@ -20,36 +128,16 @@
 		},
 		{
 			"title": {
-				"el": "Εμβολιασμένοι και ανεμβολίαστοι διασωληνωμένοι ασθενείς",
-				"en": "Vaccinated and unvaccinated intubated patients"
-			},
-			"body": {
-				"el": [
-					"Το γράφημα από προεπιλογή παρουσιάζει την ποσοστιαία κατανομή των διασωληνωμένων ασθενών σε εμβολιασμένους και μη. Δηλαδή, αποτυπώνει πόσο τοις εκατό επί των διασωληνωμένων είναι εμβολιασμένοι (με πράσινο χρώμα) και πόσο ανεμβολίαστοι (με πορτοκαλί χρώμα).",
-					"Αντίθετα, η δεύτερη προβολή, «% ΕΜΒΟΛ/ΜΕΝΩΝ & ΜΗ», δείχνει ποιο ποσοστό των ανεμβολίαστων πολιτών (με πορτοκαλί χρώμα) είναι διασωληνωμένο και ποιο ποσοστό των εμβολιασμένων πολιτών νοσηλεύονται διασωληνωμένοι. Ενώ το πρώτο γράφημα μελετά τη σχέση εμβολιασμένων - ανεμβολίαστων μεταξύ των διασωληνωμένων ασθενών, η δεύτερη προβολή εξετάζει πόσοι από τους εμβολιασμένους και πόσοι από τους ανεμβολίαστους διασωληνώνονται."
-				],
-				"en": [
-					"The graph, by default, shows the distribution of intubated patients into vaccinated and unvaccinated patients (%). It shows what percentage of the intubated patients are vaccinated (in green color) and what percentage are unvaccinated (in orange color).",
-					"In contrast, when selecting the second view, \"% VACCINATED & NON-VACCINATED\", the chart depicts the percentage of unvaccinated and vaccinated citizens who are intubated. While the first graph studies the ratio of vaccinated and unvaccinated among intubated patients, the second projection zooms in the two populations separately; how many of the vaccinated people and how many of the unvaccinated citizens are intubated."
-				]
-			},
-			"component": {
-				"id": "greece-vac-unvac-stacked",
-				"embed": true
-			}
-		},
-		{
-			"title": {
 				"el": "Εισαγωγές και εξιτήρια λόγω ίασης",
 				"en": "Admissions and discharges"
 			},
 			"body": {
 				"el": [
-					"Το γράφημα αποτυπώνει σε απόλυτα νούμερα τις ημερήσιες εισαγωγές ασθενών με COVID-19 σε νοσοκομεία και τα ημερήσια εξιτήρια λόγω ίασης. Με κόκκινο χρώμα οπτικοποιούνται οι εισαγωγές στα νοσοκομεία και με μπλε τα εξιτήρια.",
+					"Το γράφημα αποτυπώνει σε απόλυτα νούμερα τις εβδομαδιαίες εισαγωγές ασθενών με COVID-19 σε νοσοκομεία και τα εβδομαδιαία εξιτήρια λόγω ίασης. Με κόκκινο χρώμα οπτικοποιούνται οι εισαγωγές στα νοσοκομεία και με μπλε τα εξιτήρια.",
 					"Πηγή των δεδομένων είναι η σελίδα covid19.gov.gr. Κάποιες ημέρες το Υπουργείο Υγείας και ο ΕΟΔΥ επιλέγουν να μην ανακοινώσουν στοιχεία εισαγωγών και εξιτηρίων. Τις αντίστοιχες ημερομηνίες οι γραμμές του γραφήματος βρίσκονται στην τιμή μηδέν."
 				],
 				"en": [
-					"The graph shows the daily hospital admissions of patients with COVID-19 and daily discharges of cured patients in absolute numbers. Admissions to hospitals are visualized in red and discharges in blue.",
+					"The graph shows the weekly hospital admissions of patients with COVID-19 and weekly discharges of cured patients in absolute numbers. Admissions to hospitals are visualized in red and discharges in blue.",
 					"The data source is covid19.gov.gr. Some days the Ministry of Health and the EODY choose not to release data on admissions and discharges. On the corresponding dates, the graph lines are at zero."
 				]
 			},
@@ -107,11 +195,11 @@
 			},
 			"body": {
 				"el": [
-					"Το γράφημα εμφανίζεται με προεπιλεγμένη την επιλογή «Ημερήσια» και αποτυπώνει αριθμό κρουσμάτων και θανάτων ανά ημέρα στην επικράτεια. Η γραμμή με το σκούρο χρώμα καταγράφει τον κυλιόμενο μέσο όρο των τελευταίων 7 ημερών, ο οποίος χρησιμοποιείται για να εξομαλύνει τις τιμές.",
-					"Πατώντας το κουμπί «Αθροιστικά» το γράφημα αποτυπώνει το σύνολο των κρουσμάτων ανά ημέρα από την αρχή της πανδημίας. Όσο πιο μεγάλη η κλίση της γραμμής του κυλιόμενου μέσου όρου 7 ημερών, τόσο μεγαλύτερος ο ρυθμός μετάδοσης του ιού. Η επιπέδωση της καμπύλης συνεπάγεται μείωση της αύξησης κρουσμάτων ή θανάτων στην επικράτεια."
+					"Το γράφημα εμφανίζεται με προεπιλεγμένη την επιλογή «Εβδομαδιαία» και αποτυπώνει αριθμό κρουσμάτων και θανάτων ανά εβδομάδα στην επικράτεια. Η γραμμή με το σκούρο χρώμα καταγράφει τον κυλιόμενο μέσο όρο των τελευταίων 7 ημερών, ο οποίος χρησιμοποιείται για να εξομαλύνει τις τιμές.",
+					"Πατώντας το κουμπί «Αθροιστικά» το γράφημα αποτυπώνει το σύνολο των κρουσμάτων ανά εβδομάδα από την αρχή της πανδημίας. Όσο πιο μεγάλη η κλίση της γραμμής του κυλιόμενου μέσου όρου 7 ημερών, τόσο μεγαλύτερος ο ρυθμός μετάδοσης του ιού. Η επιπέδωση της καμπύλης συνεπάγεται μείωση της αύξησης κρουσμάτων ή θανάτων στην επικράτεια."
 				],
 				"en": [
-					"The chart represents the number of cases and deaths reported by date in the country and it is set to the “Daily” view by default. The darker line stands for the 7-day moving average of each metric, which is used to smooth values.",
+					"The chart represents the number of cases and deaths reported by date in the country and it is set to the “Weekly” view by default. The darker line stands for the 7-day moving average of each metric, which is used to smooth values.",
 					"When the “Cumulative” button is clicked, the chart represents cumulative numbers of cases by date. The bigger the slope of the 7-day moving average line, the bigger the rise of cases. When the curve is flattened, the rise of cases or deaths is decreasing in the country."
 				]
 			},
@@ -127,10 +215,10 @@
 			},
 			"body": {
 				"el": [
-					"Το γράφημα αποτυπώνει πόσοι ασθενείς νοσηλεύονται διασωληνωμένοι, ανα ημέρα, στις ΜΕΘ σε όλη την Ελλάδα."
+					"Το γράφημα αποτυπώνει πόσοι ασθενείς νοσηλεύονται διασωληνωμένοι, ανα εβδομάδα, σε όλη την Ελλάδα."
 				],
 				"en": [
-					"The chart shows how many intubated patients are recorded each day in the ICUs of Greece."
+					"The chart shows how many intubated patients are recorded each week in Greece. ."
 				]
 			},
 			"component": {
@@ -165,121 +253,17 @@
 			},
 			"body": {
 				"el": [
-					"Στο διάγραμμα αποτυπώνεται ο εκτιμώμενος ημερήσιος αριθμός δειγμάτων που ελέγχονται στη χώρα. Από προεπιλογή, παρουσιάζονται όλα τα εκτιμώμενα ημερήσια δεδομένα, περιλαμβανομένων εργαστηριακών RT-PCR και Rapid Ag ελέγχων. Επιλέγοντας «RT-PCR» ή «Rapid-Ag», στο γράφημα παρουσιάζεται μόνο η εξέλιξη των αντίστοιχων ελέγχων στον χρόνο.",
-					"Ο ΕΟΔΥ ανακοινώνει, στην ημερήσια έκθεσή του, τους συνολικούς αριθμούς δειγμάτων που έχουν εξεταστεί εργαστηριακά και με ελέγχους Rapid Ag έως την εκάστοτε ημέρα αναφοράς. Ο ημερήσιος αριθμός νέων τεστ που παρουσιάζεται στο γράφημα υπολογίζεται αφαιρώντας κάθε προηγούμενο ημερήσιο σύνολο από κάθε τρέχον. "
+					"Στο διάγραμμα αποτυπώνεται ο εκτιμώμενος εβδομαδιαίος αριθμός δειγμάτων που ελέγχονται στη χώρα. Από προεπιλογή, παρουσιάζονται όλα τα εκτιμώμενα εβδομαδιαία δεδομένα, περιλαμβανομένων εργαστηριακών RT-PCR και Rapid Ag ελέγχων. Επιλέγοντας «RT-PCR» ή «Rapid-Ag», στο γράφημα παρουσιάζεται μόνο η εξέλιξη των αντίστοιχων ελέγχων στον χρόνο.",
+					"Ο ΕΟΔΥ ανακοινώνει, στην εβδομαδιαία έκθεσή του, τους συνολικούς αριθμούς δειγμάτων που έχουν εξεταστεί εργαστηριακά και με ελέγχους Rapid Ag έως την εκάστοτε εβδομάδα αναφοράς. Ο εβδομαδιαίος αριθμός νέων τεστ που παρουσιάζεται στο γράφημα υπολογίζεται αφαιρώντας κάθε προηγούμενο εβδομαιδιαίο σύνολο από κάθε τρέχον."
 				],
 				"en": [
-					"The chart presents the estimated daily number of samples tested in Greece. By default, it is set to show all estimated daily data, including RT-PCR and Rapid Ag testing data. When “RT-PCR” or “Rapid-Ag” is selected, the chart is adjusted to focus on the respective testing data over time.",
-					"The National Public Health Organization announces the cumulative number of samples tested up to each date of reference in its daily report. The daily number of tests presented here is calculated by subtracting the previously known total test number from the current total test number announced each time."
+					"The chart presents the estimated weekly number of samples tested in Greece. By default, it is set to show all estimated weekly data, including RT-PCR and Rapid Ag testing data. When “RT-PCR” or “Rapid-Ag” is selected, the chart is adjusted to focus on the respective testing data over time.",
+					"The National Public Health Organization announces the cumulative number of samples tested up to each date of reference in its weekly report. The weekly number of tests presented here is calculated by subtracting the previously known total test number from the current total test number announced each time."
 				]
 			},
 			"component": {
 				"id": "greece-tests-daily-agg-bar",
 				"embed": true
-			}
-		},
-		{
-			"title": {
-				"el": "Αναλογία θανάτων στον πληθυσμό",
-				"en": "Deaths ratio in population"
-			},
-			"body": {
-				"el": [
-					"Το διάγραμμα αποτυπώνει πώς εξελίσσεται η αναλογία νέων θανάτων ανά 100.000 κατοίκους στον χρόνο για κάθε χώρα, παρουσιάζοντας τον κυλιόμενο μέσο όρο των τελευταίων 7 ημερών για την εξομάλυνση των τιμών.",
-					"Η ημέρα όποτε παρατηρείται κορύφωση της αναλογίας για μία χώρα, επισημαίνεται στο γράφημα. Για παράδειγμα, στην περίπτωση της Ελλάδας, κορύφωση σημειώθηκε στις 3 Δεκεμβρίου. Μπορείτε να αλλάξετε τις προεπιλεγμένες χώρες, ώστε να συγκρίνετε εκείνες που σας ενδιαφέρουν, επιλέγοντας ως δέκα χώρες κάθε φορά."
-				],
-				"en": [
-					"The chart shows what is the evolution of new deaths ratio in population (per 100,000 residents) over time by country and presents the 7-day moving average of said ratio to smooth values.",
-					"Annotations stand for the peak of this ratio for each country on specific dates. For instance, Greece presents a spike on December, 3. You may change the preselected countries to see how those of your interest compare to each other by selecting up to ten countries a time."
-				]
-			},
-			"component": {
-				"id": "global-key-daily-similar",
-				"embed": true,
-				"defaults": ["U300", "U840", "U826"]
-			}
-		}
-	],
-	"global": [
-		{
-			"title": {
-				"el": "Κρούσματα και θάνατοι ανά χώρα",
-				"en": "Cases and deaths by country"
-			},
-			"body": {
-				"el": [
-					"Ο πίνακας ταξινομείται βάσει του αριθμού κρουσμάτων ή θανάτων ανά 100.000 κατοίκους. Στο διάγραμμα «Ανά εβδομάδα», αποτυπώνεται χρωματικά η έξαρση κρουσμάτων ή θανάτων, βάσει του εβδομαδιαίου αντίστοιχου συνόλου, κρουσμάτων ή θανάτων, ανά 100.000 πληθυσμού. Όσο πιο σκούρο το χρώμα, τόσα περισσότερα τα κρούσματα ή οι θάνατοι εκείνη την εβδομάδα, συγκριτικά με τις προηγούμενες, στην ίδια χώρα.",
-					"Πατώντας το κουμπί «Κρούσματα» ή «Θάνατοι» προσαρμόζεται αναλόγως ο πίνακας. Πατώντας στο πεδίο «Σύνολο» αλλάζει η ταξινόμηση βάσει του συνόλου των κρουσμάτων ή των θανάτων. Αντίστοιχα, το ίδιο συμβαίνει πατώντας στο πεδίο «Ανά 100k»."
-				],
-				"en": [
-					"The table presents COVID-19 cases and deaths by country, sorted by normalized figures per 100,000 residents. The “Weekly” chart represents the outburst of cases and deaths broken down by country, colored by the weekly total number of cases and deaths respectively, per 100,000 residents. The darker the color, the more cases or deaths are reported in each country within the week of reference, compared to previous.",
-					"The table adjusts to “Cases” or “Deaths” by clicking on the relevant buttons and it is sorted by total numbers or by normalized figures, when the “Total” field or the “Per 100K” field is clicked."
-				]
-			},
-			"component": {
-				"id": "global-key-by-country-table",
-				"embed": true
-			}
-		},
-		{
-			"title": {
-				"el": "Η πορεία της πανδημίας στην υφήλιο",
-				"en": "The pandemic over time across the globe"
-			},
-			"body": {
-				"el": [
-					"Το γράφημα εμφανίζεται με προεπιλεγμένη την επιλογή «Ημερήσια» και αποτυπώνει αριθμό κρουσμάτων και θανάτων ανά ημέρα στον κόσμο. Η γραμμή με το σκούρο χρώμα καταγράφει τον κυλιόμενο μέσο όρο των τελευταίων 7 ημερών, ο οποίος χρησιμοποιείται για να εξομαλύνει τις τιμές.",
-					"Πατώντας το κουμπί «Αθροιστικά» το γράφημα αποτυπώνει το σύνολο των κρουσμάτων ανά ημέρα, από την αρχή της πανδημίας. Όσο πιο μεγάλη η κλίση της γραμμής του κυλιόμενου μέσου όρου 7 ημερών, τόσο μεγαλύτερος ο ρυθμός μετάδοσης του ιού. Η επιπέδωση της καμπύλης συνεπάγεται μείωση της αύξησης κρουσμάτων ή θανάτων στον κόσμο."
-				],
-				"en": [
-					"The chart represents the number of cases and deaths reported by date worldwide and it is set to the “Daily” view by default. The darker line stands for the 7-day moving average of each metric, which is used to smooth values.",
-					"When the “Cumulative” button is clicked, the chart represents cumulative numbers of cases by date. The bigger the slope of the 7-day moving average line, the bigger the rise of cases. When the curve is flattened, the rise of cases or deaths is decreasing."
-				]
-			},
-			"component": {
-				"id": "global-key-daily-agg-bar",
-				"embed": true
-			}
-		},
-		{
-			"title": {
-				"el": "Εξέλιξη νέων κρουσμάτων και θανάτων ανά χώρα",
-				"en": "Evolution of new cases and deaths by country"
-			},
-			"body": {
-				"el": [
-					"Τα γραφήματα αποτυπώνουν τα νέα κρούσματα ή τους νέους θανάτους, ανά 100.000 πληθυσμού και σε απόλυτους αριθμούς, ημερησίως σε κάθε χώρα. Η σειρά εμφάνισής τους εξαρτάται από τον αριθμό νέων κρουσμάτων ανά 100.000 πληθυσμού. Δηλαδή, στην κορυφή εμφανίζονται οι χώρες που, προς το παρόν, έχουν μεγαλύτερο πρόβλημα.",
-					"Η γραμμή με το σκούρο χρώμα καταγράφει τον κυλιόμενο μέσο όρο των τελευταίων 7 ημερών, ο οποίος χρησιμοποιείται για να εξομαλύνει τις τιμές."
-				],
-				"en": [
-					"The subplots represent daily new cases or daily new deaths both per 100,000 residents and in absolule numbers in each country. Countries are ranked based on the number of new cases or new deaths reported per 100,000 residents, meaning that countries on top currently face severe outbreak.",
-					"The darker line stands for the 7-day moving average of each metric, which is used to smooth values."
-				]
-			},
-			"component": {
-				"id": "global-key-subplot-countries",
-				"embed": true
-			}
-		},
-		{
-			"title": {
-				"el": "Αναλογία θανάτων στον πληθυσμό",
-				"en": "Deaths ratio in population"
-			},
-			"body": {
-				"el": [
-					"Το διάγραμμα αποτυπώνει πώς εξελίσσεται η αναλογία νέων θανάτων ανά 100.000 κατοίκους στον χρόνο για κάθε χώρα, παρουσιάζοντας τον κυλιόμενο μέσο όρο των τελευταίων 7 ημερών για την εξομάλυνση των τιμών.",
-					"Η ημέρα όποτε παρατηρείται κορύφωση της αναλογίας για μία χώρα, επισημαίνεται στο γράφημα. Για παράδειγμα, στην περίπτωση της Ελλάδας, κορύφωση σημειώθηκε στις 3 Δεκεμβρίου. Μπορείτε να αλλάξετε τις προεπιλεγμένες χώρες, ώστε να συγκρίνετε εκείνες που σας ενδιαφέρουν, επιλέγοντας ως δέκα χώρες κάθε φορά."
-				],
-				"en": [
-					"The chart shows what is the evolution of new deaths ratio in population (per 100,000 residents) over time by country and presents the 7-day moving average of said ratio to smooth values.",
-					"Annotations stand for the peak of this ratio for each country on specific dates. For instance, Greece presents a spike on December, 3. You may change the preselected countries to see how those of your interest compare to each other by selecting up to ten countries a time."
-				]
-			},
-			"component": {
-				"id": "global-key-daily-similar",
-				"embed": true,
-				"defaults": ["U300", "U840", "U826"]
 			}
 		}
 	]

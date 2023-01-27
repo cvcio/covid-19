@@ -1,8 +1,10 @@
 # COVID&ndash;19 Data Visualization Dashboard
 
-COVID&ndash;19 Data Visualization Dashboard (Greece and worldwide), is open-source and developed by the team at [Civic Information Office](https://cvcio.org/) in collaboration with i[iMEdD Lab](https://github.com/iMEdD-Lab/).
+COVID&ndash;19 Data Visualization Dashboard (Greece), is open-source and developed by the team at [Civic Information Office](https://cvcio.org/) in collaboration with [iMEdD Lab](https://github.com/iMEdD-Lab/).
 
-You can read more about the data in [iMEdD](https://imedd.org/)'s [open-data relevant repository](https://github.com/iMEdD-Lab/open-data) or see in action the [COVID&ndash;19 dashboard](https://lab.imedd.org/covid19/). If you are interested in the data collection mechanism you can refer to [COVID&ndash;19 automation](https://github.com/cvcio/covid-19-automation) service.
+In January 2023 a new Version was released by [Sociality Cooperative](https://sociality.gr).
+
+You can read more about the data in [iMEdD](https://imedd.org/)'s [open-data relevant repository](https://github.com/iMEdD-Lab/open-data) or see in action the [COVID&ndash;19 dashboard](https://lab.imedd.org/covid19/). 
 
 
 This project is an effort to visualize the spread of the disease in Greece, as the Greek government lacks transparency on this issue. This is an open-source project, so please contribute to make it better.
@@ -15,7 +17,7 @@ You will need to run [NodeJS](https://nodejs.org/en/) (>= version 12.16.1). You 
 
 ```bash
 # clone the repo
-git clone https://github.com/cvcio/covid-19.git
+git clone https://github.com/iMEdD-Lab/covid-19.git
 # cd to directory
 cd covid-19
 ```
@@ -23,7 +25,7 @@ cd covid-19
 ##### Environment Variables
 In the new folder you will find a `.env` file, where you can set your own environment variables. Read more about Vue CLI [modes and environment variables](https://cli.vuejs.org/guide/mode-and-env.html).
 
-The important key is `VUE_APP_BASE_API`, which is the COVID&ndash;19 API url. You can host your own API or you can use the public endpoints https://covid.imedd.org or the fallback https://covid.cvcio.org. Read more about the API here: [COVID&ndash;19 API](https://github.com/cvcio/covid-19-api).
+The important keys are `VUE_APP_BASE_API`, `VUE_APP_GOV_API_KEY` and `VUE_APP_MAPBOX`. The first is the COVID&ndash;19 API url. You can host your own API or you can use the public endpoints https://covid.imedd.org. Read more about the API here: [COVID&ndash;19 API](https://github.com/iMEdD-Lab/covid-19-imedd-api). The second one is the token for [Vaccinations Data API](https://www.data.gov.gr/datasets/mdg_emvolio_weekly/). You can get one from here: [Create API Token](https://www.data.gov.gr/token/). Finally, the third is the Mapbox Access Token, which you can get from [Mapbox](https://docs.mapbox.com/help/getting-started/access-tokens/).
 
 
 ##### Install Dependencies
@@ -40,12 +42,19 @@ If you're new to contributing to Open Source on Github, [this guide](https://ope
 
 ## Related Repositories
 
+- [COVID&ndash;19 API](https://github.com/iMEdD-Lab/covid-19-imedd-api) (iMEdD Lab)
+- [COVID&ndash;19 Open Data](https://github.com/iMEdD-Lab/open-data) (iMEdD Lab)
+- [COVID&ndash;19 Application](https://github.com/iMEdD-Lab/covid-19) (iMEdD Lab)
+
+## Previous Versions Repositories
+
 - [COVID&ndash;19 Automation](https://github.com/cvcio/covid-19-automation)
 - [COVID&ndash;19 API](https://github.com/cvcio/covid-19-api)
 - [COVID&ndash;19 Application](https://github.com/cvcio/covid-19)
-- [COVID&ndash;19 Open Data](https://github.com/iMEdD-Lab/open-data) (iMEdD Lab)
+
 
 ## Contributors
 
 - Ilias Dimos ([@dosko64](https://github.com/dosko64))
 - Dimitris Papaevagelou ([@andefined](https://github.com/andefined)).
+- Sociality Coop ([@socialityCoop](https://github.com/socialityCoop))

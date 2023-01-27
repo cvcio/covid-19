@@ -26,3 +26,5 @@ covid19/
 *tmp/
 /design
 proxy.*
+
+/build_history

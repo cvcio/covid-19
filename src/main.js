@@ -33,8 +33,13 @@ Vue.prototype.$VERSION = process.env.VUE_APP_VERSION;
 Vue.prototype.$BASE_URL = process.env.VUE_APP_BASE_URL;
 Vue.prototype.$BASE_API = process.env.VUE_APP_BASE_API || '';
 Vue.prototype.$DISPLAY_URL = process.env.VUE_APP_DISPLAY_URL || '';
-Vue.prototype.$APP_MAPBOX = process.env.VUE_APP_MAPBOX || 'pk.eyJ1IjoiYW5kZWZpbmVkIiwiYSI6ImNpcWY2OHN5bDAwOHZpMWt4ODV2a2EzdnUifQ.q-XTbW4kXMSRhT5alQ2J4g';
+Vue.prototype.$APP_MAPBOX = process.env.VUE_APP_MAPBOX || '';
 Vue.prototype.$APP_MAPBOX_STYLE = process.env.VUE_APP_MAPBOX_STYLE || 'mapbox://styles/mapbox/light-v10';
+
+if (process.env.NODE_ENV !== 'production') {
+	console.log("Mode: ", `${process.env.NODE_ENV}`);
+	console.log("App Version: ", `v${process.env.VUE_APP_VERSION}`);
+}
 
 Vue.use(filters);
 Vue.use(VueObserveVisibility);

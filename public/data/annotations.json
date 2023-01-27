@@ -1,104 +1,80 @@
 [
   {
     "date": "26/02/2020",
-    "name_el": "Το πρώτο καταγεγραμμένο κρούσμα στην Ελλάδα",
-	"name_en": "First confirmed case in Greece",
-	"importance": 100
-  },
-  {
-    "date": "10/03/2020",
-    "name_el": "Κλείνουν σχολεία και πανεπιστήμια.",
-	"name_en": "Schools and universities under suspension",
-	"importance": 10
+    "name_el": "Το πρώτο καταγεγραμμένο κρούσμα στην Ελλάδα.",
+    "name_en": "First confirmed case in Greece",
+    "importance": 100
   },
   {
     "date": "12/03/2020",
     "name_el": "Ο πρώτος θάνατος από COVID-19 στην Ελλάδα",
-	"name_en": "First COVID-19 death in Greece",
-	"importance": 100
-  },
-  {
-    "date": "13/03/2020",
-    "name_el": "Κλείνουν εμπορικά κέντρα, καφετέριες, μπαρ, εστιατόρια.",
-	"name_en": "Shopping malls, cafe, bars and restaurants are closing.",
-	"importance": 1
-  },
-  {
-    "date": "18/03/2020",
-    "name_el": "Απαγόρευση δημόσιων συναθροίσεων άνω των 10 ατόμων. Κλείνουν όλα τα εμπορικά καταστήματα. Κλείνουν τα σύνορα για μη Έλληνες πολίτες ή για προερχόμενους από χώρα εκτός ΕΕ.",
-	"name_en": "Only public gatherings up to 10 people are allowed. All stores are closing. Borders closure for non-Greek citizens and for travellers coming from non-EU countries.",
-	"importance": 10
+    "name_en": "First COVID-19 death in Greece",
+    "importance": 100
   },
   {
     "date": "23/03/2020",
     "name_el": "Έναρξη 1ου Lockdown",
-	"name_en": "1st Lockdown imposed",
-	"importance": 100
-  },
-  {
-    "date": "04/05/2020",
-    "name_el": "Μερική άρση απαγόρευσης μετακινήσεων, επαναλειτουργία λιανικού εμπορίου και επιχειρήσεων",
-	"name_en": "Partial lifting of restrictions on moving and traveling, retail stores are reopening",
-	"importance": 10
+    "name_en": "1st Lockdown imposed",
+    "importance": 100
   },
   {
     "date": "18/05/2020",
-    "name_el": "Άρση περιορισμού μετακινήσεων μεταξύ νομών στην ηπειρωτική Ελλάδα, όπως και από και προς την Κρήτη.",
-	"name_en": "Lifting of travel restrictions in the mainland and to/from Crete",
-	"importance": 10
+    "name_el": "Άρση περιορισμού μετακινήσεων.",
+    "name_en": "Lifting of travel restrictions.",
+    "importance": 10
   },
   {
-    "date": "25/05/2020",
-    "name_el": "Άνοιγμα της εστίασης, άρση περιορισμού μετακινήσεων από και προς όλα τα νησιά.",
-	"name_en": "Cafe, bars and restaurants are reoperating, lifting of travel restrictions to/from islands",
-	"importance": 1
-  },
-  {
-    "date": "15/06/2020",
-    "name_el": "Άνοιγμα συνόρων για 29 χώρες: επιτρέπονται πτήσεις προς Αθήνα και Θεσσαλονίκη.",
-	"name_en": "Borders of Greece are reopening for residents of 29 countries: flights to Athens and Thessaloniki are allowed.",
-	"importance": 100
-  },
-  {
-    "date": "01/07/2020",
-    "name_el": "Επιτρέπονται όλες οι διεθνείς αφίξεις σε όλα τα αεροδρόμια της χώρας.",
-	"name_en": "Arrivals to all airports of tthe country are allowed for all international flights.",
-	"importance": 10
-  },
-  {
-    "date": "03/11/2020",
-    "name_el": "Υποχρεωτική χρήση μάσκας παντού. Απαγόρευση κυκλοφορίας 00:30 - 05:00. Έναρξη τοπικού lockdown σε Θεσσαλονίκη και Σέρρες.",
-	"name_en": "Face mask is mandatory both outdoors and indoors. Circulation restrictions are imposed between 00:30 and 05:00. Regional lockdowns are imposed in Thessaloniki and Serres.",
-	"importance": 10
+    "date": "01/06/2020",
+    "name_el": "2ο κύμα της πανδημίας στην Ελλάδα.",
+    "name_en": "2nd wave of the pandemic in Greece.",
+    "importance": 100
   },
   {
     "date": "07/11/2020",
     "name_el": "Έναρξη 2ου Lockdown. Υποχρεωτική τηλεκπαίδευση στα γυμνάσια και λύκεια όλης της χώρας.",
-	"name_en": "2nd Lockdown is imposed. Remote learning is compulsory for High Schools and Lyceums across Greece.",
-	"importance": 100
+    "name_en": "2nd Lockdown is imposed. Remote learning is compulsory for High Schools and Lyceums across Greece.",
+    "importance": 100
   },
   {
-    "date": "16/11/2020",
-    "name_el": "Κλείνουν όλες οι εκπαιδευτικές δομές της χώρας, πλην ειδικών σχολείων όλων των βαθμίδων.",
-	"name_en": "All education and training institutions are closing except for special schools of any level.",
-	"importance": 10
-  },
-  {
-    "date": "11/01/2021",
-    "name_el": "Επαναλειτουργία νηπιαγωγείων και δημοτικών -περιορισμοί κυκλοφορίας σε ισχύ.",
-	"name_en": "Kindergardens and primary schools operate again -circulation restrictions still in effect.",
-	"importance": 10
+    "date": "04/01/2021",
+    "name_el": "Έναρξη εμβολιαστικού προγράμματος.",
+    "name_en": "Start of the vaccination programme.",
+    "importance": 100
   },
   {
     "date": "18/01/2021",
-    "name_el": "Άνοιγμα λιανεμπορίου -περιορισμοί κυκλοφορίας σε ισχύ.",
-	"name_en": "Reopening of retail -circulation restrictions still in effect.",
-	"importance": 1
+    "name_el": "3ο κύμα της πανδημίας στην Ελλάδα.",
+    "name_en": "3rd wave of the pandemic in Greece.",
+    "importance": 100
   },
   {
     "date": "11/02/2021",
-    "name_el": "Nέο lockdown στην Αττική",
-	"name_en": "Another lockdown in Attica",
-	"importance": 100
+    "name_el": "Έναρξη 3ου Lockdown στην Αττική.",
+    "name_en": "Start of 3rd Lockdown in Attica",
+    "importance": 100
+  },
+  {
+    "date": "22/06/2021",
+    "name_el": "4ο κύμα της πανδημίας στην Ελλάδα.",
+    "name_en": "4rd wave of the pandemic in Greece.",
+    "importance": 100
+  },
+  {
+    "date": "22/11/2021",
+    "name_el": "Πρώτη ανίχνευση της παραλλαγής Omicron.",
+    "name_en": "First detection of the Omicron variant.",
+    "importance": 100
+  },
+  {
+    "date": "20/12/2021",
+    "name_el": "5o κύμα της πανδημίας στην Ελλάδα.",
+    "name_en": "5th wave of the pandemic in Greece.",
+    "importance": 100
+  },
+  {
+    "date": "06/06/2022",
+    "name_el": "6o κύμα της πανδημίας στην Ελλάδα.",
+    "name_en": "6th wave of the pandemic in Greece.",
+    "importance": 100
   }
 ]

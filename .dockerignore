@@ -3,3 +3,7 @@ design
 .git
 .github
 .vscode
+
+/build_history
+/public/shared/decoded
+/node_modules

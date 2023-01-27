@@ -1,10 +1,11 @@
 <template>
 	<div>
 		<app-bar />
-		<v-navigation-drawer app floating :value="sidebar" color="" width="95%" temporary v-if="$vuetify.breakpoint.smAndDown">
+		<v-navigation-drawer app floating :value="sidebar" color="" width="95%" temporary
+			v-if="$vuetify.breakpoint.smAndDown">
 			<v-container fluid class="pa-0 mt-0">
 				<v-row no-gutters class="no-events">
-					<tabs class="no-events"/>
+					<tabs class="no-events" />
 				</v-row>
 			</v-container>
 		</v-navigation-drawer>
@@ -13,25 +14,21 @@
 				<router-view />
 			</v-scroll-y-transition>
 		</v-main>
-		<eody-disclaimer/>
+		<!-- <eody-disclaimer /> -->
 		<app-footer />
 		<v-bottom-navigation v-model="m" v-if="$vuetify.breakpoint.smAndDown" app class="bottom-navigation">
 			<v-btn value="recent" class="primary--text" to="/">
-				<span>{{ $t('Map') }}</span>
-				<v-icon color="primary" small class="mb-1">fa-map</v-icon>
+				<span>{{ $t('Home') }}</span>
+				<v-icon color="primary" small class="mb-1">fa-home</v-icon>
 			</v-btn>
 
 			<v-btn value="favorites" class="primary--text" to="/greece/">
-				<span>{{ $t('Greece') }}</span>
-				<v-icon color="primary" small class="mb-1">fa-search</v-icon>
-			</v-btn>
-			<v-btn value="nearby" class="primary--text" to="/global/">
-				<span>{{ $t('World') }}</span>
-				<v-icon color="primary" small class="mb-1">fa-globe</v-icon>
+				<span>{{ $t('Charts') }}</span>
+				<v-icon color="primary" small class="mb-1">fa-chart-bar</v-icon>
 			</v-btn>
 		</v-bottom-navigation>
-		<embed-dialog/>
-		<app-social/>
+		<embed-dialog />
+		<app-social />
 	</div>
 </template>
 
@@ -44,7 +41,7 @@ export default {
 		'app-bar': require('@/components/app/app-bar').default,
 		'app-footer': require('@/components/app/app-footer').default,
 		tabs: require('@/components/content/tabs').default,
-		'eody-disclaimer': require('@/components/shared/eody-disclaimer').default,
+		// 'eody-disclaimer': require('@/components/shared/eody-disclaimer').default,
 		'app-social': require('@/components/app/app-social').default,
 		'embed-dialog': require('@/components/content/embeds/dialog').default
 	},

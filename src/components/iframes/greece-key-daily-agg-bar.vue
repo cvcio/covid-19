@@ -1,26 +1,31 @@
+<!--
+	"el": "(10) - Η πορεία της πανδημίας στην Ελλάδα",
+	"en": "(10) - The pandemic over time in Greece"
+-->
+
 <template>
 	<v-card color="white" :class="$route.meta.iframe ? 'elevation-0' : ''" :tile="$route.meta.iframe">
 		<v-app-bar flat color="iframe-header px-4 mx-0" :class="$route.meta.iframe ? 'white' : 'grey lighten-5'"
-		:height="$route.meta.iframe ? 120 : ($vuetify.breakpoint.smAndDown ? 120 : 120)">
+			:height="$route.meta.iframe ? 120 : ($vuetify.breakpoint.smAndDown ? 120 : 120)">
 			<v-container class="pa-0 ma-0" fluid>
 				<v-row class="pa-0 ma-0" justify="space-between">
 					<v-col class="pa-0 shrink" align-self="center">
 						<v-btn-toggle dense class="mr-2" rounded v-model="point" mandatory>
 							<v-btn x-small class="primary--text" value="cases">
-								{{($tc('cases', 1)) | normalizeNFD }}
+								{{ ($tc('cases', 1)) | normalizeNFD }}
 							</v-btn>
 							<v-btn x-small class="primary--text" value="deaths">
-								{{($tc('deaths', 1)) | normalizeNFD }}
+								{{ ($tc('deaths', 1)) | normalizeNFD }}
 							</v-btn>
 						</v-btn-toggle>
 					</v-col>
 					<v-col class="pa-0 shrink" align-self="center">
 						<v-btn-toggle dense class="mr-2" rounded v-model="calc" mandatory>
 							<v-btn x-small class="primary--text" value="new">
-								{{($tc('Daily', 1)) | normalizeNFD }}
+								{{ ($tc('Weekly', 1)) | normalizeNFD }}
 							</v-btn>
 							<v-btn x-small class="primary--text" value="sum">
-								{{($tc('Cumulative', 1)) | normalizeNFD }}
+								{{ ($tc('Cumulative', 1)) | normalizeNFD }}
 							</v-btn>
 						</v-btn-toggle>
 					</v-col>
@@ -33,16 +38,14 @@
 						</v-btn>
 					</v-col>
 				</v-row>
-				<v-row class="pa-0 ma-0 mt-4" justify="center">
-					<v-col class="pa-0" cols="12" md="6">
-						<v-select
-							dense
-							outlined
-							color="primary"
-							hide-details prepend-icon="" class="caption" :label="$t('Time Period')"
-							:items="[periodInterval[2], periodInterval[3]]"
-							:item-text="'text.'+locale.code" item-value="value" v-model="period" auto-select-first
-							@change="load">
+				<v-row class="pa-0 ma-0 mt-4" justify="space-between">
+					<v-col class="pa-0" cols="12" md="6" align-self="center">
+				<!-- <v-row class="pa-0 ma-0 mt-4" justify="center">
+					<v-col class="pa-0" cols="12" md="6"> -->
+						<v-select dense outlined color="primary" hide-details prepend-icon="" class="caption"
+							:label="$t('Time Period')"
+							:items="[...periodInterval.slice(1)]"
+							:item-text="'text.' + locale.code" item-value="value" v-model="period" auto-select-first @change="load">
 							<template v-slot:prepend>
 								<v-icon small class="mt-1" color="primary">
 									fa-clock
@@ -53,7 +56,7 @@
 				</v-row>
 			</v-container>
 		</v-app-bar>
-		<v-divider v-if="!$route.meta.iframe"/>
+		<v-divider v-if="!$route.meta.iframe" />
 		<v-container class="px-4" fluid>
 			<v-row class="px-0" v-if="loading">
 				<v-col align="center">
@@ -61,21 +64,20 @@
 				</v-col>
 			</v-row>
 			<v-row class="px-0" v-else>
-				<v-col
-					cols="12"
-					class="px-4"
-				>
-					<d7-line-bar-events v-if="item"
-						:key="'gcb7l-' + item.uid + '-' + calc + '-' + point + '-' + period" :id="'gcb7l-uid-' + item.uid + '-' + calc + '-' + point + '-' + period"
-						:point="point" :values="item[calc === 'new' ? 'new_' + point : point]"
-						:dates="item.dates" :annotations="annotations" :sources="item.sources"/>
+				<v-col cols="12" class="px-4">
+					<d7-line-bar-events v-if="item" :key="'gcb7l-' + item.uid + '-' + calc + '-' + point + '-' + period"
+						:id="'gcb7l-uid-' + item.uid + '-' + calc + '-' + point + '-' + period" :point="point"
+						:values="item[calc === 'new' ? 'new_' + point : point]" :dates="item.dates"
+						:datesAnn="item.datesAnnotations" :annotations="annotations" :sources="item.sources" />
 				</v-col>
 			</v-row>
 		</v-container>
-		<v-divider class="mx-4"/>
+		<v-divider class="mx-4" />
 		<v-footer class="white caption small-caption pa-4 pt-2">
 			<a href="https://lab.imedd.org/covid19/" target="_blank" v-if="$route.meta.iframe">
-				<v-icon x-small class="mr-2" color="primary">fa-link</v-icon><span class="font-weight-bold">iMΕdD LAB</span>: {{ title[locale.code] }}
+				<v-icon x-small class="mr-2" color="primary">fa-link</v-icon><span class="font-weight-bold">iMΕdD LAB</span>: {{
+						title[locale.code]
+				}}
 			</a>
 			<span v-else>
 				<span class="font-weight-bold">iMΕdD LAB</span>: {{ title[locale.code] }}
@@ -86,7 +88,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { getDates } from '@/utils';
+import { groupDatesByWeek } from '@/utils';
+import { sumBy } from 'lodash';
 
 export default {
 	name: 'greece-key-daily-agg-bar',
@@ -100,53 +103,48 @@ export default {
 	},
 	computed: {
 		...mapGetters(['locale']),
-		...mapGetters('filters', ['periodInterval']),
+		...mapGetters('filters', ['periodInterval', 'periodIntervalIDX']),
 		...mapGetters('internal', ['annotations']),
 		...mapGetters('internal', ['posts']),
-		embed () {
+		embed() {
 			return {
 				title: '',
 				subtitle: '',
 				text: '',
 				mapLevel: null,
 				mapKey: null,
+				mapYear: null,
 				view: 'cases',
 				availableViews: ['cases', 'deaths'],
-				aggregation: 'daily',
-				availableAggregations: ['Daily', 'Cumulative'],
-				period: 3,
-				availablePeriods: [
-					{
-						text: { en: 'Last 3 months', el: 'Τελευταίο τρίμηνο' },
-						value: 2
-					},
-					{
-						text: { en: 'Historical data', el: 'Από την αρχή' },
-						value: 3
-					}
-				],
+				aggregation: 'weekly',
+				availableAggregations: ['Weekly', 'Cumulative'],
+				period: this.periodIntervalIDX.length - 1,
+				availablePeriods: [...this.periodIntervalIDX.slice(1)],
 				lang: this.locale.code,
 				id: 'greece-key-daily-agg-bar'
 			};
 		}
 	},
-	data () {
+	data() {
 		return {
 			loading: true,
 			point: 'cases',
 			item: null,
 			calc: 'new',
-			period: '2020-01-01',
+			period: {
+				from: '2020-01-01',
+				to: this.$moment().format('YYYY-MM-DD')
+			},
 			title: { en: '', el: '' }
 		};
 	},
-	mounted () {
+	mounted() {
 		setTimeout(() => {
 			this.preload();
 		}, this.delay);
 	},
 	methods: {
-		preload () {
+		preload() {
 			if (this.annotations.length === 0) {
 				this.$store.dispatch('internal/getAnnotations');
 			}
@@ -154,7 +152,7 @@ export default {
 				this.point = this.$route.query.view;
 			}
 			if (this.$route.query.aggregation && this.$route.query.aggregation !== '') {
-				this.calc = this.$route.query.aggregation === 'daily' ? 'new' : 'sum';
+				this.calc = this.$route.query.aggregation === 'weekly' ? 'new' : 'sum';
 			}
 			if (this.$route.query.period && this.$route.query.period !== '') {
 				this.period = this.periodInterval[parseInt(this.$route.query.period)].value;
@@ -168,36 +166,68 @@ export default {
 				this.load();
 			}
 		},
-		setEmbed () {
+		setEmbed() {
 			this.$store.commit('setEmbedDialog', true);
 			this.$store.commit('setEmbed', this.embed);
 		},
-		load () {
+		load() {
 			this.loading = true;
 			this.title = this.posts[this.embed.id.split('-')[0]].find(m => m.component.id === this.embed.id).title || '';
-			this.$store.dispatch('external/getGlobalAGG', 'GRC/all/' + this.period)
+			this.$store.dispatch('external/getTimelineData', { from: this.period.from, to: this.period.to, fields: ['daily_cases', 'cases_cum', 'deaths', 'deaths_cum'] })
 				.then(res => {
-					this.item = res.map(m => {
-						m.new_cases = m.new_cases.map(m => Math.max(0, m));
-						m.new_deaths = m.new_deaths.map(m => Math.max(0, m));
-						m.cases = m.cases.map(m => Math.max(0, m));
-						m.deaths = m.deaths.map(m => Math.max(0, m));
+					const data = res.map((m, i) => {
 						return {
-							uid: m.uid,
-							region: m.country,
-							dates: getDates(m.from, m.to),
-							cases: m.cases,
-							deaths: m.deaths,
-							new_cases: m.new_cases,
-							new_deaths: m.new_deaths,
-							sources: m.sources.sort()
+							week: this.$moment(m.date).week(),
+							year: this.$moment(m.date).year(),
+							date: m.date,
+							cases: m.daily_cases ? m.daily_cases : 0,
+							cases_cum: m.cases_cum,
+							deaths: m.deaths ? m.deaths : 0,
+							deaths_cum: m.deaths_cum
 						};
 					});
-					this.item = this.item[0];
+
+					const entries = groupDatesByWeek(data).map((m) => {
+						return {
+							year: m[0].year,
+							week: m[0].week,
+							date: this.$moment(m[0].date).startOf('week').add(3,'days'),
+							cases: sumBy(m, 'cases'),
+							cases_cum: Math.max(...m.map(o => o.cases_cum)),
+							deaths: sumBy(m, 'deaths'),
+							deaths_cum: Math.max(...m.map(o => o.deaths_cum))
+						};
+					});
+
+					const cases = [];
+					const cases_cum = [];
+					const datesArray = [];
+					const deaths = [];
+					const deaths_cum = [];
+					entries.map(obj => {
+						cases.push(obj.cases);
+						cases_cum.push(obj.cases_cum);
+						deaths.push(obj.deaths);
+						deaths_cum.push(obj.deaths_cum);
+						datesArray.push(obj.date);
+					});
+					const dates = ([...new Set(datesArray)]).map(m => this.$moment(m));
+					const datesAnnotations = ([...new Set(res.map(item => item.date))]).map(m => this.$moment(m));
+
+					this.item = {
+						dates: dates,
+						datesAnnotations: datesAnnotations,
+						cases: cases_cum,
+						deaths: deaths_cum,
+						new_cases: cases,
+						new_deaths: deaths,
+						sources: ['imedd']
+					};
+					
 					this.loading = false;
 				});
 		},
-		update () {
+		update() {
 			this.load();
 		}
 	}
@@ -208,6 +238,7 @@ export default {
 .extra-small-text {
 	font-size: 8px !important;
 }
+
 .v-data-iterator {
 	width: 100%;
 }
